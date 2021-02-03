@@ -33,6 +33,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 # Application definition
 
 INSTALLED_APPS = [
+    'website.apps.WebsiteConfig',
     'social_django',
     'django.contrib.admin',
     'django.contrib.auth',

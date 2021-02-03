@@ -1,0 +1,9 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<h1>Login / Register</h1>
+<p class="lead">Masuk atau buat akun dengan salah satu provider di bawah ini:</p>
+<p class="lead">
+    <a href="{% url 'social:begin' 'github' %}" class="btn btn-lg btn-primary fw-bold">Login dengan Github</a>
+</p>
+{% endblock %}
