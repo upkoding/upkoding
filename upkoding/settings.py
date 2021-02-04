@@ -29,10 +29,12 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 
+AUTH_USER_MODEL = 'account.User'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',
     'website.apps.WebsiteConfig',
     'social_django',
     'django.contrib.admin',
