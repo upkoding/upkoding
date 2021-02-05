@@ -1,0 +1,14 @@
+{% load website_tags %}
+
+<ul class="nav nav-tabs mb-5">
+    <li class="nav-item">
+        <a class="nav-link {% active_class 'account:profile' %}" aria-current="page"
+            href="{% url 'account:profile' %}">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% active_class 'account:auth' %}" href="{% url 'account:auth' %}">Social Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% active_class 'account:settings' %}" href="{% url 'account:settings' %}">Pengaturan</a>
+    </li>
+</ul>

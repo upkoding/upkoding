@@ -3,18 +3,17 @@
 {% block title %}Masuk atau Buat Akun{% endblock %}
 
 {% block content %}
-<h2>Masuk / Buat Akun</h2>
+<div class="text-center">
+    <h2>Masuk / Buat Akun</h2>
 
-<p class="lead">Masuk dengan mudah dan aman melalui salah satu akun berikut ini.</p>
-{% include 'website/messages.html' %}
+    <p class="lead">Masuk dengan mudah dan aman melalui salah satu akun berikut ini.</p>
+    {% include 'website/_messages.html' %}
 
-<br /><br />
-<div class="d-grid gap-3 col-8 mx-auto">
-    <a href="{% url 'social:begin' 'github' %}" class="btn btn-lg btn-secondary">Github</a>
-    <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-lg btn-danger">Google</a>
-    <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-lg btn-primary">Facebook</a>
+    <br /><br />
+    <div class="d-grid gap-3 col-8 mx-auto">
+        <a href="{% url 'social:begin' 'github' %}" class="btn btn-lg btn-secondary">Github</a>
+        <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-lg btn-danger">Google</a>
+        <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-lg btn-primary">Facebook</a>
+    </div>
 </div>
-<p class="lead">
-
-</p>
 {% endblock %}

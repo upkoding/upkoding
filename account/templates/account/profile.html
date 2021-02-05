@@ -1,24 +1,24 @@
-{% extends 'website/base.html' %}
-{% load website %}
+{% extends 'account/base.html' %}
 
-{% block title %}Profile{% endblock %}
-{% block header_mb %}mb-5{% endblock %}
+{% block form %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="username" class="form-label">{{ form.username.label }}</label>
+        {{ form.username }}
+        {% if form.username.help_text %}<div class="form-text">{{ form.username.help_text }}</div>{% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="first_name" class="form-label">{{ form.first_name.label }}</label>
+        {{ form.first_name }}
+        {% if form.first_name.help_text %}<div class="form-text">{{ form.first_name.help_text }}</div>{% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="last_name" class="form-label">{{ form.last_name.label }}</label>
+        {{ form.last_name }}
+        {% if form.last_name.help_text %}<div class="form-text">{{ form.last_name.help_text }}</div>{% endif %}
+    </div>
 
-{% block content %}
-
-{% include 'website/messages.html' %}
-
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link {% active_class 'account:profile' %}" aria-current="page"
-            href="{% url 'account:profile' %}">Profile</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% active_class 'account:auth' %}" href="{% url 'account:auth' %}">Autentikasi</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% active_class 'account:settings' %}" href="{% url 'account:settings' %}">Pengaturan</a>
-    </li>
-</ul>
-
+    <button type="submit" class="btn btn-primary">Simpan</button>
+</form>
 {% endblock %}
