@@ -1,18 +1,20 @@
 {% extends 'website/base.html' %}
 
+{% block title %}Masuk atau Buat Akun{% endblock %}
+
 {% block content %}
-<h1>Login / Register</h1>
+<h2>Masuk / Buat Akun</h2>
 
-{% if messages %}
-{% for message in messages %}
-<div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
-    {{ message }}
+<p class="lead">Masuk dengan mudah dan aman melalui salah satu akun berikut ini.</p>
+{% include 'website/messages.html' %}
+
+<br /><br />
+<div class="d-grid gap-3 col-8 mx-auto">
+    <a href="{% url 'social:begin' 'github' %}" class="btn btn-lg btn-secondary">Github</a>
+    <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-lg btn-danger">Google</a>
+    <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-lg btn-primary">Facebook</a>
 </div>
-{% endfor %}
-{% endif %}
-
-<p class="lead">Masuk atau buat akun dengan salah satu provider di bawah ini:</p>
 <p class="lead">
-    <a href="{% url 'social:begin' 'github' %}" class="btn btn-lg btn-primary fw-bold">Login dengan Github</a>
+
 </p>
 {% endblock %}

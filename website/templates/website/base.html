@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" class="h-100">
 {% load static %}
+{% load website %}
 
 <head>
     <meta charset="utf-8">
@@ -8,7 +9,7 @@
     <meta name="description" content="Sumber informasi belajar pemrograman">
     <meta name="author" content="Eka Putra">
     <meta name="generator" content="UpKoding">
-    <title>{% block title %}Sumber informasi belajar pemrograman berbahasa Indonesia{% endblock %} | UpKoding.com
+    <title>{% block title %}UpKoding{% endblock %} | Sumber informasi belajar pemrograman berbahasa Indonesia
     </title>
     <meta name="google-site-verification" content="TODO" />
     <meta property="og:title" content="{{ TODO }}" />
@@ -62,33 +63,37 @@
 </head>
 
 <body class="d-flex h-100 text-center">
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <header class="mb-auto">
+    <div class="cover-container w-100 h-100 p-3 mx-auto flex-column d-flex">
+        <header class="{% block header_mb %}mb-auto{% endblock%}">
             <div>
                 <a href="{% url 'website:index' %}" class="logo">
                     <h3 class="float-md-start mb-0">upkoding</h3>
                 </a>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link active" aria-current="page" href="{% url 'website:about' %}">Tentang</a>
+                    <a class="nav-link {% active_class 'website:about' %}" href="{% url 'website:about' %}">Tentang</a>
                     {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'account:profile' %}">Profile</a>
-                    <a class="nav-link" href="{% url 'account:logout' %}">Keluar</a>
+                    <a class="nav-link {% active_class '/account/*' %}" href="{% url 'account:profile' %}">Profile</a>
+                    <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
                     {% else %}
-                    <a class="nav-link" href="{% url 'account:login' %}">Login</a>
+                    <a class="nav-link {% active_class 'account:login' %}" href="{% url 'account:login' %}">Login</a>
                     {% endif %}
-
                 </nav>
             </div>
         </header>
 
-        <main class="px-3">
+        <main>
             {% block content %}{% endblock %}
         </main>
 
         <footer class="mt-auto">
-            <p>Powered by <a href="https://github.com/upkoding/upkoding" target="_blank">UpKoding</a>.</p>
+            <p>Powered by <a href="https://github.com/upkoding/upkoding" target="_blank">UpKoding</a>
+            </p>
         </footer>
     </div>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
     {% block footscripts %}{% endblock %}
 </body>
 

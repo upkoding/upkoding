@@ -1,18 +1,24 @@
 {% extends 'website/base.html' %}
 
+{% block title %}Profile{% endblock %}
+{% block header_mb %}mb-5{% endblock %}
+
 {% block content %}
-<h1>Profile</h1>
 
-{% if messages %}
-{% for message in messages %}
-<div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
-    {{ message }}
-</div>
-{% endfor %}
-{% endif %}
+{% include 'website/messages.html' %}
 
-<p class="lead">Masuk atau buat akun dengan salah satu provider di bawah ini:</p>
-<p class="lead">
-    <a href="{% url 'social:begin' 'github' %}" class="btn btn-lg btn-primary fw-bold">Login dengan Github</a>
-</p>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link {% if tab == 'profile' %}active{% endif %}" aria-current="page"
+            href="{% url 'account:profile' %}">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if tab == 'auth' %}active{% endif %}" href="{% url 'account:auth' %}">Autentikasi</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if tab == 'settings' %}active{% endif %}"
+            href="{% url 'account:settings' %}">Pengaturan</a>
+    </li>
+</ul>
+
 {% endblock %}
