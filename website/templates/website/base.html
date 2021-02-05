@@ -87,6 +87,7 @@
 
         <footer class="mt-auto">
             <p>Powered by <a href="https://github.com/upkoding/upkoding" target="_blank">UpKoding</a>
+                {% if user.is_authenticated %} | <a href="{% url 'admin:index' %}">Admin Area</a>{% endif %}
             </p>
         </footer>
     </div>

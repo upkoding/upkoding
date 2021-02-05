@@ -16,12 +16,12 @@ def logout(request):
 
 
 def profile(request):
-    return render(request, 'account/profile.html', {'tab': 'profile'})
+    return render(request, 'account/profile.html')
 
 
 def authentication(request):
-    return render(request, 'account/profile.html', {'tab': 'auth'})
+    return render(request, 'account/profile.html')
 
 
 def settings(request):
-    return render(request, 'account/profile.html', {'tab': 'settings'})
+    return render(request, 'account/profile.html')
