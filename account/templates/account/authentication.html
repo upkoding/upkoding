@@ -5,14 +5,14 @@
 <div class="d-grid gap-3 mx-auto">
     <p class="lead text-center">Kamu bisa login dengan salah satu atau semua akun di bawah ini.</p>
 
-    <ul class="list-group">
+    <ul class="list-group list-group-flush">
         <li class="list-group-item d-flex justify-content-between">
             <span class="lead"><i class="bi bi-github"></i> &nbsp; Github</span>
             {% if 'github' in backends.not_associated %}
-            <a href="{% url 'social:begin' 'github' %}?next=/account/authentication/"
+            <a href="{% url 'account:social:begin' 'github' %}?next=/account/authentication/"
                 class="btn btn-sm btn-outline-primary">Connect</a>
             {% else %}
-            <form action="{% url 'social:disconnect' 'github' %}?next=/account/authentication/" method="POST">
+            <form action="{% url 'account:social:disconnect' 'github' %}?next=/account/authentication/" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-secondary">Disconnect</button>
             </form>
@@ -21,10 +21,10 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <span class="lead"><i class="bi bi-google"></i> &nbsp; Google</span>
             {% if 'google-oauth2' in backends.not_associated %}
-            <a href="{% url 'social:begin' 'google-oauth2' %}?next=/account/authentication/"
+            <a href="{% url 'account:social:begin' 'google-oauth2' %}?next=/account/authentication/"
                 class="btn btn-sm btn-outline-primary">Connect</a>
             {% else %}
-            <form action="{% url 'social:disconnect' 'github' %}?next=/account/authentication/" method="POST">
+            <form action="{% url 'account:social:disconnect' 'github' %}?next=/account/authentication/" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-secondary">Disconnect</button>
             </form>
@@ -33,10 +33,10 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <span class="lead"><i class="bi bi-facebook"></i> &nbsp; Facebook</span>
             {% if 'facebook' in backends.not_associated %}
-            <a href="{% url 'social:begin' 'facebook' %}?next=/account/authentication/"
+            <a href="{% url 'account:social:begin' 'facebook' %}?next=/account/authentication/"
                 class="btn btn-sm btn-outline-primary">Connect</a>
             {% else %}
-            <form action="{% url 'social:disconnect' 'facebook' %}?next=/account/authentication/" method="POST">
+            <form action="{% url 'account:social:disconnect' 'facebook' %}?next=/account/authentication/" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-secondary">Disconnect</button>
             </form>

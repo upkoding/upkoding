@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'account.middleware.SocialLoginExceptionMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,6 +59,7 @@ MIDDLEWARE = [
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -137,12 +139,46 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
+LOGIN_ERROR_URL = '/account/login/'
 LOGOUT_REDIRECT_URL = '/account/login/'
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = os.environ.get(
+    'SOCIAL_AUTH_POSTGRES_JSONFIELD', 'False') == 'True'
+SOCIAL_AUTH_URL_NAMESPACE = 'account:social'
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    # 'social_core.pipeline.user.user_details', # disabled, so it won't override user's changed profile
+)
 
 # Social Auth: Github
 SOCIAL_AUTH_GITHUB_KEY = os.environ.get('SOCIAL_AUTH_GITHUB_KEY')
 SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('SOCIAL_AUTH_GITHUB_SECRET')
 SOCIAL_AUTH_GITHUB_SCOPE = ['read:user', 'user:email']
+
+# Social Auth: Google
+SOCIAL_AUTH_GOOGLE_OAUTH_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH_SECRET = os.environ.get(
+    'SOCIAL_AUTH_GOOGLE_OAUTH_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+]
+
+# Social Auth: Facebook
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email'
+}
+SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.10'
 
 try:
     from upkoding.local_settings import *

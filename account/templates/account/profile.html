@@ -3,17 +3,23 @@
 {% block form %}
 <form method="POST">
     {% csrf_token %}
-    <div class="mb-3">
+    <div class="mb-4">
         <label for="username" class="form-label">{{ form.username.label }}</label>
         {{ form.username }}
         {% if form.username.help_text %}<div class="form-text">{{ form.username.help_text }}</div>{% endif %}
+        <div class="invalid-feedback">
+            {{ form.errors.username }}
+        </div>
     </div>
-    <div class="mb-3">
+    <div class="mb-4">
         <label for="first_name" class="form-label">{{ form.first_name.label }}</label>
         {{ form.first_name }}
         {% if form.first_name.help_text %}<div class="form-text">{{ form.first_name.help_text }}</div>{% endif %}
+        <div class="invalid-feedback">
+            {{ form.errors.first_name }}
+        </div>
     </div>
-    <div class="mb-3">
+    <div class="mb-4">
         <label for="last_name" class="form-label">{{ form.last_name.label }}</label>
         {{ form.last_name }}
         {% if form.last_name.help_text %}<div class="form-text">{{ form.last_name.help_text }}</div>{% endif %}

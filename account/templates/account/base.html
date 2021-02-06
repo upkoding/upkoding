@@ -4,10 +4,15 @@
 {% block header_mb %}mb-5{% endblock %}
 
 {% block content %}
-{% include 'website/_messages.html' %}
-{% include 'account/_tabs.html' %}
-
-{% block form %}
-{% endblock %}
+<div class="card">
+    <div class="card-header">
+        {% include 'account/_tabs.html' %}
+    </div>
+    <div class="card-body" style="padding: 2rem;">
+        {% include 'website/_messages.html' %}
+        {% block form %}
+        {% endblock %}
+    </div>
+</div>
 
 {% endblock %}
