@@ -9,7 +9,7 @@
     <meta name="description" content="Sumber informasi belajar pemrograman">
     <meta name="author" content="Eka Putra">
     <meta name="generator" content="UpKoding">
-    <title>{% block title %}UpKoding{% endblock %} | Sumber informasi belajar pemrograman berbahasa Indonesia
+    <title>{% block title %}UpKoding{% endblock %} | Belajar Coding Menyenangkan!
     </title>
     <meta name="google-site-verification" content="TODO" />
     <meta property="og:title" content="{{ TODO }}" />
@@ -55,9 +55,13 @@
                             style="font-size: 12px; position: absolute; top: 10px; right: -50px">BETA</span></h3>
                 </a>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link {% active_class 'website:about' %}" href="{% url 'website:about' %}">Tentang</a>
+                    <a class="nav-link {% active_class 'website:proyek' %}" href="{% url 'website:proyek' %}">Proyek</a>
+                    <a class="nav-link {% active_class 'website:coders' %}" href="{% url 'website:coders' %}">Coders</a>
+                    <a class="nav-link {% active_class 'website:forum' %}" href="{% url 'website:forum' %}">Diskusi</a>
+                    <a class="nav-link {% active_class 'website:tentang' %}"
+                        href="{% url 'website:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
-                    <a class="nav-link {% active_class '/account/*' %}" href="{% url 'account:profile' %}">Profile</a>
+                    <a class="nav-link {% active_class '/account/*' %}" href="{% url 'account:profile' %}">Akun</a>
                     <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
                     {% else %}
                     <a class="nav-link {% active_class 'account:login' %}" href="{% url 'account:login' %}">Login</a>
@@ -71,7 +75,14 @@
         </main>
 
         <footer class="mt-auto text-center">
-            <p style="color: grey;">Powered by <a href="https://github.com/upkoding/upkoding"
+            <nav class="nav nav-masthead justify-content-center">
+                <a class="nav-link" href="{% url 'website:proyek' %}">Proyek</a>
+                <a class="nav-link" href="{% url 'website:coders' %}">Coders</a>
+                <a class="nav-link" href="{% url 'website:forum' %}">Diskusi</a>
+                <a class="nav-link" href="{% url 'website:tentang' %}">Tentang</a>
+            </nav>
+
+            <p style="color: grey; margin-top: 1em;">Powered by <a href="https://github.com/upkoding/upkoding"
                     target="_blank">upkoding</a>
                 {% if user.is_authenticated and user.is_staff %}
                 | <a href="{% url 'admin:index' %}">Admin Area</a>

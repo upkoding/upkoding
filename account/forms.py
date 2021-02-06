@@ -23,6 +23,9 @@ class ProfileForm(forms.ModelForm):
                              widget=forms.TextInput(
                                    attrs={'class': 'form-control'}),
                              help_text="Karakter yang diperbolehkan: huruf, angka dan _ (underscore)")
+    email = forms.EmailField(required=True,
+                             label='Alamat Email *',
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(required=True,
                                  label='Nama Depan *',
                                  widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -32,7 +35,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name']
+        fields = ['username', 'email', 'first_name', 'last_name']
 
     def is_valid(self):
         """

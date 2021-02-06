@@ -12,6 +12,14 @@
         </div>
     </div>
     <div class="mb-4">
+        <label for="email" class="form-label">{{ form.email.label }}</label>
+        {{ form.email }}
+        {% if form.email.help_text %}<div class="form-text">{{ form.email.help_text }}</div>{% endif %}
+        <div class="invalid-feedback">
+            {{ form.errors.email }}
+        </div>
+    </div>
+    <div class="mb-4">
         <label for="first_name" class="form-label">{{ form.first_name.label }}</label>
         {{ form.first_name }}
         {% if form.first_name.help_text %}<div class="form-text">{{ form.first_name.help_text }}</div>{% endif %}
