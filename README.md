@@ -1,2 +1,2 @@
 # upkoding
-Kode sumber untuk website UpKoding.com
+Kode sumber untuk base UpKoding.com

@@ -35,7 +35,7 @@ AUTH_USER_MODEL = 'account.User'
 
 INSTALLED_APPS = [
     'account.apps.AccountConfig',
-    'website.apps.WebsiteConfig',
+    'base.apps.BaseConfig',
     'social_django',
     'django.contrib.admin',
     'django.contrib.auth',

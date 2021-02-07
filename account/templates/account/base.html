@@ -1,4 +1,4 @@
-{% extends 'website/base.html' %}
+{% extends 'base/base.html' %}
 
 {% block title %}Profile{% endblock %}
 {% block header_mb %}mb-5{% endblock %}
@@ -9,7 +9,7 @@
         {% include 'account/_tabs.html' %}
     </div>
     <div class="card-body" style="padding: 2rem;">
-        {% include 'website/_messages.html' %}
+        {% include 'base/_messages.html' %}
         {% block form %}
         {% endblock %}
     </div>
