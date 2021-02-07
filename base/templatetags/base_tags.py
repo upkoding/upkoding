@@ -20,4 +20,5 @@ def active_class(context, namespace_or_path, classname="active"):
             return classname if path.startswith(namespace_or_path.replace('*', '')) else ''
         return classname if path == namespace_or_path else ''
 
-    return classname if path.startswith(reverse(namespace_or_path)) else ''
+    # it must be a namespace because `namespace_or_path` doesn't contains `/`
+    return classname if path == reverse(namespace_or_path) else ''
