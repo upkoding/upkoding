@@ -2,12 +2,25 @@
 {% load base_tags %}
 
 {% block form %}
-<div class="text-center">
-    {{ user|avatar_img }}
-</div>
-
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+
+    <div class="mb-4 text-center">
+        {{ user|avatar_img }}
+        <br>
+
+        {% if user.avatar %}
+        <input type="checkbox" name="avatar-clear" id="avatar-clear"/> <label for="avatar-clear">Hapus avatar</label>
+        {% else %}
+        <input type="file" name="avatar" accept="image/*">
+        {% if form.errors.avatar %}
+        <div class="invalid-feedback">
+            {{ form.errors.avatar }}
+        </div>
+        {% endif %}
+        {% endif %}
+
+    </div>
     <div class="mb-4">
         <label for="username" class="form-label">{{ form.username.label }}</label>
         {{ form.username }}

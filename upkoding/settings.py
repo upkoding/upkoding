@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'base.apps.BaseConfig',
     'social_django',
+    'sorl.thumbnail',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,6 +138,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+THUMBNAIL_FORCE_OVERWRITE = True
 
 LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -154,7 +159,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     # 'social_core.pipeline.social_auth.associate_by_email',
-    # 'social_core.pipeline.user.user_details', # disabled, so it won't override user's changed profile
+    'social_core.pipeline.user.user_details', # disabled, so it won't override user's changed profile
 )
 
 # Social Auth: Github
