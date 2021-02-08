@@ -10,14 +10,9 @@
         <br>
 
         {% if user.avatar %}
-        <input type="checkbox" name="avatar-clear" id="avatar-clear"/> <label for="avatar-clear">Hapus avatar</label>
+        <input type="checkbox" name="avatar-clear" id="avatar-clear" /> <label for="avatar-clear">Hapus avatar</label>
         {% else %}
-        <input type="file" name="avatar" accept="image/*">
-        {% if form.errors.avatar %}
-        <div class="invalid-feedback">
-            {{ form.errors.avatar }}
-        </div>
-        {% endif %}
+        <input type="file" name="avatar" id="avatar" accept="image/*" class="file-input">
         {% endif %}
 
     </div>

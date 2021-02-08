@@ -43,3 +43,12 @@ a {
 .nav-masthead .active {
     border-bottom-color: rgba(0, 0, 0, .25);
 }
+
+/* File Input */
+.file-input {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    width: 250px;
+    padding: 10px;
+    border-radius: 5px;
+}
