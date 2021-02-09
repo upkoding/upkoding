@@ -5,12 +5,14 @@ from django.contrib import auth
 from django.contrib.auth import views, forms
 from django.contrib import messages
 from django.views.generic import TemplateView, UpdateView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import User
 from .forms import ProfileForm
 
 
-class LoginView(TemplateView):
+class LoginView(views.LoginView):
     template_name = 'account/login.html'
 
 
@@ -25,7 +27,7 @@ class LogoutView(views.LogoutView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ProfileView(UpdateView):
+class ProfileView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = ProfileForm
     template_name = 'account/profile.html'
@@ -40,9 +42,11 @@ class ProfileView(UpdateView):
         return super().form_valid(form)
 
 
+@login_required
 def authentication(request):
     return render(request, 'account/authentication.html')
 
 
+@login_required
 def settings(request):
     return render(request, 'account/settings.html')

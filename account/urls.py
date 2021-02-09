@@ -10,5 +10,6 @@ urlpatterns = [
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('authentication/', views.authentication, name='auth'),
     path('settings/', views.settings, name='settings'),
-    path('', include('social_django.urls', namespace='social')), # complete namespace: account:social
+    # complete namespace: account:social
+    path('', include('social_django.urls', namespace='social')),
 ]

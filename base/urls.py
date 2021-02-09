@@ -2,13 +2,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
 
-from . import views
+from .views import render_template
 
 app_name = 'base'
-
-
-def render_template(name):
-    return TemplateView.as_view(template_name=name)
 
 
 urlpatterns = [

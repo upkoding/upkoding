@@ -20,6 +20,7 @@ def avatar_path(instance, filename):
 
 
 class User(AbstractUser):
+    date_modified = models.DateTimeField(auto_now=True)
     avatar = ImageField(
         upload_to=avatar_path,
         blank=True,
