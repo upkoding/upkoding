@@ -36,6 +36,7 @@ AUTH_USER_MODEL = 'account.User'
 INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'base.apps.BaseConfig',
+    'projects.apps.ProjectsConfig',
     'social_django',
     'sorl.thumbnail',
 
