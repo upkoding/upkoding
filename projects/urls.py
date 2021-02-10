@@ -5,7 +5,6 @@ from . import views
 app_name = 'projects'
 
 urlpatterns = [
+    path('<slug:slug>-<int:pk>/', views.ProjectDetail.as_view(), name='detail'),
     path('', views.ProjectList.as_view(), name='list'),
-    path('<int:pk>/<slug:slug>/', views.ProjectDetail.as_view(), name='detail'),
-    path('<int:pk>/', views.ProjectDetail.as_view(), name='detail-redirect'),
 ]
