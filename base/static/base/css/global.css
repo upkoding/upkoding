@@ -2,14 +2,21 @@
  * Base structure
  */
 
+ .custom-container {
+    max-width: 70em;
+}
+
 a {
     text-decoration: none;
 }
 
-.cover-container {
-    max-width: 50em;
+a.link-card h5 {
+    color: #212529 !important;
 }
 
+a.link-card p {
+    color: #212529 !important;
+}
 
 /*
  * Header

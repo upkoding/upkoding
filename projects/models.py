@@ -1,5 +1,7 @@
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.utils.timezone import now
+from django.urls import reverse
 
 from sorl.thumbnail import ImageField
 from account.models import User
@@ -7,11 +9,11 @@ from account.models import User
 
 def cover_path(instance, filename):
     """
-    Custom cover path: projects/cover123-12345678.png
+    Custom cover path: projects/cover/hello-world-12345678.png
     """
-    return 'projects/cover{}-{}.{}'.format(
-        instance.id,
-        int(instance.created.timestamp()),
+    return 'projects/cover/{}-{}.{}'.format(
+        instance.slug,
+        int(now().timestamp()),
         filename.split('.')[-1]
     )
 
@@ -53,3 +55,6 @@ class Project(models.Model):
                 tag.strip().lower()
                 for tag in self.tags.split(',')])
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('projects:detail', args=[str(self.pk), self.slug])

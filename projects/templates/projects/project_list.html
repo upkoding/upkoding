@@ -1,0 +1,35 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Semua Proyek{% endblock %}
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center text-center">
+        <div class="col col-lg-8">
+            <h1 class="display-6">Semua Proyek</h1>
+            <p class="lead" style="margin-top: 1rem; margin-bottom: 4rem;">Tantang dirimu dengan membuat ide-ide proyek
+                berikut menjadi kenyataan dan raih poin
+                berdasarkan
+                tingkat kesulitannya.</p>
+        </div>
+    </div>
+    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
+        {% if object_list %}
+        {% for project in object_list %}
+        <a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}">
+            <div class="col">
+                <div class="card">
+                    <img src="https://picsum.photos/640/360" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title|title }}</h5>
+                        <p class="card-text">{{ project.description|truncatechars:65 }}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

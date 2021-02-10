@@ -47,7 +47,7 @@
 </head>
 
 <body class="d-flex h-100">
-    <div class="cover-container w-100 h-100 p-3 mx-auto flex-column d-flex">
+    <div class="custom-container w-100 h-100 p-3 mx-auto flex-column d-flex">
         <header class="{% block header_mb %}mb-auto{% endblock%}">
             <div>
                 <a href="{% url 'base:index' %}" class="logo">
@@ -55,7 +55,7 @@
                             style="font-size: 12px; position: absolute; top: 10px; right: -50px">BETA</span></h3>
                 </a>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link {% active_class 'base:proyek' %}" href="{% url 'base:proyek' %}">Proyek</a>
+                    <a class="nav-link {% active_class 'projects:list' %}" href="{% url 'projects:list' %}">Proyek</a>
                     <a class="nav-link {% active_class 'base:coders' %}" href="{% url 'base:coders' %}">Coders</a>
                     <a class="nav-link {% active_class 'base:forum' %}" href="{% url 'base:forum' %}">Diskusi</a>
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
@@ -75,7 +75,7 @@
 
         <footer class="mt-auto text-center" style="padding-top: 30px;">
             <nav class="nav nav-masthead justify-content-center">
-                <a class="nav-link" href="{% url 'base:proyek' %}">Proyek</a>
+                <a class="nav-link" href="{% url 'projects:list' %}">Proyek</a>
                 <a class="nav-link" href="{% url 'base:coders' %}">Coders</a>
                 <a class="nav-link" href="{% url 'base:forum' %}">Diskusi</a>
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
