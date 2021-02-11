@@ -1,37 +1,96 @@
 {% extends 'base/base.html' %}
 
 {% block title %}{{ object.title }}{% endblock %}
-{% block header_mb %}mb-5{% endblock %}
+{% block header_mb %}mb-4{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-md-center text-center">
-        <div class="col col-lg-8">
-            <h1 class="display-6">{{ object.title|title }}</h1>
-            <p class="lead" style="margin-top: 1rem; margin-bottom: 4rem;">Tantang dirimu dengan membuat ide-ide proyek
+{% load martortags %}
+<div class="project-detail">
+    <div class="row justify-content-md-center header" {% if object.cover %}
+        style="background-image: url({{ object.cover.url }});" {% endif %}>
+        <div class="col col-lg-8 left">
+            <h1 class="display-5">{{ object.title|title }}</h1>
+        </div>
+        <div class="col col-lg-4 right text-center">
+            <p style="font-size: 35px; font-weight: 300;">100 Point</p>
+            <div class="d-grid mt-4">
+                <button type="button" class="btn btn-primary btn-lg">Kerjakan <i class="bi bi-arrow-right"></i></button>
+            </div>
+            <div class="row mt-4">
+                <div class="col col-6">
+                    <a href=""><i class="bi bi-share-fill mr-5"></i> Bagikan</a>
+                </div>
+                <div class="col col-6">
+                    <a href=""><i class="bi bi-bookmark-plus-fill mr-5"></i> Simpan</a>
+                </div>
+            </div>
+        </div>
+        <div class="overlay"></div>
+    </div>
+    <div class="row mt-3 content">
+        <div class="col col-lg-8 left">
+            <div class="description">
+                {{ object.description|safe_markdown }}
+            </div>
+
+            <h3 class="section-title mt-5 mb-3"><i class="bi bi-card-checklist mr-10"></i>Tasks</h3>
+
+            <div class="list-group requirements">
+                <div class="list-group-item list-group-item-action" aria-current="true">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1"><i class="bi bi-code mr-10"></i>
+                            Buat akun di Github</h6>
+                    </div>
+                    <small class="help">Just writing this will help you reacquaint yourself with the person you are at
+                        your core</small>
+                </div>
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1"><i class="bi bi-code mr-10"></i> Buat akun di Gitlab</h6>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1"><i class="bi bi-code mr-10"></i> Buat akun di BitBucket</h6>
+                    </div>
+                    <small class="help">And some small print.</small>
+                </div>
+            </div>
+
+            <h3 class="section-title mt-5 mb-3"><i class="bi bi-chat-square-quote mr-10"></i>Diskusi tentang proyek ini
+            </h3>
+
+            <div class="list-group requirements">
+                <div class="list-group-item list-group-item-action" aria-current="true">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1"><i class="bi bi-person-square mr-10"></i>
+
+                            Buat akun di Github</h6>
+                    </div>
+                    <small class="help">Just writing this will help you reacquaint yourself with the person you are at
+                        your core</small>
+                </div>
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1"><i class="bi bi-person-square mr-10"></i>
+                            Buat akun di Gitlab</h6>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1"><i class="bi bi-person-square mr-10"></i>
+                            Buat akun di BitBucket</h6>
+                    </div>
+                    <small class="help">And some small print.</small>
+                </div>
+            </div>
+        </div>
+        <div class="col col-lg-4 right">
+            <p class="lead">Tantang dirimu dengan membuat ide-ide proyek
                 berikut menjadi kenyataan dan raih poin
                 berdasarkan
                 tingkat kesulitannya.</p>
         </div>
-    </div>
-    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-2 g-lg-3">
-        {% if object_list %}
-        {% for project in object_list %}
-        <a href="{{ project.get_absolute_url }}" class="link-card">
-            <div class="col">
-                <div class="p-3">
-                    <div class="card">
-                        <img src="https://picsum.photos/640/360" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ project.title|title }}</h5>
-                            <p class="card-text">{{ project.description|truncatechars:120 }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-        {% endif %}
     </div>
 </div>
 {% endblock %}

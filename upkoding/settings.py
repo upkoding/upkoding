@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'social_django',
     'sorl.thumbnail',
+    'martor',
 
     'django.contrib.admin',
     'django.contrib.auth',

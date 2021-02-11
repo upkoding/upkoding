@@ -2,8 +2,8 @@
  * Base structure
  */
 
- .custom-container {
-    max-width: 70em;
+.custom-container {
+    max-width: 65em;
 }
 
 a {
@@ -16,6 +16,14 @@ a.link-card h5 {
 
 a.link-card p {
     color: #212529 !important;
+}
+
+i.bi.mr-5 {
+    margin-right: 5px;
+}
+
+i.bi.mr-10 {
+    margin-right: 10px;
 }
 
 /*
@@ -58,4 +66,85 @@ a.link-card p {
     width: 250px;
     padding: 10px;
     border-radius: 5px;
+}
+
+/* project detail */
+.project-detail .header {
+    padding-top: 2em;
+    padding-bottom: 2em;
+    height: 250px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    border-radius: 5px;
+    position: relative;
+}
+
+.project-detail .header .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+.project-detail .header .left {
+    border-right: 1px solid #999;
+    padding-right: 40px;
+    padding-left: 40px;
+    z-index: 10;
+}
+
+.project-detail .header .right {
+    padding-left: 40px;
+    padding-right: 30px;
+    z-index: 10;
+}
+
+.project-detail .header a {
+    color: #ddd;
+}
+
+.project-detail .header a:hover {
+    color: white
+}
+
+.project-detail .content .left,
+.project-detail .content .right {
+    padding-top: 30px;
+}
+
+.project-detail .content .left {
+    border-right: 1px solid #eee;
+    padding-right: 30px;
+}
+
+.project-detail .content .left p,
+.project-detail .content .left li {
+    font-size: 17px;
+    font-weight: 300;
+}
+
+.project-detail .content .right {
+    padding-left: 40px;
+}
+
+.section-title {
+    font-size: 20px;
+}
+
+.requirements .list-group-item {
+    padding: 15px 20px;
+}
+
+.requirements .list-group-item .help {
+    margin-left: 30px;
+    color: rgba(0, 0, 0, 0.5);
 }
