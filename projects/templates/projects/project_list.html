@@ -4,6 +4,7 @@
 {% block header_mb %}mb-5{% endblock %}
 
 {% block content %}
+{% load sorl_thumbnail %}
 <div class="container">
     <div class="row justify-content-md-center text-center">
         <div class="col col-lg-8">
@@ -20,7 +21,10 @@
         <a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}">
             <div class="col">
                 <div class="card">
-                    <img src="https://picsum.photos/640/360" class="card-img-top" alt="...">
+                    <span class="badge bg-primary" style="position: absolute; top: 10px; right: 10px;">100 poin</span>
+                    {% thumbnail project.cover "640x360" crop="center" as im %}
+                    <img src="{{ im.url }}" class="card-img-top" style="min-height: 150px;">
+                    {% endthumbnail %}
                     <div class="card-body">
                         <h5 class="card-title">{{ project.title|title }}</h5>
                         <p class="card-text">{{ project.description|truncatechars:65 }}</p>

@@ -132,19 +132,50 @@ i.bi.mr-10 {
     font-weight: 300;
 }
 
+.project-detail .section-title {
+    font-size: 20px;
+}
+
+.project-detail .requirements .list-group-item {
+    padding: 15px 20px;
+}
+
+.project-detail .requirements .list-group-item .help {
+    margin-left: 30px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
 .project-detail .content .right {
     padding-left: 40px;
 }
 
-.section-title {
-    font-size: 20px;
+.project-detail .content .user-progress a .card {
+    border: none;
 }
 
-.requirements .list-group-item {
-    padding: 15px 20px;
+.project-detail .content .user-progress a .card .card-body {
+    color: #212529
 }
 
-.requirements .list-group-item .help {
-    margin-left: 30px;
-    color: rgba(0, 0, 0, 0.5);
+.project-detail .content .user-progress a .card .card-body {
+    padding: 15px 0;
+}
+
+.project-detail .content .user-progress a .card .card-body small {
+    font-weight: 300;
+    color: grey;
+    margin-left: 3px;
+}
+
+.project-detail .content .user-progress a .card .card-body img {
+    width: 25px;
+    height: 25px;
+    margin-right: 8px
+}
+
+.project-detail .content .user-progress a .card .card-body .progress {
+    position: relative;
+    margin-left: 34px;
+    margin-top: -3px;
+    height: 6px;
 }
