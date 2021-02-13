@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib import auth
 from django.contrib.auth import views, forms
 from django.contrib import messages
@@ -14,6 +14,11 @@ from .forms import ProfileForm
 
 class LoginView(views.LoginView):
     template_name = 'account/login.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('base:index'))
+        return super().dispatch(request, *args, **kwargs)
 
 
 class LogoutView(views.LogoutView):

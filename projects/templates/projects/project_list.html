@@ -21,13 +21,14 @@
         <a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}">
             <div class="col">
                 <div class="card">
-                    <span class="badge bg-primary" style="position: absolute; top: 10px; right: 10px;">100 poin</span>
+                    <span class="badge bg-primary" style="position: absolute; top: 10px; right: 10px; z-index: 99;">100
+                        poin</span>
                     {% thumbnail project.cover "640x360" crop="center" as im %}
-                    <img src="{{ im.url }}" class="card-img-top" style="min-height: 150px;">
+                    <img src="{{ im.url }}" class="card-img-top ratio ratio-16x9">
                     {% endthumbnail %}
                     <div class="card-body">
                         <h5 class="card-title">{{ project.title|title }}</h5>
-                        <p class="card-text">{{ project.description|truncatechars:65 }}</p>
+                        <p class="card-text">{{ project.description_short|truncatechars:65 }}</p>
                     </div>
                 </div>
             </div>

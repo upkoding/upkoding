@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'base.apps.BaseConfig',
     'projects.apps.ProjectsConfig',
+    'coders.apps.CodersConfig',
+
     'social_django',
     'sorl.thumbnail',
     'martor',

@@ -26,6 +26,8 @@ class Project(models.Model):
         related_name='projects')
     slug = models.SlugField(max_length=150, blank=True)
     title = models.CharField('Judul', max_length=100)
+    description_short = models.CharField(
+        'Deskripsi Pendek', max_length=100, default='')
     description = models.TextField('Deskripsi')
     requirements = models.JSONField('Requirements', blank=True, null=True)
     cover = ImageField(

@@ -8,11 +8,11 @@ from .models import Project
 
 
 class ProjectList(ListView):
-    queryset = Project.objects.all()
+    queryset = Project.objects.filter(is_active=True)
 
 
 class ProjectDetail(DetailView):
-    queryset = Project.objects.all()
+    queryset = Project.objects.filter(is_active=True)
 
     def get_object(self):
         """
@@ -21,12 +21,13 @@ class ProjectDetail(DetailView):
         return get_object_or_404(
             Project,
             pk=self.kwargs.get('pk'),
-            slug=self.kwargs.get('slug')
+            slug=self.kwargs.get('slug'),
+            is_active=True
         )
 
 
 class ProjectDetailUser(DetailView):
-    queryset = Project.objects.all()
+    queryset = Project.objects.filter(is_active=True)
     template_name = 'projects/project_detail_user.html'
 
     def get_object(self):
@@ -36,7 +37,8 @@ class ProjectDetailUser(DetailView):
         return get_object_or_404(
             Project,
             pk=self.kwargs.get('pk'),
-            slug=self.kwargs.get('slug')
+            slug=self.kwargs.get('slug'),
+            is_active=True
         )
 
     def get_context_data(self, **kwargs):

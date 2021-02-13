@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Para Coders{% endblock %}
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
+{% load sorl_thumbnail %}
+{% load base %}
+<div class="container">
+    <div class="row justify-content-md-center text-center">
+        <div class="col col-lg-8">
+            <h1 class="display-6">Para Coders</h1>
+            <p class="lead" style="margin-top: 1rem; margin-bottom: 4rem;">UpKoding adalah platform dari coders untuk
+                para coders, belajar bersama dan berbagi. Belum punya akun? yuk <a
+                    href="{% url 'account:login' %}">daftar disini</a>.</p>
+        </div>
+    </div>
+    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
+        {% if object_list %}
+        {% for coder in object_list %}
+        <a href="{{ coder.get_absolute_url }}" class="link-card" title="{{ coder.get_display_name }}">
+            <div class="col">
+                <div class="card">
+                    <span class="badge bg-primary" style="position: absolute; top: 10px; left: 10px; z-index: 99;">
+                        {{ coder.username }}
+                    </span>
+                    <span class="badge bg-success" style="position: absolute; top: 10px; right: 10px; z-index: 99;">100
+                        poin</span>
+                    {% thumbnail coder.avatar "640x360" crop="center" as im %}
+                    <img src="{{ im.url }}" class="card-img-top ratio ratio-16x9">
+                    {% endthumbnail %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ coder.get_display_name|title }}</h5>
+                        <p class="card-text">{{ coder.description|truncatechars:65 }}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

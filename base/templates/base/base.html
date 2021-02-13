@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" class="h-100">
 {% load static %}
-{% load base_tags %}
+{% load base %}
 
 <head>
     <meta charset="utf-8">
@@ -56,7 +56,7 @@
                 </a>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}">Proyek</a>
-                    <a class="nav-link {% active_class 'base:coders' %}" href="{% url 'base:coders' %}">Coders</a>
+                    <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Coders</a>
                     <a class="nav-link {% active_class 'base:forum' %}" href="{% url 'base:forum' %}">Diskusi</a>
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
@@ -76,7 +76,7 @@
         <footer class="mt-auto text-center" style="padding-top: 50px;">
             <nav class="nav nav-masthead justify-content-center">
                 <a class="nav-link" href="{% url 'projects:list' %}">Proyek</a>
-                <a class="nav-link" href="{% url 'base:coders' %}">Coders</a>
+                <a class="nav-link" href="{% url 'coders:list' %}">Coders</a>
                 <a class="nav-link" href="{% url 'base:forum' %}">Diskusi</a>
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
             </nav>

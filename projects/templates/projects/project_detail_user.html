@@ -6,7 +6,7 @@
 {% block content %}
 {% load martortags %}
 {% load sorl_thumbnail %}
-{% load base_tags %}
+{% load base %}
 <div class="project-detail">
     {% thumbnail object.cover "960x540" crop="center" as im %}
     <div class="row justify-content-md-center header" style="background-image: url({{ im.url }});">

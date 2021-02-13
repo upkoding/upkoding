@@ -1,5 +1,6 @@
 import hashlib
 import urllib
+from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.templatetags.static import static
@@ -27,6 +28,8 @@ class User(AbstractUser):
         null=True,
         default=None
     )
+    point = models.IntegerField(default=0)
+    description = models.TextField(blank=True, null=True, default='')
 
     def avatar_url(self, size=100):
         """
@@ -35,3 +38,11 @@ class User(AbstractUser):
         if self.avatar:
             return get_thumbnail(self.avatar, '{}x{}'.format(size, size), crop='center', quality=99).url
         return 'https://www.gravatar.com/avatar/{}?d=retro&f=y&s={}'.format(self.id, size)
+
+    def get_absolute_url(self):
+        return reverse('coders:detail', args=[self.username])
+
+    def get_display_name(self):
+        if not self.first_name and not self.last_name:
+            return self.username
+        return '{} {}'.format(self.first_name, self.last_name)
