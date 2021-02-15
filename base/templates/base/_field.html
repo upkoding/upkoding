@@ -1,0 +1,11 @@
+{% load base %}
+<div class="{{ classes }}">
+    <label for="{{ field.name }}" class="form-label">{{ field.label }}</label>
+    {{ field|input_class:'form-control' }}
+    {% if field.help_text %}
+    <div class="form-text">{{ field.help_text }}</div>
+    {% endif %}
+    <div class="invalid-feedback">
+        {{ field.errors }}
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="card mt-4">
+    <div class="card-header">
+        <i class="bi bi-link-45deg me-2"></i>Links
+    </div>
+    <div class="card-body p-4">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="kind" value="link" />
+            {% for field in form.visible_fields %}
+            {% include 'base/_field.html' with field=field classes='mb-3' %}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>

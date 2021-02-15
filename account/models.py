@@ -43,6 +43,27 @@ class User(AbstractUser):
         return reverse('coders:detail', args=[self.username])
 
     def get_display_name(self):
-        if not self.first_name and not self.last_name:
-            return self.username
-        return '{} {}'.format(self.first_name, self.last_name)
+        return self.user if not self.first_name else self.first_name
+
+
+class Link(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='link')
+    github = models.CharField(
+        'Github', max_length=200, blank=True, null=True)
+    gitlab = models.CharField(
+        'GitLab', max_length=200, blank=True, null=True)
+    bitbucket = models.CharField(
+        'Bitbucket', max_length=200, blank=True, null=True)
+    linkedin = models.CharField(
+        'LinkedIn', max_length=200, blank=True, null=True)
+    facebook = models.CharField(
+        'Facebook', max_length=200, blank=True, null=True)
+    twitter = models.CharField(
+        'Twitter', max_length=200, blank=True, null=True)
+    youtube = models.CharField(
+        'Youtube', max_length=200, blank=True, null=True)
+    website = models.CharField(
+        'Website', max_length=200, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)

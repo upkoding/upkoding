@@ -1,0 +1,31 @@
+{% load sorl_thumbnail %}
+{% load base %}
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-person-fill me-2"></i>Profil
+    </div>
+    <div class="card-body p-4">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="kind" value="profile" />
+            <div class="mb-4 text-center">
+                {{ user|avatar_img:200 }}
+                <br>
+
+                {% if user.avatar %}
+                <input type="checkbox" name="avatar-clear" id="avatar-clear" /> <label for="avatar-clear">Hapus
+                    avatar</label>
+                {% else %}
+                <input type="file" name="avatar" id="avatar" accept="image/*" class="file-input">
+                {% endif %}
+            </div>
+
+            {% for field in form.visible_fields %}
+            {% if field.name != 'avatar' %}
+            {% include 'base/_field.html' with field=field classes='mb-4' %}
+            {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+</div>

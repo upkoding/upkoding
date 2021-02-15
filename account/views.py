@@ -4,12 +4,12 @@ from django.urls import reverse, reverse_lazy
 from django.contrib import auth
 from django.contrib.auth import views, forms
 from django.contrib import messages
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import TemplateView, UpdateView, View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import User
-from .forms import ProfileForm
+from .models import User, Link
+from .forms import ProfileForm, LinkForm
 
 
 class LoginView(views.LoginView):
@@ -32,26 +32,49 @@ class LogoutView(views.LogoutView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class ProfileView(LoginRequiredMixin, UpdateView):
-    model = User
-    form_class = ProfileForm
-    template_name = 'account/profile.html'
-    success_url = reverse_lazy('account:profile')
+class SettingsView(LoginRequiredMixin, View):
 
-    def get_object(self):
-        return self.request.user
+    def __get_link(self, user):
+        try:
+            return user.link
+        except Link.DoesNotExist:
+            return None
 
-    def form_valid(self, form):
-        messages.info(self.request, 'Profile berhasil disimpan!',
-                      extra_tags='success')
-        return super().form_valid(form)
+    def __render(self, request, profile_form, link_form):
+        return render(request, 'account/settings.html', {
+            'profile_form': profile_form,
+            'link_form': link_form
+        })
 
+    def get(self, request):
+        user = request.user
+        profile_form = ProfileForm(instance=user)
+        link_form = LinkForm(user, instance=self.__get_link(user))
+        return self.__render(request, profile_form, link_form)
 
-@login_required
-def authentication(request):
-    return render(request, 'account/authentication.html')
+    def post(self, request):
+        user = request.user
+        kind = request.POST.get('kind')
 
+        if kind == 'profile':
+            form = ProfileForm(
+                request.POST, request.FILES, instance=request.user)
+            if not form.is_valid():
+                link_form = LinkForm(user, instance=self.__get_link(user))
+                return self.__render(request, form, link_form)
 
-@login_required
-def settings(request):
-    return render(request, 'account/settings.html')
+            form.save()
+            messages.info(self.request, 'Profile berhasil diupdate!',
+                          extra_tags='success')
+
+        if kind == 'link':
+            form = LinkForm(user, request.POST, instance=self.__get_link(user))
+            if not form.is_valid():
+                profile_form = ProfileForm(instance=user)
+                return self.__render(request, profile_form, form)
+
+            form.save()
+            messages.info(self.request, 'Links berhasil diupdate!',
+                          extra_tags='success')
+
+        return HttpResponseRedirect(reverse('account:settings'))

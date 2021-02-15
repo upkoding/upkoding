@@ -1,0 +1,48 @@
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-shield-lock me-2"></i>Social Login
+    </div>
+    <div class="card-body p-4">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item ps-0 pe-0 d-flex justify-content-between">
+                <span class="lead"><i class="bi bi-github"></i> &nbsp; Github</span>
+                {% if 'github' in backends.not_associated %}
+                <a href="{% url 'account:social:begin' 'github' %}?next={% url 'account:settings' %}"
+                    class="btn btn-sm btn-outline-primary">Connect</a>
+                {% else %}
+                <form action="{% url 'account:social:disconnect' 'github' %}?next={% url 'account:settings' %}"
+                    method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Disconnect</button>
+                </form>
+                {% endif %}
+            </li>
+            <li class="list-group-item ps-0 pe-0 d-flex justify-content-between align-items-center">
+                <span class="lead"><i class="bi bi-google"></i> &nbsp; Google</span>
+                {% if 'google-oauth2' in backends.not_associated %}
+                <a href="{% url 'account:social:begin' 'google-oauth2' %}?next={% url 'account:settings' %}"
+                    class="btn btn-sm btn-outline-primary">Connect</a>
+                {% else %}
+                <form action="{% url 'account:social:disconnect' 'github' %}?next={% url 'account:settings' %}"
+                    method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Disconnect</button>
+                </form>
+                {% endif %}
+            </li>
+            <li class="list-group-item ps-0 pe-0 d-flex justify-content-between align-items-center">
+                <span class="lead"><i class="bi bi-facebook"></i> &nbsp; Facebook</span>
+                {% if 'facebook' in backends.not_associated %}
+                <a href="{% url 'account:social:begin' 'facebook' %}?next={% url 'account:settings' %}"
+                    class="btn btn-sm btn-outline-primary">Connect</a>
+                {% else %}
+                <form action="{% url 'account:social:disconnect' 'facebook' %}?next={% url 'account:settings' %}"
+                    method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Disconnect</button>
+                </form>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</div>

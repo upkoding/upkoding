@@ -49,3 +49,18 @@ def avatar_img(user, size=100):
     """
     url = avatar_url(user, size)
     return mark_safe('<img src="%s" height="%d" width="%d" class="rounded-circle" alt="%s\'s avatar">' % (url, size, size, user.first_name))
+
+
+@register.filter
+def input_class(obj, arg):
+    """
+    Inserts css classes to input field.
+    """
+    current_classes = obj.field.widget.attrs.get('class', '')
+    if current_classes:
+        current_classes = current_classes.split()
+    else:
+        current_classes = []
+    new_classes = arg.split()
+    final_classes = set(current_classes + new_classes)
+    return obj.as_widget(attrs={'class': ' '.join(final_classes)})
