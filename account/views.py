@@ -1,11 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
-from django.contrib import auth
-from django.contrib.auth import views, forms
+from django.urls import reverse
+from django.contrib.auth import views
 from django.contrib import messages
-from django.views.generic import TemplateView, UpdateView, View
-from django.contrib.auth.decorators import login_required
+from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import User, Link
