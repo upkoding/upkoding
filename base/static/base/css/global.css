@@ -3,19 +3,19 @@
  */
 
 .custom-container {
-    max-width: 65em;
+  max-width: 65em;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 a.link-card h5 {
-    color: #212529 !important;
+  color: #212529 !important;
 }
 
 a.link-card p {
-    color: #212529 !important;
+  color: #212529 !important;
 }
 
 /*
@@ -23,151 +23,161 @@ a.link-card p {
  */
 
 .logo {
-    color: rgba(0, 0, 0, .5);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .logo:hover {
-    color: rgba(0, 0, 0, .5);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .nav-masthead .nav-link {
-    padding: .25rem 0;
-    font-weight: 700;
-    color: rgba(0, 0, 0, .5);
-    background-color: transparent;
-    border-bottom: .25rem solid transparent;
+  padding: 0.25rem 0;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+  border-bottom: 0.25rem solid transparent;
 }
 
 .nav-masthead .nav-link:hover,
 .nav-masthead .nav-link:focus {
-    border-bottom-color: rgba(0, 0, 0, .25);
+  border-bottom-color: rgba(0, 0, 0, 0.25);
 }
 
-.nav-masthead .nav-link+.nav-link {
-    margin-left: 1rem;
+.nav-masthead .nav-link + .nav-link {
+  margin-left: 1rem;
 }
 
 .nav-masthead .active {
-    border-bottom-color: rgba(0, 0, 0, .25);
+  border-bottom-color: rgba(0, 0, 0, 0.25);
 }
 
 /* File Input */
 .file-input {
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    width: 250px;
-    padding: 10px;
-    border-radius: 5px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  width: 250px;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 /* project detail */
 .project-detail .header {
-    padding-top: 2em;
-    padding-bottom: 2em;
-    height: 250px;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: white;
-    border-radius: 5px;
-    position: relative;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  height: 250px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  border-radius: 5px;
+  position: relative;
 }
 
 .project-detail .header .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 1;
-    border-radius: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1;
+  border-radius: 5px;
 }
 
 .project-detail .header .left {
-    border-right: 1px solid #999;
-    padding-right: 40px;
-    padding-left: 40px;
-    z-index: 10;
+  border-right: 1px solid #999;
+  padding-right: 40px;
+  padding-left: 40px;
+  z-index: 10;
 }
 
 .project-detail .header .right {
-    padding-left: 40px;
-    padding-right: 30px;
-    z-index: 10;
+  padding-left: 40px;
+  padding-right: 30px;
+  z-index: 10;
 }
 
 .project-detail .header a {
-    color: #ddd;
+  color: #ddd;
 }
 
 .project-detail .header a:hover {
-    color: white
+  color: white;
 }
 
 .project-detail .content .left,
 .project-detail .content .right {
-    padding-top: 30px;
+  padding-top: 30px;
 }
 
 .project-detail .content .left {
-    border-right: 1px solid #eee;
-    padding-right: 30px;
+  border-right: 1px solid #eee;
+  padding-right: 30px;
 }
 
 .project-detail .content .left p,
 .project-detail .content .left li {
-    font-size: 17px;
-    font-weight: 300;
+  font-size: 17px;
+  font-weight: 300;
+}
+
+.project-detail .content .left li.list-group-item {
+  padding: 10px 0;
+}
+.project-detail .content .left li.list-group-item a {
+  color: #212529;
+}
+.project-detail .content .left li.list-group-item a:hover {
+  color: #0d6efd;
 }
 
 .project-detail .section-title {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 .project-detail .requirements .list-group-item {
-    padding: 15px 20px;
+  padding: 15px 20px;
 }
 
 .project-detail .requirements .list-group-item .help {
-    margin-left: 30px;
-    color: rgba(0, 0, 0, 0.5);
+  margin-left: 30px;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .project-detail .content .right {
-    padding-left: 40px;
+  padding-left: 40px;
 }
 
 .project-detail .content .user-progress a .card {
-    border: none;
+  border: none;
 }
 
 .project-detail .content .user-progress a .card .card-body {
-    color: #212529
+  color: #212529;
 }
 
 .project-detail .content .user-progress a .card .card-body {
-    padding: 15px 0;
+  padding: 15px 0;
 }
 
 .project-detail .content .user-progress a .card .card-body small {
-    font-weight: 300;
-    color: grey;
-    margin-left: 3px;
+  font-weight: 300;
+  color: grey;
+  margin-left: 3px;
 }
 
 .project-detail .content .user-progress a .card .card-body img {
-    width: 25px;
-    height: 25px;
-    margin-right: 8px
+  width: 25px;
+  height: 25px;
+  margin-right: 8px;
 }
 
 .project-detail .content .user-progress a .card .card-body .progress {
-    position: relative;
-    margin-left: 34px;
-    margin-top: -3px;
-    height: 6px;
+  position: relative;
+  margin-left: 34px;
+  margin-top: -3px;
+  height: 6px;
 }
