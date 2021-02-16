@@ -6,6 +6,7 @@
 {% block content %}
 {% load martortags %}
 {% load sorl_thumbnail %}
+{% load projects %}
 <div class="project-detail">
     {% thumbnail object.cover "960x540" crop="center" as im %}
     <div class="row justify-content-md-center header" style="background-image: url({{ im.url }});">
@@ -34,36 +35,13 @@
         <div class="col col-lg-8 left">
 
             <h3 class="section-title mb-3"><i class="bi bi-list-task me-2"></i>Requirements</h3>
-
-            <div class="list-group requirements">
-                <div class="list-group-item list-group-item-action" aria-current="true">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1"><i class="bi bi-code me-2"></i>
-                            Buat akun di Github</h6>
-                    </div>
-                    <small class="help">Just writing this will help you reacquaint yourself with the person you are at
-                        your core</small>
-                </div>
-                <div class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1"><i class="bi bi-code me-2"></i> Buat akun di Gitlab</h6>
-                    </div>
-                </div>
-                <div class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1"><i class="bi bi-code me-2"></i> Buat akun di BitBucket</h6>
-                    </div>
-                    <small class="help">And some small print.</small>
-                </div>
-            </div>
+            {% render_requirements object %}
 
             <div class="description mt-5">
-                <figure>
-                    <blockquote class="blockquote">
-                        <h5>{{ object.description_short }}</h5>
-                    </blockquote>
-                </figure>
-
+                <p class="lead ps-3 mb-4"
+                    style="font-size: 18px; color: rgba(0, 0, 0, 0.7); font-weight: 300; font-style: italic; border-left: 2px solid #ccc;">
+                    {{ object.description_short }}
+                </p>
                 {{ object.description|safe_markdown }}
             </div>
 
@@ -213,14 +191,7 @@
             </div>
 
             <h3 class="section-title mt-5 mb-3"><i class="bi bi-tag-fill me-2"></i>Tags</h3>
-            <div class="tags">
-                <a href=""><span class="badge bg-primary">python</span></a>
-                <a href=""><span class="badge bg-primary">django</span></a>
-                <a href=""><span class="badge bg-primary">git</span></a>
-                <a href=""><span class="badge bg-primary">github</span></a>
-                <a href=""><span class="badge bg-primary">gitlab</span></a>
-                <a href=""><span class="badge bg-primary">bitbucket</span></a>
-            </div>
+            {% render_tags project %}
         </div>
     </div>
 </div>

@@ -1,5 +1,3 @@
-import hashlib
-import urllib
 from django.utils.safestring import mark_safe
 from django import template
 from django.shortcuts import reverse

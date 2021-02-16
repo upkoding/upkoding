@@ -1,0 +1,14 @@
+{% if requirements %}
+<div class="list-group requirements">
+    {% for req in requirements %}
+    <div class="list-group-item list-group-item-action" aria-current="true">
+        <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1"><i class="bi bi-code me-2"></i>{{ req.title }}</h6>
+        </div>
+        {% if req.desc %}
+        <small class="help ms-4">{{ req.desc }}</small>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
