@@ -32,12 +32,6 @@ class LogoutView(views.LogoutView):
 
 class SettingsView(LoginRequiredMixin, View):
 
-    def __get_link(self, user):
-        try:
-            return user.link
-        except Link.DoesNotExist:
-            return None
-
     def __render(self, request, profile_form, link_form):
         return render(request, 'account/settings.html', {
             'profile_form': profile_form,
@@ -47,7 +41,7 @@ class SettingsView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
         profile_form = ProfileForm(instance=user)
-        link_form = LinkForm(user, instance=self.__get_link(user))
+        link_form = LinkForm(user, instance=user.get_link())
         return self.__render(request, profile_form, link_form)
 
     def post(self, request):
@@ -58,7 +52,7 @@ class SettingsView(LoginRequiredMixin, View):
             form = ProfileForm(
                 request.POST, request.FILES, instance=request.user)
             if not form.is_valid():
-                link_form = LinkForm(user, instance=self.__get_link(user))
+                link_form = LinkForm(user, instance=user.get_link())
                 return self.__render(request, form, link_form)
 
             form.save()
@@ -66,7 +60,7 @@ class SettingsView(LoginRequiredMixin, View):
                           extra_tags='success')
 
         if kind == 'link':
-            form = LinkForm(user, request.POST, instance=self.__get_link(user))
+            form = LinkForm(user, request.POST, instance=user.get_link())
             if not form.is_valid():
                 profile_form = ProfileForm(instance=user)
                 return self.__render(request, profile_form, form)
