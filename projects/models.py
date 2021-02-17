@@ -35,6 +35,7 @@ class Project(models.Model):
         blank=True,
         null=True
     )
+    point = models.IntegerField(default=0)
     tags = models.CharField('Tags', max_length=50, null=True, blank=True)
     is_featured = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)

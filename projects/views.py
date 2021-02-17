@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 
 from account.models import User
 from .models import Project
@@ -24,6 +25,25 @@ class ProjectDetail(DetailView):
             slug=self.kwargs.get('slug'),
             is_active=True
         )
+
+    def post(self, request, **kwargs):
+        user = request.user
+        next_url = reverse('projects:detail', args=[
+            kwargs.get('slug'), kwargs.get('pk')
+        ])
+        # not authenticated, ask for login
+        if not user.is_authenticated:
+            messages.warning(
+                request,
+                'Silahkan login terlebih dahulu sebelum mengerjakan proyek.'
+            )
+            return HttpResponseRedirect(reverse('account:login') + '?next={}'.format(next_url))
+
+        # create user project
+        success_url = reverse('projects:detail_user', args=[
+            kwargs.get('slug'), kwargs.get('pk'), user.username
+        ])
+        return HttpResponseRedirect(success_url)
 
 
 class ProjectDetailUser(DetailView):
