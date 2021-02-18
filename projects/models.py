@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import constraints, indexes
 from django.template.defaultfilters import slugify
 from django.utils.timezone import now
 from django.urls import reverse
@@ -18,7 +19,26 @@ def cover_path(instance, filename):
     )
 
 
+class ProjectManager(models.Manager):
+    """
+    Custom manager for `Project` with some helper methods to work with Project.
+    """
+
+    def active(self):
+        """
+        Returns active projects only.
+        Usage:
+            `Project.objects.active()`
+        Which is equivalent to:
+            `Project.objects.all(is_active=True)`
+        """
+        return self.filter(is_active=True)
+
+
 class Project(models.Model):
+    """
+    Project that can be picked-up by users.
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -36,7 +56,7 @@ class Project(models.Model):
         null=True
     )
     point = models.IntegerField(default=0)
-    tags = models.CharField('Tags', max_length=50, null=True, blank=True)
+    tags = models.CharField('Tags', max_length=50, blank=True, default='')
     is_featured = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
@@ -44,6 +64,15 @@ class Project(models.Model):
     completed_count = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    # custom manager
+    objects = ProjectManager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['slug'], name='slug_idx'),
+            models.Index(fields=['is_active'], name='is_active_idx'),
+        ]
 
     def __str__(self, *args, **kwargs):
         return self.title
@@ -61,3 +90,68 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse('projects:detail', args=[self.slug, str(self.pk)])
+
+    def assign_to(self, user):
+        """
+        Returns `UserProject` instance and created (bool).
+        - If user already pick this project, return that one instead of creating new one
+          since user can only work on the same project once.
+        - If user never pick this project, create new `UserProject`.
+        """
+        return UserProject.objects.get_or_create(
+            user=user,
+            project=self,
+            defaults={
+                'requirements': self.requirements,
+                'point': self.point
+            }
+        )
+
+
+class UserProject(models.Model):
+    """
+    Status of project that picked-up by user.
+    The original project data itself may changed overtime, but UserProject will holds 
+    the snapshot of important data (requirements, point) at the time user pick this project.
+    """
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_projects')
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='user_projects')
+    requirements = models.JSONField('Requirements', blank=True, null=True)
+    point = models.IntegerField(default=0)
+
+    # information bellow can be added by user when confirming the project completion
+    demo_url = models.CharField(max_length=250, blank=True, default='')
+    sourcecode_url = models.CharField(max_length=250, blank=True, default='')
+    note = models.TextField(blank=True, default='')
+
+    # when all requirements checked
+    requirements_completed = models.BooleanField(default=False)
+    # when project submitted for completion
+    project_completed = models.BooleanField(default=False)
+
+    likes_count = models.IntegerField(default=0)
+    comments_count = models.IntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            # to make sure get UserProject by `user` and `project` query fast
+            models.Index(fields=['user', 'project'],
+                         name='user_project_idx')
+        ]
+        constraints = [
+            # to make sure there's only one UserProject record with the same `user` and `project`
+            models.UniqueConstraint(
+                fields=['user', 'project'],
+                name='unique_user_project')
+        ]
+
+    def __str__(self):
+        return '{} - {} ({})'.format(self.user.username, self.project.slug, self.point)

@@ -26,7 +26,7 @@ class User(AbstractUser):
         default=None
     )
     point = models.IntegerField(default=0)
-    description = models.TextField(blank=True, null=True, default='')
+    description = models.TextField(blank=True, default='')
 
     def avatar_url(self, size=100):
         """
@@ -53,21 +53,21 @@ class Link(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='link')
     github = models.CharField(
-        'Github', max_length=200, blank=True, null=True)
+        'Github', max_length=200, blank=True, default='')
     gitlab = models.CharField(
-        'GitLab', max_length=200, blank=True, null=True)
+        'GitLab', max_length=200, blank=True, default='')
     bitbucket = models.CharField(
-        'Bitbucket', max_length=200, blank=True, null=True)
+        'Bitbucket', max_length=200, blank=True, default='')
     linkedin = models.CharField(
-        'LinkedIn', max_length=200, blank=True, null=True)
+        'LinkedIn', max_length=200, blank=True, default='')
     facebook = models.CharField(
-        'Facebook', max_length=200, blank=True, null=True)
+        'Facebook', max_length=200, blank=True, default='')
     twitter = models.CharField(
-        'Twitter', max_length=200, blank=True, null=True)
+        'Twitter', max_length=200, blank=True, default='')
     youtube = models.CharField(
-        'Youtube', max_length=200, blank=True, null=True)
+        'Youtube', max_length=200, blank=True, default='')
     website = models.CharField(
-        'Website', max_length=200, blank=True, null=True)
+        'Website', max_length=200, blank=True, default='')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
