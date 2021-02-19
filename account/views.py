@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import User, Link
 from .forms import ProfileForm, LinkForm
 
 

@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'social_django',
     'sorl.thumbnail',
     'martor',
-
+    
+    'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -155,3 +155,9 @@ class UserProject(models.Model):
 
     def __str__(self):
         return '{} - {} ({})'.format(self.user.username, self.project.slug, self.point)
+
+    def get_absolute_url(self):
+        return reverse('projects:detail_user', args=[self.project.slug, self.project.pk, self.user.username])
+
+    def get_project_url(self):
+        return self.project.get_absolute_url()
