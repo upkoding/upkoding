@@ -22,7 +22,7 @@ terms:
             <span class="me-1">{{ object.created|naturalday }}</span>
             {% if user_project %}
             <span class="me-1">/</span>
-            <span class="badge bg-success ms-1">{{ object.get_point_display|upper }}</span>
+            <span class="badge bg-success ms-1">{{ user_project.get_point_display }}</span>
             {% endif %}
         </p>
         <a href="{{ object.get_absolute_url }}">
@@ -44,7 +44,7 @@ terms:
 
         {% else %}
         <!-- show Kerjakan button and sharing -->
-        <p style="font-size: 35px; font-weight: 300;">{{ object.get_point_display|upper }}</p>
+        <p style="font-size: 35px; font-weight: 300;">{{ object.get_point_display }}</p>
         <form method="POST">
             <div class="d-grid mt-4">
                 {% csrf_token %}

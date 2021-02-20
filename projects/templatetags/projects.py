@@ -15,17 +15,24 @@ def render_requirements(project):
 def render_requirements_form(context, project):
     """
     Render project's requirements form to updated progress.
+    Requirements form only editable by its owner and the project not yet completed.
     """
-    reqs_completed_percent = 0.0
-    reqs = project.requirements
-    if reqs:
-        # calculate percent of completed tasks/requirements
-        reqs_completed = sum(map(lambda r: 1 if 'complete' in r else 0, reqs))
-        reqs_completed_percent = (reqs_completed/len(reqs)) * 100
     return {
         'user_project': project,
         'requirements': project.requirements,
-        'requirements_completed_percent': reqs_completed_percent,
+        'editable': (context.request.user == project.user) and not project.project_completed,
+    }
+
+
+@register.inclusion_tag('projects/templatetags/render_completion_form.html', takes_context=True)
+def render_completion_form(context, project, form):
+    """
+    The completion form always editable by owner even though the project already completed
+    so user can edit project links and note if needed.
+    """
+    return {
+        'user_project': project,
+        'form': form,
         'editable': context.request.user == project.user,
     }
 

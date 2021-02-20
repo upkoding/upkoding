@@ -92,7 +92,7 @@ class Project(models.Model):
         return reverse('projects:detail', args=[self.slug, str(self.pk)])
 
     def get_point_display(self):
-        return '{} Poin'.format(self.point)
+        return '{}UP'.format(self.point)
 
     def assign_to(self, user):
         """
@@ -126,12 +126,21 @@ class UserProject(models.Model):
         on_delete=models.CASCADE,
         related_name='user_projects')
     requirements = models.JSONField('Requirements', blank=True, null=True)
+    requirements_completed_percent = models.DecimalField(
+        default=0.0, decimal_places=2, max_digits=5)  # max value: 100.00
     point = models.IntegerField(default=0)
 
     # information bellow can be added by user when confirming the project completion
-    demo_url = models.CharField(max_length=250, blank=True, default='')
-    sourcecode_url = models.CharField(max_length=250, blank=True, default='')
-    note = models.TextField(blank=True, default='')
+    demo_url = models.CharField(
+        'URL demo proyek', max_length=250, blank=True, default='')
+    sourcecode_url = models.CharField(
+        'URL kode sumber proyek', max_length=250, blank=True, default='')
+    note = models.TextField('Catatan', blank=True, default='')
+
+    # whether user need to provide `demo_url` and/or `sourcecode_url` before project
+    # marked as complete.
+    require_demo_url = models.BooleanField(default=False)
+    require_sourcecode_url = models.BooleanField(default=False)
 
     # when all requirements checked
     requirements_completed = models.BooleanField(default=False)
@@ -164,3 +173,26 @@ class UserProject(models.Model):
 
     def get_project_url(self):
         return self.project.get_absolute_url()
+
+    def get_point_display(self):
+        return '{}UP'.format(self.point)
+
+    def calculate_progress(self):
+        """
+        Calculate percent of completed tasks/requirements and set `requirements_completed_percent` value.
+        If `requirements_completed_percent` 100%, we also set `requirements_completed` to True
+        """
+        if not self.requirements:
+            return
+        reqs_completed_percent = 0.0
+        reqs_completed = sum(
+            map(lambda r: 1 if 'complete' in r else 0, self.requirements))
+        reqs_completed_percent = (
+            reqs_completed/len(self.requirements)) * 100.0
+        self.requirements_completed_percent = reqs_completed_percent
+        # changed from incomplete to complete
+        if not self.requirements_completed and reqs_completed_percent == 100.0:
+            self.requirements_completed = True
+        # changed from complete to incomplete
+        if self.requirements_completed and reqs_completed_percent < 100.0:
+            self.requirements_completed = False

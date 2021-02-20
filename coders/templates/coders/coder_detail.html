@@ -11,10 +11,18 @@
     <div class="row justify-content-md-center">
         <div class="col col-lg-6 right text-center">
             <p style="font-size: 35px; font-weight: 300;" class="mb-1">{{ object|avatar_img:150 }}</p>
-            <div class="d-grid mt-3">
-                <h1 class="display-6" style="font-size: 30px; font-weight: 400;">{{ object.get_display_name|title }}
-                    <span style="color: grey;">({{ object.username }})</span style="color: grey;">
+            <div class="mt-3">
+                <h1 class="display-6" style="font-size: 30px; font-weight: 400;">
+                    {{ object.get_display_name|title }}
                 </h1>
+                <span class="badge bg-primary" style="font-size: 0.9rem;">
+                    @{{ object.username }}
+                </span>
+                {% if object.point > 0 %}
+                <span class="badge bg-success" style="font-size: 0.9rem;">
+                    {{ object.get_point_display }}
+                </span>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
@@ -7,6 +7,7 @@ from django.contrib import messages
 
 from account.models import User
 from .models import Project, UserProject
+from .forms import UserProjectCompletionForm
 
 
 class ProjectList(ListView):
@@ -71,6 +72,13 @@ class ProjectDetailUser(DetailView):
 
         data = super().get_context_data(**kwargs)
         data['user_project'] = user_project
+
+        # show completion form only when requirements completed and url has `?complete=1`
+        complete_qs = self.request.GET.get('complete') == '1'
+        show_completion_form = user_project.requirements_completed and complete_qs
+        if show_completion_form:
+            data['completion_form'] = UserProjectCompletionForm(
+                instance=user_project)
         return data
 
     def __handle_update(self, request, project, user_project):
@@ -101,18 +109,33 @@ class ProjectDetailUser(DetailView):
 
             # save changes
             user_project.requirements = requirements_copy
+            user_project.calculate_progress()
             user_project.save()
-            messages.info(request,
-                          "Progress proyek telah diupdate!".format(
-                              project.title),
-                          extra_tags='success')
+
+            # if all requirements completed, show completion form
+            if user_project.requirements_completed:
+                messages.info(request,
+                              "Mantap! Selangkah lagi proyek kamu selesai.".format(
+                                  project.title),
+                              extra_tags='success')
 
         return HttpResponseRedirect(redirect_url)
 
     def __handle_complete(self, request, project, user_project):
-        redirect_url = reverse('projects:detail_user', args=[
-                               project.slug, project.pk, request.user.username])
-        return HttpResponseRedirect(redirect_url)
+        form = UserProjectCompletionForm(request.POST, instance=user_project)
+        if form.is_valid():
+            earned_point = form.complete()
+            if earned_point:
+                messages.info(request,
+                              "Selamat! Kamu mendapatkan {} karena telah berhasil menyelesaikan `{}`.".format(
+                                  user_project.get_point_display(), project.title),
+                              extra_tags='success')
+            else:
+                messages.info(request,
+                              "Detail proyek berhasil diupdate!",
+                              extra_tags='success')
+            return HttpResponse()
+        return HttpResponseBadRequest(form.errors.as_json(), content_type='application/json; charset=utf-8')
 
     def post(self, request, slug, pk, username):
         user = request.user

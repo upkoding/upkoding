@@ -3,7 +3,7 @@
 {% block title %}Para Coders{% endblock %}
 {% block header_mb %}mb-5{% endblock %}
 
-{% block content %} {% load sorl_thumbnail%} 
+{% block content %} {% load sorl_thumbnail%}
 {% load base %}
 <div class="container">
     <div class="row justify-content-md-center text-center">
@@ -27,8 +27,12 @@
                         <span class="badge bg-primary">
                             @{{ coder.username }}
                         </span>
-                        {% if coder.point > 0 %}<span class="badge bg-success">{{ coder.point }} poin</span>{% endif %}
-                        <p class="card-text mt-2" style="color: grey !important;">{{ coder.description|truncatechars:65 }}</p>
+                        {% if coder.point > 0 %}
+                        <span class="badge bg-success">{{ coder.get_point_display }}</span>
+                        {% endif %}
+                        <p class="card-text mt-2" style="color: grey !important;">
+                            {{ coder.description|truncatechars:65 }}
+                        </p>
                     </div>
                 </div>
             </div>
