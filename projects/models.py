@@ -91,6 +91,9 @@ class Project(models.Model):
     def get_absolute_url(self):
         return reverse('projects:detail', args=[self.slug, str(self.pk)])
 
+    def get_point_display(self):
+        return '{} Poin'.format(self.point)
+
     def assign_to(self, user):
         """
         Returns `UserProject` instance and created (bool).

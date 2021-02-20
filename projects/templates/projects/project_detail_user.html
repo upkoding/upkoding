@@ -5,32 +5,17 @@
 
 {% block content %}
 {% load martortags %}
-{% load sorl_thumbnail %}
 {% load base %}
 {% load projects %}
 <div class="project-detail">
-    {% thumbnail object.cover "960x540" crop="center" as im %}
-    <div class="row justify-content-md-center header" style="background-image: url({{ im.url }});">
-        <div class="col col-lg-8 left">
-            <p style="color: grey">Diposting oleh <a href="">{{ object.user.username }}</a></p>
-            <h1 class="display-6 mt-2" title="{{ object.title }}">{{ object.title|title }}</h1>
-        </div>
-        <div class="col col-lg-4 right text-center">
-            <p style="color: grey">Dikerjakan oleh</p>
-            <p style="font-size: 35px; font-weight: 300;" class="mb-1">{{ project_user|avatar_img }}</p>
-            <div class="d-grid">
-                <a href="" style="font-size: 24px;">{{ project_user.username }}</a>
-            </div>
-        </div>
-        <div class="overlay"></div>
-    </div>
-    {% endthumbnail %}
+    {% include 'projects/_project_header.html' with project=object user_project=user_project %}
+
     <div class="row mt-3 content">
-        {% include 'base/_messages.html' %}
-        
+        {% include 'base/_messages.html' with closable=True %}
+
         <div class="col col-lg-8 left">
             <h3 class="section-title mb-3"><i class="bi bi-list-task me-2"></i>Requirements</h3>
-            {% render_requirements_form project %}
+            {% render_requirements_form user_project %}
 
             <div class="description mt-5">
                 {{ object.description|safe_markdown }}

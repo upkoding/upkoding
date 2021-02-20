@@ -1,0 +1,69 @@
+{% comment %}
+data:
+- object = an instance of `Project`
+- user_project = an instance of `UserProject`
+terms:
+- project_owner = user associated with `Project`
+- project_user = the user associated with `UserProject`
+{% endcomment %}
+
+{% load base %}
+{% load sorl_thumbnail %}
+{% load humanize %}
+{% thumbnail object.cover "960x540" crop="center" as im %}
+<div class="row justify-content-md-center header" style="background-image: url({{ im.url }});">
+    {% with object.user as project_owner %}
+    <div class="col col-lg-8 left">
+        <p style="color: grey">Diposting oleh
+            <a href="{{ project_owner.get_absolute_url }}">
+                {{ project_owner.get_display_name }}
+            </a>
+            <span class="ms-1 me-1">/</span>
+            <span class="me-1">{{ object.created|naturalday }}</span>
+            {% if user_project %}
+            <span class="me-1">/</span>
+            <span class="badge bg-success ms-1">{{ object.get_point_display|upper }}</span>
+            {% endif %}
+        </p>
+        <a href="{{ object.get_absolute_url }}">
+            <h1 class="display-6 mt-2" title="{{ object.title }}">{{ object.title|title }}</h1>
+        </a>
+    </div>
+    {% endwith %}
+
+    <div class="col col-lg-4 right text-center">
+        {% if user_project %}
+        <!-- show user who working on this project -->
+        {% with user_project.user as project_user %}
+        <p style="color: grey">Dikerjakan oleh</p>
+        <p style="font-size: 35px; font-weight: 300;" class="mb-1">{{ project_user|avatar_img }}</p>
+        <div class="d-grid">
+            <a href="{{ project_user.get_absolute_url }}" style="font-size: 24px;">{{ project_user.username }}</a>
+        </div>
+        {% endwith %}
+
+        {% else %}
+        <!-- show Kerjakan button and sharing -->
+        <p style="font-size: 35px; font-weight: 300;">{{ object.get_point_display|upper }}</p>
+        <form method="POST">
+            <div class="d-grid mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-lg">Kerjakan
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </div>
+        </form>
+
+        <div class="row mt-4">
+            <div class="col col-6">
+                <a href=""><i class="bi bi-share-fill me-1"></i> Bagikan</a>
+            </div>
+            <div class="col col-6">
+                <a href=""><i class="bi bi-bookmark-plus-fill me-1"></i> Simpan</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="overlay"></div>
+</div>
+{% endthumbnail %}

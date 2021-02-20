@@ -70,8 +70,7 @@ class ProjectDetailUser(DetailView):
             UserProject, user=user, project=self.object)
 
         data = super().get_context_data(**kwargs)
-        data['project_user'] = user
-        data['project'] = user_project
+        data['user_project'] = user_project
         return data
 
     def __handle_update(self, request, project, user_project):
@@ -134,7 +133,9 @@ class ProjectDetailUser(DetailView):
         if request_kind == 'delete':
             user_project.delete()
             messages.info(request,
-                          "Proyek `{}` telah dibatalkan!".format(project.title), extra_tags='success')
+                          "Proyek `{}` telah dibatalkan :(".format(
+                              project.title),
+                          extra_tags='warning')
             return HttpResponse()
 
         if request_kind == 'complete':
