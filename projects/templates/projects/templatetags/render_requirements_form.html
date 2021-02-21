@@ -30,6 +30,7 @@
         {% endfor %}
 
         {% if editable %}
+        <!-- is_owner && editable -->
         <div class="row mt-3">
             <div class="col col-6">
                 <button type="submit" class="btn btn-primary">Update Progress</button>
@@ -44,6 +45,15 @@
                     data-bs-target="#deleteUserProjectModal">Batalkan Proyek
                 </button>
                 {% endif %}
+            </div>
+        </div>
+        {% elif is_owner %}
+        <!-- !editable && is_owner: owner can edit the completion detail -->
+        <div class="row mt-3">
+            <div class="col col-12" style="text-align: right;">
+                <a href="?complete=1" class="btn btn-success" title="Edit detail">
+                    Edit detail <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
         </div>
         {% endif %}

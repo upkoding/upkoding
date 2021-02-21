@@ -41,15 +41,14 @@
 
         <div class="row mt-3">
             <div class="col col-6">
-                {% if not user_project.project_completed %}
                 <a href="{{ user_project.get_absolute_url }}" class="btn btn-secondary" title="Kembali">
                     <i class="bi bi-arrow-left"></i> Kembali
                 </a>
-                {% endif %}
             </div>
             <div class="col col-6" style="text-align: right;">
                 {% if user_project.project_completed %}
-                <button type="submit" class="btn btn-success" x-text="loading ? 'Mengupdate...': 'Update'"></button>
+                <button type="submit" class="btn btn-success"
+                    x-text="loading ? 'Mengupdate...': 'Update detail'"></button>
                 {% else %}
                 <button type="submit" class="btn btn-success"
                     x-text="loading ? 'Menyelesaikan Proyek...': 'Proyek Selesai'"></button>
@@ -71,7 +70,7 @@
                     body: new FormData(e.target)
                 }).then(async (resp) => {
                     if (resp.ok) {
-                        window.location.href = '{{ user_project.get_project_url }}'
+                        window.location.href = '{{ user_project.get_absolute_url }}'
                     } else {
                         this.errors = await resp.json()
                     }

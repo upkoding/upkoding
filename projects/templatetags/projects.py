@@ -17,10 +17,12 @@ def render_requirements_form(context, project):
     Render project's requirements form to updated progress.
     Requirements form only editable by its owner and the project not yet completed.
     """
+    is_owner = context.request.user == project.user
     return {
         'user_project': project,
         'requirements': project.requirements,
-        'editable': (context.request.user == project.user) and not project.project_completed,
+        'is_owner': is_owner,
+        'editable': is_owner and not project.project_completed,
     }
 
 
@@ -30,10 +32,12 @@ def render_completion_form(context, project, form):
     The completion form always editable by owner even though the project already completed
     so user can edit project links and note if needed.
     """
+    is_owner = context.request.user == project.user
     return {
         'user_project': project,
         'form': form,
-        'editable': context.request.user == project.user,
+        'is_owner': is_owner,
+        'editable': is_owner,
     }
 
 

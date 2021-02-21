@@ -73,9 +73,12 @@ class ProjectDetailUser(DetailView):
         data = super().get_context_data(**kwargs)
         data['user_project'] = user_project
 
-        # show completion form only when requirements completed and url has `?complete=1`
+        # show completion form only when:
+        # - requirements completed
+        # - url has `?complete=1`
+        # - current user is the owner
         complete_qs = self.request.GET.get('complete') == '1'
-        show_completion_form = user_project.requirements_completed and complete_qs
+        show_completion_form = user_project.requirements_completed and complete_qs and user == self.request.user
         if show_completion_form:
             data['completion_form'] = UserProjectCompletionForm(
                 instance=user_project)
