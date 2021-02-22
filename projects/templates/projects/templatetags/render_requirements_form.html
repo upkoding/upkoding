@@ -1,6 +1,6 @@
 {% if requirements %}
 <div class="progress">
-    <div class="progress-bar progress-bar-striped" role="progressbar"
+    <div class="progress-bar progress-bar-striped bg-{{ user_project.get_color_class }}" role="progressbar"
         style="width: {{ user_project.requirements_completed_percent }}%" aria-valuenow="10" aria-valuemin="0"
         aria-valuemax="100">
         {{ user_project.requirements_completed_percent|floatformat:1 }}%
@@ -13,7 +13,7 @@
         <input type="hidden" name="kind" value="update" />
         {% for req in requirements %}
         <label for="reqs-{{ forloop.counter0 }}"
-            class="list-group-item list-group-item-action {% if req.complete %}list-group-item-success{% endif %}"
+            class="list-group-item list-group-item-action {% if req.complete %}list-group-item-{{ user_project.get_color_class }}{% endif %}"
             style="cursor: pointer;">
             <div class="d-flex w-100 justify-content-between">
                 <h6 class="mb-1">
@@ -33,15 +33,16 @@
         <!-- is_owner && editable -->
         <div class="row mt-3">
             <div class="col col-6">
-                <button type="submit" class="btn btn-primary">Update Progress</button>
+                <button type="submit" class="btn btn-outline-{{ user_project.get_color_class }}">Update
+                    Progress</button>
             </div>
             <div class="col col-6" style="text-align: right;">
-                {% if user_project.requirements_completed %}
-                <a href="?complete=1" class="btn btn-success" title="Konfirmasi proyek telah diselesaikan">
-                    Selesaikan Proyek <i class="bi bi-arrow-right"></i>
+                {% if user_project.is_requirements_complete %}
+                <a href="?form=1" class="btn btn-success" title="Minta proyek untuk direview">
+                    Minta Review <i class="bi bi-arrow-right"></i>
                 </a>
                 {% else %}
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                     data-bs-target="#deleteUserProjectModal">Batalkan Proyek
                 </button>
                 {% endif %}
@@ -51,7 +52,7 @@
         <!-- !editable && is_owner: owner can edit the completion detail -->
         <div class="row mt-3">
             <div class="col col-12" style="text-align: right;">
-                <a href="?complete=1" class="btn btn-success" title="Edit detail">
+                <a href="?form=1" class="btn btn-outline-success" title="Edit detail">
                     Edit detail <i class="bi bi-arrow-right"></i>
                 </a>
             </div>

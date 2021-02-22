@@ -41,17 +41,17 @@
 
         <div class="row mt-3">
             <div class="col col-6">
-                <a href="{{ user_project.get_absolute_url }}" class="btn btn-secondary" title="Kembali">
+                <a href="{{ user_project.get_absolute_url }}" class="btn btn-outline-secondary" title="Kembali">
                     <i class="bi bi-arrow-left"></i> Kembali
                 </a>
             </div>
             <div class="col col-6" style="text-align: right;">
-                {% if user_project.project_completed %}
+                {% if user_project.is_in_progress %}
                 <button type="submit" class="btn btn-success"
-                    x-text="loading ? 'Mengupdate...': 'Update detail'"></button>
+                    x-text="loading ? 'Mengirim Request...': 'Kirim Request'"></button>
                 {% else %}
                 <button type="submit" class="btn btn-success"
-                    x-text="loading ? 'Menyelesaikan Proyek...': 'Proyek Selesai'"></button>
+                    x-text="loading ? 'Mengupdate...': 'Update detail'"></button>
                 {% endif %}
             </div>
         </div>

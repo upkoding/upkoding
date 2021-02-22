@@ -22,14 +22,14 @@ def render_requirements_form(context, project):
         'user_project': project,
         'requirements': project.requirements,
         'is_owner': is_owner,
-        'editable': is_owner and not project.project_completed,
+        'editable': is_owner and project.is_in_progress(),
     }
 
 
-@register.inclusion_tag('projects/templatetags/render_completion_form.html', takes_context=True)
-def render_completion_form(context, project, form):
+@register.inclusion_tag('projects/templatetags/render_review_request_form.html', takes_context=True)
+def render_review_request_form(context, project, form):
     """
-    The completion form always editable by owner even though the project already completed
+    The Review Request form always editable by owner even though the project already completed
     so user can edit project links and note if needed.
     """
     is_owner = context.request.user == project.user

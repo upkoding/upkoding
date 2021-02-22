@@ -7,7 +7,7 @@ from django.contrib import messages
 
 from account.models import User
 from .models import Project, UserProject
-from .forms import UserProjectCompletionForm
+from .forms import UserProjectReviewRequestForm
 
 
 class ProjectList(ListView):
@@ -23,7 +23,7 @@ class ProjectDetail(DetailView):
             Project,
             pk=self.kwargs.get('pk'),
             slug=self.kwargs.get('slug'),
-            is_active=True
+            status=Project.STATUS_ACTIVE
         )
 
     def post(self, request, slug, pk):
@@ -62,7 +62,7 @@ class ProjectDetailUser(DetailView):
             Project,
             pk=self.kwargs.get('pk'),
             slug=self.kwargs.get('slug'),
-            is_active=True
+            status=Project.STATUS_ACTIVE
         )
 
     def get_context_data(self, **kwargs):
@@ -75,12 +75,15 @@ class ProjectDetailUser(DetailView):
 
         # show completion form only when:
         # - requirements completed
-        # - url has `?complete=1`
+        # - url has `?form=1`
         # - current user is the owner
-        complete_qs = self.request.GET.get('complete') == '1'
-        show_completion_form = user_project.requirements_completed and complete_qs and user == self.request.user
-        if show_completion_form:
-            data['completion_form'] = UserProjectCompletionForm(
+        rev_request = self.request.GET.get('form') == '1'
+        show_rr_form = user_project.is_requirements_complete() \
+            and rev_request \
+            and (user == self.request.user)
+
+        if show_rr_form:
+            data['rr_form'] = UserProjectReviewRequestForm(
                 instance=user_project)
         return data
 
@@ -115,23 +118,23 @@ class ProjectDetailUser(DetailView):
             user_project.calculate_progress()
             user_project.save()
 
-            # if all requirements completed, show completion form
-            if user_project.requirements_completed:
+            # if all requirements completed, ready for review
+            if user_project.is_requirements_complete():
                 messages.info(request,
-                              "Mantap! Selangkah lagi proyek kamu selesai.".format(
-                                  project.title),
+                              "Mantap! Proyek kamu siap untuk direview. Klik tombol `Review Request`",
                               extra_tags='success')
 
         return HttpResponseRedirect(redirect_url)
 
-    def __handle_complete(self, request, project, user_project):
-        form = UserProjectCompletionForm(request.POST, instance=user_project)
+    def __handle_review_request(self, request, project, user_project):
+        form = UserProjectReviewRequestForm(
+            request.POST, instance=user_project)
+
         if form.is_valid():
-            earned_point = form.complete()
-            if earned_point:
+            review_requested = form.submit_review()
+            if review_requested:
                 messages.info(request,
-                              "Selamat! Kamu mendapatkan {} karena telah berhasil menyelesaikan `{}`.".format(
-                                  user_project.get_point_display(), project.title),
+                              "Great job! Proyek kamu sudah disubmit untuk direview team UpKoding.",
                               extra_tags='success')
             else:
                 messages.info(request,
@@ -164,6 +167,6 @@ class ProjectDetailUser(DetailView):
                           extra_tags='warning')
             return HttpResponse()
 
-        if request_kind == 'complete':
-            return self.__handle_complete(request, project, user_project)
+        if request_kind == 'review_request':
+            return self.__handle_review_request(request, project, user_project)
         return HttpResponseRedirect(project_url)

@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'social_django',
     'sorl.thumbnail',
     'martor',
-    
+
     'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -96,8 +96,9 @@ WSGI_APPLICATION = 'upkoding.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 if os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(
-        conn_max_age=600, ssl_require=True)
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    }
 else:
     DATABASES = {
         'default': {
@@ -188,6 +189,8 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, name, email'
 }
 SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.10'
+
+POINT_UNIT = 'UP'
 
 try:
     from upkoding.local_settings import *
