@@ -164,6 +164,8 @@ class UserProject(models.Model):
     requirements = models.JSONField('Requirements', blank=True, null=True)
     requirements_completed_percent = models.DecimalField(
         default=0.0, decimal_places=2, max_digits=5)  # max value: 100.00
+    requirements_completed_percent_max = models.DecimalField(
+        default=0.0, decimal_places=2, max_digits=5)
     point = models.IntegerField(default=0)
     status = models.PositiveSmallIntegerField(
         'Status', choices=STATUSES, default=STATUS_IN_PROGRESS)
@@ -184,9 +186,6 @@ class UserProject(models.Model):
     comments_count = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-    # to store the original value
-    _original_values = {}
 
     class Meta:
         indexes = [
@@ -227,18 +226,45 @@ class UserProject(models.Model):
             return 'danger'
         return 'primary'
 
+    @staticmethod
+    def requirements_to_progress(requirements):
+        """
+        Returns progress in percent.
+        """
+        reqs_progress_percent = 0.0
+        reqs_progress = sum(
+            map(lambda r: 1 if 'complete' in r else 0, requirements))
+        reqs_progress_percent = (
+            reqs_progress/len(requirements)) * 100.0
+        return float(format(reqs_progress_percent, '.2f'))
+
+    @staticmethod
+    def requirements_diff(before, after):
+        """
+        Return the differences between before and after requirements
+        """
+        progress_before = UserProject.requirements_to_progress(before)
+        progress_after = UserProject.requirements_to_progress(after)
+        become_complete = []
+        become_incomplete = []
+
+        for index, req_before in enumerate(before):
+            req_after = after[index]
+            if not req_before.get('complete') and req_after.get('complete'):
+                become_complete.append(req_before.get('title'))
+            if req_before.get('complete') and not req_after.get('complete'):
+                become_incomplete.append(req_before.get('title'))
+        return (progress_before, progress_after, become_complete, become_incomplete)
+
     def calculate_progress(self):
         """
         Calculate percent of completed tasks/requirements and set `requirements_completed_percent` value.
         """
-        if not self.requirements:
-            return
-        reqs_completed_percent = 0.0
-        reqs_completed = sum(
-            map(lambda r: 1 if 'complete' in r else 0, self.requirements))
-        reqs_completed_percent = (
-            reqs_completed/len(self.requirements)) * 100.0
-        self.requirements_completed_percent = reqs_completed_percent
+        if self.requirements:
+            progress = UserProject.requirements_to_progress(self.requirements)
+            self.requirements_completed_percent = progress
+            if progress > self.requirements_completed_percent_max:
+                self.requirements_completed_percent_max = progress
 
     def is_requirements_complete(self):
         return self.requirements_completed_percent == 100.0
@@ -252,12 +278,20 @@ class UserProject(models.Model):
     def is_in_progress(self):
         return self.status == self.STATUS_IN_PROGRESS
 
+    def add_event(self, event_type, **kwargs):
+        UserProjectEvent(
+            user_project=self,
+            user=kwargs.get('user', self.user),
+            event_type=event_type,
+            message=kwargs.get('message', '')).save()
+
 
 class UserProjectEvent(models.Model):
     # type 0-9: user generated event
     TYPE_PROJECT_START = 0
     TYPE_PROGRESS_UPDATE = 1
-    TYPE_REVIEW_REQUEST = 2
+    TYPE_PROGRESS_COMPLETE = 2
+    TYPE_REVIEW_REQUEST = 3
     # type >= 10: staff/system generated event
     TYPE_REQUIRE_REVISION = 10
     TYPE_REVIEW_MESSAGE = 11
@@ -266,6 +300,7 @@ class UserProjectEvent(models.Model):
     TYPES = [
         (TYPE_PROJECT_START, 'Project start'),
         (TYPE_PROGRESS_UPDATE, 'Progress update'),
+        (TYPE_PROGRESS_COMPLETE, 'Progress complete'),
         (TYPE_REVIEW_REQUEST, 'Review request'),
         (TYPE_REVIEW_MESSAGE, 'Review message'),
         (TYPE_PROJECT_COMPLETE, 'Project complete'),
@@ -287,4 +322,4 @@ class UserProjectEvent(models.Model):
         ]
 
     def __str__(self):
-        return self.event_type
+        return self.get_event_type_display()

@@ -1,3 +1,4 @@
+import copy
 from django.http import HttpResponseRedirect
 from django.http.response import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.urls import reverse
@@ -6,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 
 from account.models import User
-from .models import Project, UserProject
+from .models import Project, UserProject, UserProjectEvent
 from .forms import UserProjectReviewRequestForm
 
 
@@ -41,8 +42,9 @@ class ProjectDetail(DetailView):
             return HttpResponseRedirect(reverse('account:login') + '?next={}'.format(next_url))
 
         # assign user to the project
-        _, created = project.assign_to(user)
+        user_project, created = project.assign_to(user)
         if created:
+            user_project.add_event(UserProjectEvent.TYPE_PROJECT_START)
             messages.info(request,
                           "Selamat mengerjakan `{}`!".format(project.title),
                           extra_tags='success')
@@ -94,10 +96,13 @@ class ProjectDetailUser(DetailView):
         redirect_url = reverse('projects:detail_user', args=[
             project.slug, project.pk, request.user.username])
 
-        requirements = user_project.requirements
+        # deepcopy to preserve the original state
+        requirements = copy.deepcopy(user_project.requirements)
+        max_progress = user_project.requirements_completed_percent_max
+
         if requirements:
             # create a copy and modify this instead so we can compare it later
-            requirements_copy = requirements.copy()
+            requirements_copy = copy.deepcopy(requirements)
 
             # update requirements_copy
             updated_reqs = map(lambda r: int(r),
@@ -120,9 +125,19 @@ class ProjectDetailUser(DetailView):
 
             # if all requirements completed, ready for review
             if user_project.is_requirements_complete():
+                user_project.add_event(UserProjectEvent.TYPE_PROGRESS_COMPLETE)
                 messages.info(request,
                               "Mantap! Proyek kamu siap untuk direview. Klik tombol `Review Request`",
                               extra_tags='success')
+            else:
+                _, progress_after, become_complete, _ = UserProject.requirements_diff(
+                    requirements, requirements_copy)
+                # only create progress update event when progress_after > progress_before
+                # If `become_complete` = ['aa', 'bb'] then event message = `- aa\n- bb`. `\n` is for new line.
+                if progress_after > float(max_progress):
+                    items = ['- {}'.format(i) for i in become_complete]
+                    user_project.add_event(
+                        UserProjectEvent.TYPE_PROGRESS_UPDATE, message='\n'.join(items))
 
         return HttpResponseRedirect(redirect_url)
 
@@ -133,6 +148,7 @@ class ProjectDetailUser(DetailView):
         if form.is_valid():
             review_requested = form.submit_review()
             if review_requested:
+                user_project.add_event(UserProjectEvent.TYPE_REVIEW_REQUEST)
                 messages.info(request,
                               "Great job! Proyek kamu sudah disubmit untuk direview team UpKoding.",
                               extra_tags='success')
