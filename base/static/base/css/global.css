@@ -177,3 +177,61 @@ a.link-card p {
   margin-top: -3px;
   height: 6px;
 }
+
+ul.timeline {
+  list-style-type: none;
+  position: relative;
+  margin-left: -22px;
+}
+
+ul.timeline:before {
+  content: " ";
+  background: #d4d9df;
+  display: inline-block;
+  position: absolute;
+  left: 29px;
+  width: 1px;
+  height: 100%;
+  z-index: 400;
+}
+ul.timeline > li {
+  margin: 20px 0;
+  padding-top: 0px;
+  padding-left: 25px;
+  position: relative;
+}
+
+ul.timeline > li > .avatar {
+  position: absolute;
+  top: 5px;
+  left: -15px;
+  z-index: 500;
+}
+
+ul.timeline li .card-body .title {
+  font-size: 0.9rem;
+  color: #555;
+}
+ul.timeline li .card-body .title strong {
+  font-weight: 500;
+  color: #333;
+}
+ul.timeline .card-body .created {
+  font-size: 12px;
+  color: #777;
+  background-color: white;
+  margin-top: 2px;
+}
+/* ul.timeline > li:before {
+  content: " ";
+  background: white;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid #777;
+  left: 24px;
+  margin-top: 7px;
+  width: 10px;
+  height: 10px;
+  z-index: 400;
+} */

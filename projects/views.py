@@ -133,11 +133,10 @@ class ProjectDetailUser(DetailView):
                 _, progress_after, become_complete, _ = UserProject.requirements_diff(
                     requirements, requirements_copy)
                 # only create progress update event when progress_after > progress_before
-                # If `become_complete` = ['aa', 'bb'] then event message = `- aa\n- bb`. `\n` is for new line.
                 if progress_after > float(max_progress):
-                    items = ['- {}'.format(i) for i in become_complete]
-                    user_project.add_event(
-                        UserProjectEvent.TYPE_PROGRESS_UPDATE, message='\n'.join(items))
+                    for msg in become_complete:
+                        user_project.add_event(
+                            UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg)
 
         return HttpResponseRedirect(redirect_url)
 

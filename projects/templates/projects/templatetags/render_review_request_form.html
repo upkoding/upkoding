@@ -45,12 +45,12 @@
                     <i class="bi bi-arrow-left"></i> Kembali
                 </a>
             </div>
-            <div class="col col-6" style="text-align: right;">
+            <div class="col col-6">
                 {% if user_project.is_in_progress %}
-                <button type="submit" class="btn btn-success"
+                <button type="submit" class="btn btn-success float-end"
                     x-text="loading ? 'Mengirim Request...': 'Kirim Request'"></button>
                 {% else %}
-                <button type="submit" class="btn btn-success"
+                <button type="submit" class="btn btn-success float-end"
                     x-text="loading ? 'Mengupdate...': 'Update detail'"></button>
                 {% endif %}
             </div>
