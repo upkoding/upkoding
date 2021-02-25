@@ -226,6 +226,14 @@ class UserProject(models.Model):
             return 'danger'
         return 'primary'
 
+    def approvable_by(self, user):
+        """
+        Check whether `user` can approve this project.
+        """
+        if user.is_staff and self.user != user:
+            return True
+        return False
+
     @staticmethod
     def requirements_to_progress(requirements):
         """
@@ -293,10 +301,9 @@ class UserProjectEvent(models.Model):
     TYPE_PROGRESS_COMPLETE = 2
     TYPE_REVIEW_REQUEST = 3
     # type >= 10: staff/system generated event
-    TYPE_REQUIRE_REVISION = 10
-    TYPE_REVIEW_MESSAGE = 11
-    TYPE_PROJECT_COMPLETE = 12
-    TYPE_PROJECT_INCOMPLETE = 13
+    TYPE_REVIEW_MESSAGE = 10
+    TYPE_PROJECT_COMPLETE = 11
+    TYPE_PROJECT_INCOMPLETE = 12
     TYPES = [
         (TYPE_PROJECT_START, 'Project start'),
         (TYPE_PROGRESS_UPDATE, 'Progress update'),

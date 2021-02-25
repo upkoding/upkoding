@@ -1,0 +1,108 @@
+<div class="card text-dark bg-light">
+    <div class="card-header">Review Proyek</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Demo URL: <a href="{{ user_project.demo_url }}" target="_blank" class="project-url">
+                {{ user_project.demo_url }}
+            </a>
+        </li>
+        <li class="list-group-item">Kode Sumber: <a href="{{ user_project.sourcecode_url }}" target="_blank"
+                class="project-url">
+                {{ user_project.sourcecode_url }}
+            </a>
+        </li>
+    </ul>
+    <div class="card-body pt-2 pb-2 ps-3 pe-3" x-data="reviewForm()">
+        <div class="mb-3">
+            <label for="message" class="form-label">Pesan</label>
+            <textarea class="form-control" id="message" rows="3"
+                placeholder="Permintaan Revisi WAJIB disini pesan, Approval optional." x-model="message"></textarea>
+        </div>
+        <div class="alert"
+            :class="{'alert-warning': alert.type=='client', 'alert-danger': alert.type=='server', 'alert-success': alert.type=='success'}"
+            role="alert" x-show="alert.type" x-text="alert.message"></div>
+        <div class="row mb-2">
+            <div class="col col-6">
+                {% if user.is_staff and user != user_project.user%}
+                <button type="button" class="btn btn-success" @click="approve"
+                    x-html="approve_loading ? spinner : 'Approve'"></button>
+                {% endif %}
+            </div>
+            <div class="col col-6">
+                <button type="button" class="btn btn-danger float-end" @click="sendMessage"
+                    x-html="message_loading ? spinner : 'Kirim Pesan'"></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.reviewForm = function () {
+        return {
+            spinner: '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading...',
+            approve_loading: false,
+            message_loading: false,
+            alert: { type: null, message: '' },
+            message: '',
+            showAlert(type, message) {
+                this.alert = { type: type, message: message }
+            },
+            resetAlert() {
+                this.alert = { type: null, message: '' }
+            },
+            approve() {
+                if (this.approve_loading || this.message_loading) return;
+                this.approve_loading = true
+
+                fetch("{% url 'projects:review_approve' user_project.pk %}", {
+                    method: 'post',
+                    headers: { 'x-CSRFToken': window.csrftoken, 'Content-Type': 'application/javascript' },
+                    body: JSON.stringify({
+                        message: this.message
+                    })
+                })
+                    .then(resp => {
+                        if (!resp.ok) {
+                            throw Error(resp.statusText)
+                        }
+                        this.message = ''
+                        this.showAlert('success', 'Proyek telah disetujui!')
+                        window.location.reload()
+                    })
+                    .catch(err => {
+                        this.showAlert('server', err)
+                    })
+                    .finally(() => {
+                        this.approve_loading = false
+                    })
+            },
+            sendMessage() {
+                if (this.approve_loading || this.message_loading) return;
+                if (this.message.trim().length == 0) {
+                    return this.showAlert('client', 'Pesan tidak boleh kosong!')
+                }
+                this.message_loading = true
+
+                fetch("{% url 'projects:review_message' user_project.pk %}", {
+                    method: 'post',
+                    headers: { 'x-CSRFToken': window.csrftoken, 'Content-Type': 'application/javascript' },
+                    body: JSON.stringify({
+                        message: this.message
+                    })
+                })
+                    .then(resp => {
+                        if (!resp.ok) {
+                            throw Error(resp.statusText)
+                        }
+                        this.message = ''
+                        this.showAlert('success', 'Pesan dikirim!')
+                        window.location.reload()
+                    })
+                    .catch(err => {
+                        this.showAlert('server', err)
+                    })
+                    .finally(() => {
+                        this.message_loading = false
+                    })
+            },
+        }
+    }
+</script>

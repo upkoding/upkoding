@@ -54,19 +54,20 @@ def render_tags(project):
     return data
 
 
-@register.inclusion_tag('projects/templatetags/render_events.html')
-def render_events(user_project):
+@register.inclusion_tag('projects/templatetags/render_timeline.html', takes_context=True)
+def render_timeline(context, user_project):
     """
-    Render project's events.
+    Render project's events timeline.
     """
     events = UserProjectEvent.objects.filter(user_project=user_project)
     events_with_template = []
     for event in events:
         events_with_template.append({
             'obj': event,
-            'tpl': 'projects/templatetags/events/type_{}.html'.format(event.event_type)
+            'tpl': 'projects/templatetags/timeline/type_{}.html'.format(event.event_type)
         })
     return {
         'user_project': user_project,
-        'events': events_with_template
+        'events': events_with_template,
+        'user': context.request.user,
     }

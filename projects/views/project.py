@@ -1,14 +1,14 @@
 import copy
 from django.http import HttpResponseRedirect
-from django.http.response import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 
 from account.models import User
-from .models import Project, UserProject, UserProjectEvent
-from .forms import UserProjectReviewRequestForm
+from projects.models import Project, UserProject, UserProjectEvent
+from projects.forms import UserProjectReviewRequestForm
 
 
 class ProjectList(ListView):

@@ -208,6 +208,23 @@ ul.timeline > li > .avatar {
   z-index: 500;
 }
 
+ul.timeline li .card-header {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+ul.timeline li .list-group .list-group-item,
+ul.timeline li .card-body label,
+ul.timeline li .card-body .alert,
+ul.timeline li .card-body .form-text {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+ul.timeline li .list-group .list-group-item a.project-url {
+  color: #0d6efd;
+}
+
 ul.timeline li .card-body .title {
   font-size: 0.9rem;
   color: #555;
