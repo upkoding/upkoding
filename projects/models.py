@@ -142,13 +142,11 @@ class UserProject(models.Model):
     # statuses
     STATUS_IN_PROGRESS = 0
     STATUS_PENDING_REVIEW = 1
-    STATUS_NEED_REVISION = 2
-    STATUS_COMPLETE = 3
-    STATUS_INCOMPLETE = 4
+    STATUS_COMPLETE = 2
+    STATUS_INCOMPLETE = 3
     STATUSES = [
         (STATUS_IN_PROGRESS, 'In Progress'),
         (STATUS_PENDING_REVIEW, 'Pending Review'),
-        (STATUS_NEED_REVISION, 'Need Revision'),
         (STATUS_COMPLETE, 'Complete'),
         (STATUS_INCOMPLETE, 'Incomplete'),
     ]
@@ -216,10 +214,8 @@ class UserProject(models.Model):
         """
         Based Bootstrap theme color
         """
-        if self.status == self.STATUS_NEED_REVISION:
-            return 'warning'
         if self.status == self.STATUS_PENDING_REVIEW:
-            return 'primary'
+            return 'warning'
         if self.status == self.STATUS_COMPLETE:
             return 'success'
         if self.status == self.STATUS_INCOMPLETE:
@@ -230,6 +226,8 @@ class UserProject(models.Model):
         """
         Check whether `user` can approve this project.
         """
+        if self.is_complete():
+            return False
         if user.is_staff and self.user != user:
             return True
         return False

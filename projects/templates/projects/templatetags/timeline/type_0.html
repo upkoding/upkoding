@@ -10,6 +10,9 @@
                     {{ event_user.username }}
                 </strong>
             </a>
+            {% if event_user.is_staff %}
+            <span class="badge bg-secondary ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
+            {% endif %}
             memulai proyek.
         </div>
     </div>

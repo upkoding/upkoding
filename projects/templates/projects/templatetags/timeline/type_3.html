@@ -10,7 +10,29 @@
                     {{ event_user.username }}
                 </strong>
             </a>
+            {% if event_user.is_staff %}
+            <span class="badge bg-secondary ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
+            {% endif %}
             meminta project review.
+            <ul class="list-group mt-3 mb-2">
+                {% if user_project.demo_url %}
+                <li class="list-group-item">Demo: <a href="{{ user_project.demo_url }}" target="_blank"
+                        class="project-url">
+                        {{ user_project.demo_url }}
+                    </a>
+                </li>
+                {% endif %}
+                {% if user_project.sourcecode_url %}
+                <li class="list-group-item">Kode Sumber: <a href="{{ user_project.sourcecode_url }}" target="_blank"
+                        class="project-url">
+                        {{ user_project.sourcecode_url }}
+                    </a>
+                </li>
+                {% endif %}
+                {% if user_project.note %}
+                <li class="list-group-item">{{ user_project.note|linebreaks }}</li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </div>

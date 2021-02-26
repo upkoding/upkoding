@@ -214,11 +214,18 @@ ul.timeline li .card-header {
 }
 
 ul.timeline li .list-group .list-group-item,
+ul.timeline li .list-group .list-group-item p,
 ul.timeline li .card-body label,
 ul.timeline li .card-body .alert,
-ul.timeline li .card-body .form-text {
+ul.timeline li .card-body .form-text,
+ul.timeline .card-header a {
   font-size: 0.9rem;
   font-weight: 400;
+}
+
+ul.timeline .card-header a {
+  color: #212529;
+  font-weight: 500;
 }
 
 ul.timeline li .list-group .list-group-item a.project-url {
@@ -233,11 +240,23 @@ ul.timeline li .card-body .title strong {
   font-weight: 500;
   color: #333;
 }
-ul.timeline .card-body .created {
+ul.timeline .card .card-body .created,
+ul.timeline .card .card-header .created {
   font-size: 12px;
   color: #777;
-  background-color: white;
   margin-top: 2px;
+}
+ul.timeline li .card .card-body * {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+ul.timeline li .card .card-body h1,
+ul.timeline li .card .card-body h2,
+ul.timeline li .card .card-body h3,
+ul.timeline li .card .card-body h4,
+ul.timeline li .card .card-body h5,
+ul.timeline li .card .card-body h6 {
+  font-weight: 700;
 }
 /* ul.timeline > li:before {
   content: " ";
