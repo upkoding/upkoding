@@ -1,5 +1,5 @@
 from django import template
-from projects.models import UserProjectEvent
+from projects.models import UserProject, UserProjectEvent
 
 register = template.Library()
 
@@ -70,4 +70,28 @@ def render_timeline(context, user_project):
         'user_project': user_project,
         'events': events_with_template,
         'user': context.request.user,
+    }
+
+
+@register.inclusion_tag('projects/templatetags/inprogress_projects.html')
+def render_inprogress_projects(project):
+    user_projects = UserProject.objects.filter(
+        project=project,
+        status__in=(UserProject.STATUS_IN_PROGRESS,
+                    UserProject.STATUS_PENDING_REVIEW,
+                    UserProject.STATUS_INCOMPLETE)
+    ).order_by('-created')[:5]
+    return {
+        'items': user_projects
+    }
+
+
+@register.inclusion_tag('projects/templatetags/completed_projects.html')
+def render_completed_projects(project):
+    user_projects = UserProject.objects.filter(
+        project=project,
+        status=UserProject.STATUS_COMPLETE
+    )[:5]
+    return {
+        'items': user_projects
     }

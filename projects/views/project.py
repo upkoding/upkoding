@@ -1,10 +1,11 @@
 import copy
 from django.http import HttpResponseRedirect
-from django.http.response import HttpResponse, HttpResponseBadRequest
+from django.http.response import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.db import transaction
 
 from account.models import User
 from projects.models import Project, UserProject, UserProjectEvent
@@ -27,6 +28,20 @@ class ProjectDetail(DetailView):
             status=Project.STATUS_ACTIVE
         )
 
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('me') == 'true':
+            if not request.user.is_authenticated:
+                return HttpResponseForbidden()
+
+            project = self.get_object()
+            user_project = get_object_or_404(
+                UserProject, user=request.user, project=project)
+            return JsonResponse({
+                'status': user_project.status,
+                'color_class': user_project.get_color_class()
+            })
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, slug, pk):
         user = request.user
         project = self.get_object()
@@ -42,15 +57,17 @@ class ProjectDetail(DetailView):
             return HttpResponseRedirect(reverse('account:login') + '?next={}'.format(next_url))
 
         # assign user to the project
-        user_project, created = project.assign_to(user)
-        if created:
-            user_project.add_event(UserProjectEvent.TYPE_PROJECT_START)
-            messages.info(request,
-                          "Selamat mengerjakan `{}`!".format(project.title),
-                          extra_tags='success')
-        success_url = reverse('projects:detail_user', args=[
-                              slug, pk, user.username])
-        return HttpResponseRedirect(success_url)
+        with transaction.atomic():
+            user_project, created = project.assign_to(user)
+            if created:
+                user_project.add_event(UserProjectEvent.TYPE_PROJECT_START)
+                messages.info(request,
+                              "Selamat mengerjakan `{}`!".format(
+                                  project.title),
+                              extra_tags='success')
+            success_url = reverse('projects:detail_user', args=[
+                slug, pk, user.username])
+            return HttpResponseRedirect(success_url)
 
 
 class ProjectDetailUser(DetailView):

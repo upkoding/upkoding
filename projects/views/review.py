@@ -2,11 +2,12 @@ import json
 from django.http.response import HttpResponseForbidden, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView
+from django.db import transaction
 
 from projects.models import UserProject, UserProjectEvent
 
 
-class ReviewProject(LoginRequiredMixin, DetailView):
+class ProjectReview(LoginRequiredMixin, DetailView):
     model = UserProject
 
     def post(self, request, *args, **kwargs):
@@ -30,26 +31,43 @@ class ReviewProject(LoginRequiredMixin, DetailView):
 
         # staff can approve projects, but staff project need to be approved by admin :)
         if action == 'approve' and user_project.approvable_by(current_user):
-            # TODO: transaction
-            user_project.status = UserProject.STATUS_COMPLETE
-            user_project.save()
+            with transaction.atomic():
+                user_project.status = UserProject.STATUS_COMPLETE
+                user_project.save()
 
-            user_project.add_event(
-                UserProjectEvent.TYPE_PROJECT_COMPLETE,
-                user=current_user,
-                message=message)
-            return JsonResponse({'ok': True})
+                # add point to user
+                owner.add_point(user_project.point)
+
+                # increment completed count on project
+                project = user_project.project
+                project.inc_completed_count()
+
+                user_project.add_event(
+                    UserProjectEvent.TYPE_PROJECT_COMPLETE,
+                    user=current_user,
+                    message=message)
+                return JsonResponse({'ok': True})
 
         # only superuser can disapprove (drop the status back to pending review) approved project
         if action == 'disapprove' and current_user.is_superuser:
-            # TODO: transaction
-            user_project.status = UserProject.STATUS_PENDING_REVIEW
-            user_project.save()
+            was_complete = user_project.is_complete()
 
-            user_project.add_event(
-                UserProjectEvent.TYPE_PROJECT_INCOMPLETE,
-                user=current_user,
-                message=message)
-            return JsonResponse({'ok': True})
+            with transaction.atomic():
+                user_project.status = UserProject.STATUS_PENDING_REVIEW
+                user_project.save()
+
+                # withdraw point and counter if it was approved
+                if was_complete:
+                    owner.remove_point(user_project.point)
+
+                    # decrement completed count on project
+                    project = user_project.project
+                    project.dec_completed_count()
+
+                user_project.add_event(
+                    UserProjectEvent.TYPE_PROJECT_INCOMPLETE,
+                    user=current_user,
+                    message=message)
+                return JsonResponse({'ok': True})
 
         return HttpResponseForbidden()

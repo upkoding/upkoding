@@ -52,6 +52,14 @@ class User(AbstractUser):
         except ObjectDoesNotExist:
             return None
 
+    def add_point(self, point):
+        self.point = models.F('point') + point
+        self.save()
+
+    def remove_point(self, point):
+        self.point = models.F('point') - point
+        self.save()
+
 
 class Link(models.Model):
     user = models.OneToOneField(

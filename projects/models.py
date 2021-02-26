@@ -114,14 +114,27 @@ class Project(models.Model):
     def get_point_display(self):
         return '{}{}'.format(self.point, settings.POINT_UNIT)
 
+    def inc_taken_count(self):
+        self.taken_count = models.F('taken_count') + 1
+        self.save()
+
+    def inc_completed_count(self):
+        self.completed_count = models.F('completed_count') + 1
+        self.save()
+
+    def dec_completed_count(self):
+        self.completed_count = models.F('completed_count') - 1
+        self.save()
+
     def assign_to(self, user):
         """
         Returns `UserProject` instance and created (bool).
         - If user already pick this project, return that one instead of creating new one
           since user can only work on the same project once.
         - If user never pick this project, create new `UserProject`.
+        - Last, we increment the taken count.
         """
-        return UserProject.objects.get_or_create(
+        obj, created = UserProject.objects.get_or_create(
             user=user,
             project=self,
             defaults={
@@ -129,8 +142,10 @@ class Project(models.Model):
                 'point': self.point,
                 'require_demo_url': self.require_demo_url,
                 'require_sourcecode_url': self.require_sourcecode_url,
-            }
-        )
+            })
+        if created:
+            self.inc_taken_count()
+        return (obj, created)
 
 
 class UserProject(models.Model):
@@ -214,12 +229,10 @@ class UserProject(models.Model):
         """
         Based Bootstrap theme color
         """
-        if self.status == self.STATUS_PENDING_REVIEW:
+        if self.is_pending_review() or self.is_incomplete():
             return 'warning'
-        if self.status == self.STATUS_COMPLETE:
+        if self.is_complete():
             return 'success'
-        if self.status == self.STATUS_INCOMPLETE:
-            return 'danger'
         return 'primary'
 
     def approvable_by(self, user):
@@ -277,6 +290,9 @@ class UserProject(models.Model):
 
     def is_complete(self):
         return self.status == self.STATUS_COMPLETE
+
+    def is_incomplete(self):
+        return self.status == self.STATUS_INCOMPLETE
 
     def is_pending_review(self):
         return self.status == self.STATUS_PENDING_REVIEW
