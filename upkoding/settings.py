@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'social_django',
     'sorl.thumbnail',
     'martor',
+    'fullurl',
 
     'django.contrib.humanize',
     'django.contrib.admin',
@@ -191,6 +192,13 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.10'
 
 POINT_UNIT = 'UP'
+GOOGLE_SITE_VERIFICATION = os.environ.get('GOOGLE_SITE_VERIFICATION', '')
+DEFAULT_METADATA = {
+    'title': 'UpKoding',
+    'image': 'base/img/logo.png',
+    'description': 'Belajar Coding paling efektif adalah dengan membuat proyek.'
+    + ' UpKoding menyediakan ratusan ide-ide proyek yang kamu bisa buat sebagai latihan mengasah keahlian programming kamu dan dapatkan point untuk setiap proyek yang kamu selesaikan.',
+}
 
 try:
     from upkoding.local_settings import *

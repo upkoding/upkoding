@@ -1,10 +1,14 @@
 {% extends 'base/base.html' %}
 
-{% block title %}Semua Proyek{% endblock %}
+{% load base %}
+{% load sorl_thumbnail %}
+
+{% block meta %}
+{% meta title='Semua Proyek' desc='Tantang dirimu dengan membuat ide-ide proyek berikut menjadi kenyataan dan raih poin berdasarkan tingkat kesulitannya.'%}
+{% endblock %}
 {% block header_mb %}mb-5{% endblock %}
 
 {% block content %}
-{% load sorl_thumbnail %}
 <div class="container">
     <div class="row justify-content-md-center text-center">
         <div class="col col-lg-8">

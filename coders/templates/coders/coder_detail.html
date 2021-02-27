@@ -1,12 +1,13 @@
 {% extends 'base/base.html' %}
 
-{% block title %}Profil {{ object.get_display_name|title }} ({{ object.username }}){% endblock %}
-{% block header_mb %}mb-5{% endblock %}
-
-{% block content %}
 {% load martortags %}
 {% load sorl_thumbnail %}
 {% load base %}
+
+{% block meta %}{% meta object=object %}{% endblock %}
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
 <div class="project-detail">
     <div class="row justify-content-md-center">
         <div class="col col-lg-6 right text-center">

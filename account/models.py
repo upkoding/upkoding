@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.humanize.templatetags import humanize
+from django.conf import settings
 
 from sorl.thumbnail import ImageField, get_thumbnail
 
@@ -41,10 +42,10 @@ class User(AbstractUser):
         return reverse('coders:detail', args=[self.username])
 
     def get_display_name(self):
-        return self.user if not self.first_name else self.first_name
+        return self.username if not self.first_name else self.first_name
 
     def get_point_display(self):
-        return '{}UP'.format(humanize.intcomma(self.point))
+        return '{}{}'.format(humanize.intcomma(self.point), settings.POINT_UNIT)
 
     def get_link(self):
         try:

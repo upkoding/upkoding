@@ -1,6 +1,10 @@
 from django.utils.safestring import mark_safe
 from django import template
 from django.shortcuts import reverse
+from django.conf import settings
+
+from account.models import User
+from projects.models import Project
 
 register = template.Library()
 
@@ -62,3 +66,35 @@ def input_class(obj, arg):
     new_classes = arg.split()
     final_classes = set(current_classes + new_classes)
     return obj.as_widget(attrs={'class': ' '.join(final_classes)})
+
+
+@register.inclusion_tag('base/templatetags/meta.html', takes_context=True)
+def meta(context, **kwargs):
+    meta_url = context.request.path
+    meta_title = kwargs.get('title', settings.DEFAULT_METADATA.get('title'))
+    meta_image = kwargs.get('image', settings.DEFAULT_METADATA.get('image'))
+    meta_desc = kwargs.get(
+        'desc', settings.DEFAULT_METADATA.get('description'))
+
+    if 'object' in kwargs:
+        obj = kwargs.get('object')
+        if isinstance(obj, User):
+            meta_url = obj.get_absolute_url()
+            meta_title = 'Profil dari {} (@{})'.format(
+                obj.get_display_name(), obj.username)
+            meta_image = obj.avatar_url(640)
+            meta_desc = obj.description
+
+        if isinstance(obj, Project):
+            meta_title = obj.title if (
+                not 'title' in kwargs) else kwargs.get('title')
+            meta_image = obj.cover.url
+            meta_desc = obj.description
+
+    return {
+        'title': meta_title,
+        'image': meta_image,
+        'url': meta_url,
+        'desc': meta_desc,
+        'google_site_verification': settings.GOOGLE_SITE_VERIFICATION,
+    }

@@ -1,11 +1,13 @@
 {% extends 'base/base.html' %}
 
-{% block title %}{{ object.title|title }}{% endblock %}
+{% load base %}
+{% load martortags %}
+{% load projects %}
+
+{% block meta %}{% meta object=object %}{% endblock %}
 {% block header_mb %}mb-4{% endblock %}
 
 {% block content %}
-{% load martortags %}
-{% load projects %}
 <div class="project-detail">
     {% include 'projects/_project_header.html' with project=object user_project=None %}
 
