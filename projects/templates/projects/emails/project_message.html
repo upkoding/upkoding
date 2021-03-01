@@ -1,0 +1,9 @@
+Halo {{ to_user.username }},
+
+Terdapat pesan baru dari <a href="{{ domain }}{{ user.get_absolute_url }}">@{{ user.username }}</a>
+di proyek <a href="{{ domain }}{{ user_project.get_absolute_url }}">{{ project.title|title }}</a>.
+
+Silahkan <a href="{{ domain }}{{ user_project.get_absolute_url }}">Klik disini</a> untuk melihat pesannya.
+
+--
+Team UpKoding

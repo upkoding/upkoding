@@ -344,3 +344,19 @@ class UserProjectEvent(models.Model):
 
     def __str__(self):
         return self.get_event_type_display()
+
+    def istype(self, event_type: int):
+        return self.event_type == event_type
+
+
+class UserProjectEventParticipant(models.Model):
+    """
+    Used to track who participate in `UserProjectEvent`
+    """
+    user_project = models.ForeignKey(
+        UserProject, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    # whether this user will will be notified for an event.
+    subscribed = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)

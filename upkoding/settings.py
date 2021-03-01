@@ -31,6 +31,10 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 
 AUTH_USER_MODEL = 'account.User'
 
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_EMAIL_FROM = 'notification@upkoding.com'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -191,6 +195,7 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 }
 SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.10'
 
+SITE_DOMAIN = os.environ.get('SITE_DOMAIN')
 POINT_UNIT = 'UP'
 GOOGLE_SITE_VERIFICATION = os.environ.get('GOOGLE_SITE_VERIFICATION', '')
 DEFAULT_METADATA = {

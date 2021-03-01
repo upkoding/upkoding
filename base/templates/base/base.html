@@ -64,7 +64,7 @@
             <p style="color: grey; margin-top: 1em;">Powered by <a href="https://github.com/upkoding/upkoding"
                     target="_blank">upkoding</a>
                 {% if user.is_authenticated and user.is_staff %}
-                | <a href="{% url 'admin:index' %}">Admin Area</a>
+                | <a href="{% url 'admin:index' %}">admin</a>
                 {% endif %}
             </p>
         </footer>
@@ -77,6 +77,8 @@
     <script>
         var a2a_config = a2a_config || {};
         a2a_config.onclick = 1;
+        a2a_config.num_services = 6;
+        a2a_config.prioritize = ['facebook', 'twitter', 'whatsapp', 'telegram', 'email', 'facebook_messenger']
     </script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.0/dist/alpine.min.js" defer></script>
     {% block footscripts %}{% endblock %}

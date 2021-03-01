@@ -1,13 +1,15 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import UserProject, UserProjectEvent
+from .models import UserProjectEvent, UserProjectEventParticipant
+from .notifications import UserProjectEventNotification
 
 
-# @receiver(post_save, sender=UserProject, dispatch_uid='user_project_event')
-# def create_user_project_event(sender, instance, created, **kwargs):
-#     if created:
-#         print('Project started')
-#     else:
-#         print(instance.requirements)
-#         print(instance._original_values.get('requirements'))
+@receiver(post_save, sender=UserProjectEvent, dispatch_uid='UserProjectEvent:post_save')
+def user_project_event_post_save(sender, instance, created, **kwargs):
+    if created:
+        # create participant
+        UserProjectEventParticipant.objects.get_or_create(
+            user_project=instance.user_project, user=instance.user)
+        # send notification
+        UserProjectEventNotification(instance)
