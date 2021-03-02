@@ -2,7 +2,7 @@ from django.core.mail import send_mail, send_mass_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 
-from .models import UserProjectEvent, UserProjectEventParticipant
+from .models import UserProjectEvent, UserProjectParticipant
 
 FROM = settings.DEFAULT_EMAIL_FROM
 
@@ -30,7 +30,7 @@ class UserProjectEventNotification:
         tpl = 'projects/emails/project_message.html'
 
         # get all participants on this project, except the event creator.
-        participants = UserProjectEventParticipant.objects. \
+        participants = UserProjectParticipant.objects. \
             filter(subscribed=True). \
             exclude(user=self.__event_user)
         emails = []
@@ -56,5 +56,5 @@ class UserProjectEventNotification:
         user_project_owner = self.__user_project.user
         self.__context.update({'to_user': user_project_owner})
         msg = render_to_string(tpl, self.__context)
-        send_mail('[UpKoding] Status disetujui proyek kamu diralat!',
+        send_mail('[UpKoding] Status proyek kamu diralat',
                   msg, FROM, [user_project_owner.email], fail_silently=True)

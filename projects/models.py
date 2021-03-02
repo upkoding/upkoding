@@ -349,9 +349,10 @@ class UserProjectEvent(models.Model):
         return self.event_type == event_type
 
 
-class UserProjectEventParticipant(models.Model):
+class UserProjectParticipant(models.Model):
     """
-    Used to track who participate in `UserProjectEvent`
+    Used to track who participates in `UserProject`
+    including the owner and reviewers.
     """
     user_project = models.ForeignKey(
         UserProject, on_delete=models.CASCADE)

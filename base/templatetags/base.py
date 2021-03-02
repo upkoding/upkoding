@@ -35,6 +35,16 @@ def active_class(context, namespace_or_path, classname="active"):
 
 
 @register.filter
+def fullurl(url):
+    """
+    Constuct URL with domain
+    """
+    if url.startswith('/'):
+        return '{}{}'.format(settings.SITE_DOMAIN, url)
+    return '{}/{}'.format(settings.SITE_DOMAIN, url)
+
+
+@register.filter
 def avatar_url(user, size=100):
     """
     return only the URL of the gravatar

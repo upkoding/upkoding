@@ -1,9 +1,8 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 
 from account.models import User
+from projects.models import UserProject
 
 
 class CoderList(ListView):
@@ -66,6 +65,8 @@ class CoderDetail(DetailView):
         """
         data = super().get_context_data(**kwargs)
         data['links'] = self.__get_link_props()
-        data['current_projects'] = []
-        data['completed_projects'] = []
+        data['current_projects'] = UserProject.objects.filter(
+            user=self.object).exclude(status=UserProject.STATUS_COMPLETE)[:5]
+        data['completed_projects'] = UserProject.objects.filter(
+            user=self.object, status=UserProject.STATUS_COMPLETE)[:5]
         return data

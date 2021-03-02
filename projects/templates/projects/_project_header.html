@@ -10,7 +10,6 @@ terms:
 {% load base %}
 {% load sorl_thumbnail %}
 {% load humanize %}
-{% load fullurl %}
 {% thumbnail object.cover "960x540" crop="center" as im %}
 <div class="row justify-content-md-center header" style="background-image: url({{ im.url }});">
     {% with object.user as project_owner %}
@@ -104,8 +103,8 @@ terms:
         {% endif %}
         <div class="row mt-4">
             <div class="col col-6">
-                <div class="a2a_kit a2a_kit_size_32 a2a_default_style" data-a2a-url="{% buildfullurl object.get_absolute_url %}"
-                    data-a2a-title="{{ object.title|title }}">
+                <div class="a2a_kit a2a_kit_size_32 a2a_default_style"
+                    data-a2a-url="{{ object.get_absolute_url|fullurl }}" data-a2a-title="{{ object.title|title }}">
                     <a class="a2a_dd" href="https://www.addtoany.com/share"><i class="bi bi-share-fill me-1"></i>
                         Bagikan</a>
                 </div>

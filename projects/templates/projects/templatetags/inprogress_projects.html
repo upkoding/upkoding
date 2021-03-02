@@ -14,7 +14,7 @@
                     </small>
                     {% endwith %}
                 </h6>
-                <div class="progress">
+                <div class="progress" style="height: 3px; margin-left: 36px;">
                     <div class="progress-bar progress-bar-striped bg-{{ item.get_color_class }}" role="progressbar"
                         style="width: {{ item.requirements_completed_percent|safe }}%"
                         aria-valuenow="{{ item.requirements_completed_percent|safe }}" aria-valuemin="0"

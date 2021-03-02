@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'social_django',
     'sorl.thumbnail',
     'martor',
-    'fullurl',
 
     'django.contrib.humanize',
     'django.contrib.admin',
@@ -90,6 +89,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'upkoding.context_processors.upkoding',
             ],
         },
     },

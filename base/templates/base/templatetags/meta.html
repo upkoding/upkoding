@@ -1,4 +1,4 @@
-{% load fullurl %}
+{% load base %}
 {% load static %}
 {% with title=title|add:' | Belajar Coding Menyenangkan!' %}
 <meta charset="utf-8">
@@ -11,12 +11,12 @@
 <meta property="og:image" content="{% if 'http' in image %}{{ image }}{% else %}{% static image %}{% endif %}" />
 <meta property="og:site_name" content="UpKoding" />
 <meta property="og:description" content="{{ desc|truncatewords:100 }}" />
-<meta property="og:url" content="{% buildfullurl url %}" />
+<meta property="og:url" content="{{ url|fullurl }}" />
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:url" content="{% buildfullurl url %}" />
+<meta name="twitter:url" content="{{ url|fullurl }}" />
 <meta name="twitter:title" content="{{ title }}" />
 <meta name="twitter:description" content="{{ desc|truncatewords:100 }}" />
 <meta name="twitter:image" content="{% if 'http' in image %}{{ image }}{% else %}{% static image %}{% endif %}" />
-<link rel="canonical" href="{% buildfullurl url %}">
+<link rel="canonical" href="{{ url|fullurl }}">
 <title>{{ title }}</title>
 {% endwith %}

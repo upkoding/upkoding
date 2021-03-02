@@ -171,13 +171,6 @@ a.link-card p {
   margin-right: 8px;
 }
 
-.project-detail .content .user-progress a .card .card-body .progress {
-  position: relative;
-  margin-left: 34px;
-  margin-top: -3px;
-  height: 6px;
-}
-
 .project-detail .content .description {
   position: relative;
 }

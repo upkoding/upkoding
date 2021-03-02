@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import UserProjectEvent, UserProjectEventParticipant
+from .models import UserProjectEvent, UserProjectParticipant
 from .notifications import UserProjectEventNotification
 
 
@@ -9,7 +9,7 @@ from .notifications import UserProjectEventNotification
 def user_project_event_post_save(sender, instance, created, **kwargs):
     if created:
         # create participant
-        UserProjectEventParticipant.objects.get_or_create(
+        UserProjectParticipant.objects.get_or_create(
             user_project=instance.user_project, user=instance.user)
         # send notification
         UserProjectEventNotification(instance)
