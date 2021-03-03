@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=100, verbose_name='Judul')),
                 ('description', models.TextField(verbose_name='Deskripsi')),
                 ('requirements', models.JSONField(blank=True, null=True, verbose_name='Requirements')),
-                ('cover', sorl.thumbnail.fields.ImageField(blank=True, null=True, upload_to=projects.models.cover_path)),
+                ('cover', sorl.thumbnail.fields.ImageField(blank=True, null=True, upload_to=projects.models.project_cover_path)),
                 ('tags', models.CharField(blank=True, max_length=50, null=True, verbose_name='Tags')),
                 ('is_featured', models.BooleanField(default=False)),
                 ('is_deleted', models.BooleanField(default=False)),

@@ -5,7 +5,12 @@ from django.utils.translation import gettext_lazy as _
 from .models import User, Link
 
 
+class LinkAdmin(admin.StackedInline):
+    model = Link
+
+
 class CustomUserAdmin(UserAdmin):
+    inlines = [LinkAdmin]
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {
@@ -18,4 +23,3 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Link)

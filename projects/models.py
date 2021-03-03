@@ -10,15 +10,18 @@ from sorl.thumbnail import ImageField
 from account.models import User
 
 
-def cover_path(instance, filename):
+def project_cover_path(instance, filename):
     """
-    Custom cover path: projects/cover/hello-world-12345678.png
+    Custom cover path: projects/cover/hello-world.png
     """
-    return 'projects/cover/{}-{}.{}'.format(
-        instance.slug,
-        int(now().timestamp()),
-        filename.split('.')[-1]
-    )
+    return 'projects/cover/{}'.format(filename)
+
+
+def project_image_path(instance, filename):
+    """
+    Custom cover path: projects/images/hello-world.png
+    """
+    return 'projects/images/{}'.format(filename)
 
 
 class ProjectManager(models.Manager):
@@ -65,7 +68,7 @@ class Project(models.Model):
     description = models.TextField('Deskripsi')
     requirements = models.JSONField('Requirements', blank=True, null=True)
     cover = ImageField(
-        upload_to=cover_path,
+        upload_to=project_cover_path,
         blank=True,
         null=True
     )
@@ -146,6 +149,18 @@ class Project(models.Model):
         if created:
             self.inc_taken_count()
         return (obj, created)
+
+
+class ProjectImage(models.Model):
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name='images')
+    title = models.CharField(max_length=250, blank=True, default='')
+    order = models.SmallIntegerField(default=0)
+    cover = ImageField(
+        upload_to=project_image_path,
+    )
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
 
 class UserProject(models.Model):
