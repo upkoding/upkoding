@@ -12,7 +12,7 @@ class CoderList(ListView):
 
 class CoderDetail(DetailView):
     template_name = 'coders/coder_detail.html'
-    queryset = User.objects.all()
+    context_object_name = 'coder'
 
     def get_object(self):
         """
