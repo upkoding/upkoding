@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 
+{% load static %}
 {% load martortags %}
 {% load base %}
 {% load projects %}
@@ -34,6 +35,8 @@
 
             <div x-data="descriptionToggle()" :class="{'shrink': shrink, 'pb-4': !shrink}" class="description mt-5 pt-4"
                 style="border-top: 1px dashed #ddd">
+                {% include 'projects/_project_images.html' with images=project.images.all %}
+
                 <p class="lead ps-3 mb-4"
                     style="font-size: 18px; color: rgba(0, 0, 0, 0.7); font-weight: 300; font-style: italic; border-left: 2px solid #ccc;">
                     {{ object.description_short }}
@@ -89,8 +92,15 @@
 </div>
 {% endblock %}
 
+{% block headscripts %}
+<link href="{% static 'base/vendor/simpleLightbox/simpleLightbox.min.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block footscripts %}
+<script src="{% static 'base/vendor/simpleLightbox/simpleLightbox.min.js' %}"></script>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
 <script>
+    // description toggle
     window.descriptionToggle = function () {
         return {
             shrink: true,
@@ -99,5 +109,12 @@
             }
         }
     }
+    // simple lightbox
+    new SimpleLightbox({ elements: '.simpleLightbox a' });
+    // add2any
+    var a2a_config = a2a_config || {};
+    a2a_config.onclick = 1;
+    a2a_config.num_services = 6;
+    a2a_config.prioritize = ['facebook', 'twitter', 'whatsapp', 'telegram', 'email', 'facebook_messenger']
 </script>
 {% endblock %}

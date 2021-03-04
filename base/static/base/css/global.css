@@ -177,7 +177,7 @@ a.link-card p {
 
 .project-detail .content .description.shrink {
   position: relative;
-  max-height: 200px;
+  max-height: 300px;
   overflow: hidden;
 }
 

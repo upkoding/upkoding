@@ -156,7 +156,7 @@ class ProjectImage(models.Model):
         Project, on_delete=models.CASCADE, related_name='images')
     title = models.CharField(max_length=250, blank=True, default='')
     order = models.SmallIntegerField(default=0)
-    cover = ImageField(
+    image = ImageField(
         upload_to=project_image_path,
     )
     created = models.DateTimeField(auto_now_add=True)

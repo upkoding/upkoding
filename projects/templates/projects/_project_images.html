@@ -1,0 +1,18 @@
+{% if images %}
+{% load sorl_thumbnail %}
+<div class="images mb-5 simpleLightbox">
+    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-5 g-2">
+        {% for img in images %}
+        {% thumbnail img.image "200x200" crop="center" as im %}
+        <div class="col">
+            <a href="{{ img.image.url }}" {%if img.title %}title="{{ img.title }}" {% endif %}target="_blank"
+                rel="noopener noreferrer">
+                <img src="{{ im.url }}" class="rounded img-fluid"
+                    alt="Image {%if img.title %}{{ img.title }}{% endif %}" />
+            </a>
+        </div>
+        {% endthumbnail %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

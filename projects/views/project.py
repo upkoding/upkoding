@@ -144,7 +144,7 @@ class ProjectDetailUser(DetailView):
             if user_project.is_requirements_complete():
                 user_project.add_event(UserProjectEvent.TYPE_PROGRESS_COMPLETE)
                 messages.info(request,
-                              "Mantap! Proyek kamu siap untuk direview. Klik tombol `Review Request`",
+                              "Mantap! Proyek kamu siap untuk direview. Klik tombol `Minta Review`",
                               extra_tags='success')
             else:
                 _, progress_after, become_complete, _ = UserProject.requirements_diff(
