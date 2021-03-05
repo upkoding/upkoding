@@ -1,0 +1,41 @@
+<div x-data="requirementsWidget()" x-init="init" class="vLargeTextField" style="margin-left: 170px;">
+    <textarea name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %} x-model="strValue"></textarea>
+    <div class="items">
+        <template x-for="(item, index) in objValue" :key="index">
+            <div style="padding: 10px 0 10px 0">
+                <input type="text" placeholder="Title" x-model="item.title" style="width: 90%;"
+                    @input.debounce.500ms="applyChanges()"><br />
+                <input type="text" placeholder="Description" x-model="item.desc" style="width: 90%;"
+                    @input.debounce.500ms="applyChanges()">
+                <input type="button" value="X" style="float: right; margin-top: -27px;"
+                    @click.prevent="remove(index)" />
+            </div>
+        </template>
+    </div>
+    <input type="button" @click.prevent="add" value="Tambah" />
+</div>
+<script>
+    requirementsWidget = () => {
+        return {
+            initialValue: JSON.parse('{% if widget.value %}{{ widget.value | safe }} {% else %}[]{% endif %}'),
+            strValue: '',
+            objValue: [],
+            init() {
+                this.objValue = this.initialValue
+                this.strValue = JSON.stringify(this.initialValue)
+            },
+            add() {
+                this.objValue.push({})
+            },
+            remove(index) {
+                this.objValue.splice(index, 1)
+                this.applyChanges()
+            },
+            applyChanges() {
+                // store changes back to original input
+                // TODO: remove empty items
+                this.strValue = JSON.stringify(this.objValue)
+            }
+        }
+    }
+</script>
