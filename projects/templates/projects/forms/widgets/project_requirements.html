@@ -1,5 +1,6 @@
 <div x-data="requirementsWidget()" x-init="init" class="vLargeTextField" style="margin-left: 170px;">
-    <textarea name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %} x-model="strValue"></textarea>
+    <textarea name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %} x-model="strValue"
+        style="display: none;"></textarea>
     <div class="items">
         <template x-for="(item, index) in objValue" :key="index">
             <div style="padding: 10px 0 10px 0">
@@ -17,12 +18,12 @@
 <script>
     requirementsWidget = () => {
         return {
-            initialValue: JSON.parse('{% if widget.value %}{{ widget.value | safe }} {% else %}[]{% endif %}'),
+            initialValue: JSON.parse('{% if widget.value %}{{ widget.value | safe }}{% else %}[]{% endif %}'),
             strValue: '',
             objValue: [],
             init() {
-                this.objValue = this.initialValue
-                this.strValue = JSON.stringify(this.initialValue)
+                this.objValue = this.initialValue || []
+                this.strValue = JSON.stringify(this.objValue)
             },
             add() {
                 this.objValue.push({})
@@ -33,8 +34,9 @@
             },
             applyChanges() {
                 // store changes back to original input
-                // TODO: remove empty items
-                this.strValue = JSON.stringify(this.objValue)
+                this.strValue = JSON.stringify(this.objValue.filter(o => {
+                    return o.title && o.title.trim().length > 0
+                }))
             }
         }
     }
