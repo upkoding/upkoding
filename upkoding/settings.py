@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'martor',
 
+    'django.contrib.postgres',
     'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',

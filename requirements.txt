@@ -4,3 +4,4 @@ social-auth-app-django==4.0.0
 Pillow==8.1.0
 sorl-thumbnail==12.7.0
 martor==1.5.8
+psycopg2-binary==2.8.6

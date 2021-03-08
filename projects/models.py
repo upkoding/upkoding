@@ -1,13 +1,19 @@
+from django.contrib.postgres import search
 from django.db import models
-from django.db.models import constraints, indexes
 from django.db.models.deletion import CASCADE
 from django.template.defaultfilters import slugify
-from django.utils.timezone import now
 from django.urls import reverse
 from django.conf import settings
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, SearchVectorField
 
 from sorl.thumbnail import ImageField
 from account.models import User
+
+PROJECT_SEARCH_VECTORS = (SearchVector('title', weight='A') +
+                          SearchVector('tags', weight='B') +
+                          SearchVector('description_short', weight='C') +
+                          SearchVector('description', weight='D'))
 
 
 def project_cover_path(instance, filename):
@@ -48,6 +54,19 @@ class ProjectManager(models.Manager):
             `Project.objects.all(status=2, is_featured=True)`
         """
         return self.filter(status=2, is_featured=True)
+
+    def search(self, text):
+        """
+        Provides an easy way to do Full Text Search.
+        Usage:
+            `Project.objects.search('django')`
+        """
+        search_query = SearchQuery(text)
+        search_rank = SearchRank(PROJECT_SEARCH_VECTORS, search_query)
+        return self.get_queryset() \
+            .filter(search_vector=search_query, status=2) \
+            .annotate(rank=search_rank) \
+            .order_by('-rank')
 
 
 class Project(models.Model):
@@ -98,6 +117,9 @@ class Project(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    # full text search
+    search_vector = SearchVectorField(null=True, blank=True)
+
     # custom manager
     objects = ProjectManager()
 
@@ -105,6 +127,8 @@ class Project(models.Model):
         indexes = [
             models.Index(fields=['slug'], name='project_slug_idx'),
             models.Index(fields=['status'], name='project_status_idx'),
+            GinIndex(fields=['search_vector'],
+                     name='project_search_vector_idx'),
         ]
         ordering = ['-created']
 
@@ -120,6 +144,8 @@ class Project(models.Model):
             self.tags = ','.join([
                 tag.strip().lower()
                 for tag in self.tags.split(',')])
+        # set/update search_vector
+        self.search_vector = PROJECT_SEARCH_VECTORS
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
