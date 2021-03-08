@@ -35,7 +35,7 @@
                         {% if coder.point > 0 %}
                         <span class="badge bg-success">{{ coder.get_point_display }}</span>
                         {% endif %}
-                        <p class="card-text mt-2" style="color: grey !important;">
+                        <p class="card-text mt-2" style="color: #888 !important; line-height: 1.3em; font-size: 0.9rem;font-weight: 300;">
                             {{ coder.description|truncatechars:65 }}
                         </p>
                     </div>
@@ -44,5 +44,7 @@
         </a>
         {% endfor %} {% endif %}
     </div>
+
+    {% include 'base/_pagination.html' with page_obj=page_obj %}
 </div>
 {% endblock %}

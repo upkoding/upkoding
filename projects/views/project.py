@@ -14,6 +14,12 @@ from projects.forms import UserProjectReviewRequestForm
 
 class ProjectList(ListView):
     queryset = Project.objects.active()
+    paginate_by = 12
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['featured_projects'] = Project.objects.featured()
+        return data
 
 
 class ProjectDetail(DetailView):

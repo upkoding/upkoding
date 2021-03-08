@@ -19,25 +19,24 @@
                 tingkat kesulitannya.</p>
         </div>
     </div>
-    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
-        {% if object_list %}
-        {% for project in object_list %}
-        <a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}">
-            <div class="col">
-                <div class="card">
-                    <span class="badge bg-success" style="position: absolute; top: 10px; right: 10px; z-index: 99;">{{ project.get_point_display|upper }}</span>
-                    {% thumbnail project.cover "640x360" crop="center" as im %}
-                    <img src="{{ im.url }}" class="card-img-top ratio ratio-16x9">
-                    {% endthumbnail %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ project.title|title }}</h5>
-                        <p class="card-text">{{ project.description_short|truncatechars:65 }}</p>
-                    </div>
-                </div>
-            </div>
-        </a>
+
+    <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">FEATURED</h6>
+    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mb-5">
+        {% if featured_projects %}
+        {% for project in featured_projects %}
+        {% include 'projects/_project_list_item.html' with project=project %}
         {% endfor %}
         {% endif %}
     </div>
+    <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">SEMUA PROYEK</h6>
+    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
+        {% if object_list %}
+        {% for project in object_list %}
+        {% include 'projects/_project_list_item.html' with project=project %}
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    {% include 'base/_pagination.html' with page_obj=page_obj %}
 </div>
 {% endblock %}

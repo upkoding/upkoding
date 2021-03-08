@@ -39,6 +39,16 @@ class ProjectManager(models.Manager):
         """
         return self.filter(status=2)
 
+    def featured(self):
+        """
+        Returns featured projects only.
+        Usage:
+            `Project.objects.featured()`
+        Which is equivalent to:
+            `Project.objects.all(status=2, is_featured=True)`
+        """
+        return self.filter(status=2, is_featured=True)
+
 
 class Project(models.Model):
     """
@@ -96,6 +106,7 @@ class Project(models.Model):
             models.Index(fields=['slug'], name='project_slug_idx'),
             models.Index(fields=['status'], name='project_status_idx'),
         ]
+        ordering = ['-created']
 
     def __str__(self, *args, **kwargs):
         return self.title

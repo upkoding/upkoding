@@ -41,10 +41,10 @@
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
                     <div class="btn-group ms-4">
-                        <a href="{% url 'account:settings' %}" class="btn btn-outline-primary">
+                        <a href="{% url 'account:settings' %}" class="btn btn-outline-default nav-link">
                             {{ user|avatar_img:25 }} <span class="ms-1">{{ user.username }}</span>
                         </a>
-                        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
+                        <button type="button" class="btn btn-outline-default dropdown-toggle dropdown-toggle-split"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
@@ -53,7 +53,7 @@
                         </ul>
                     </div>
                     {% else %}
-                    <a class="btn btn-outline-primary ms-4" href="{% url 'account:login' %}">Login</a>
+                    <a class="btn btn-outline-default ms-4 nav-link" href="{% url 'account:login' %}">Login</a>
                     {% endif %}
                 </nav>
             </div>
