@@ -1,6 +1,6 @@
 import copy
 from django.http import HttpResponseRedirect
-from django.http.response import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
@@ -13,12 +13,23 @@ from projects.forms import UserProjectReviewRequestForm
 
 
 class ProjectList(ListView):
-    queryset = Project.objects.active()
     paginate_by = 12
 
+    def get_queryset(self):
+        search_query = self.request.GET.get('s')
+        if search_query:
+            return Project.objects.search(search_query)
+        return Project.objects.active()
+
     def get_context_data(self, **kwargs):
+        search_query = self.request.GET.get('s')
+        page = self.request.GET.get('page')
+
         data = super().get_context_data(**kwargs)
-        data['featured_projects'] = Project.objects.featured()
+        data['search_query'] = search_query
+        # only show featured project on page 1 AND not in search page
+        if not search_query and (not page or page == '1'):
+            data['featured_projects'] = Project.objects.featured()
         return data
 
 

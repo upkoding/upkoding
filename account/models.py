@@ -30,6 +30,9 @@ class User(AbstractUser):
     point = models.IntegerField(default=0)
     description = models.TextField(blank=True, default='')
 
+    class Meta:
+        ordering = ['-point']
+
     def avatar_url(self, size=100):
         """
         If user upload their picture manually, use it. Otherwise generate from default Gravatar image.

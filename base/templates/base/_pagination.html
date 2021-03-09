@@ -1,9 +1,11 @@
 <nav aria-label="Paginasi" class="mt-5">
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page=1">Pertama</a></li>
+        <li class="page-item"><a class="page-link"
+                href="?page=1{% if search_query %}&s={{ search_query }}{% endif %}">Pertama</a></li>
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+            <a class="page-link"
+                href="?page={{ page_obj.previous_page_number }}{% if search_query %}&s={{ search_query }}{% endif %}">
                 <i class="bi bi-arrow-left"></i>
             </a>
         </li>
@@ -13,11 +15,13 @@
         </li>
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+            <a class="page-link"
+                href="?page={{ page_obj.next_page_number }}{% if search_query %}&s={{ search_query }}{% endif %}">
                 <i class="bi bi-arrow-right"></i>
             </a>
         </li>
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+        <li class="page-item"><a class="page-link"
+                href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&s={{ search_query }}{% endif %}">
                 Terakhir
             </a>
         </li>

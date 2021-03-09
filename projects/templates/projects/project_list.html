@@ -10,25 +10,43 @@
 
 {% block content %}
 <div class="container">
-    <div class="row justify-content-md-center text-center">
+    <div class="row justify-content-md-center text-center mb-5">
         <div class="col col-lg-8">
-            <h1 class="display-6">Semua Proyek</h1>
-            <p class="lead" style="margin-top: 1rem; margin-bottom: 4rem;">Tantang dirimu dengan membuat ide-ide proyek
+            <h1 class="display-6">Proyek</h1>
+            <p class="lead mt-3 mb-4">Tantang dirimu dengan membuat ide-ide proyek
                 berikut menjadi kenyataan dan raih poin
                 berdasarkan
                 tingkat kesulitannya.</p>
+
+            <form method="GET" action="{% url 'projects:list' %}">
+                <input name="s" {% if search_query %}value="{{ search_query }}" {% endif %}
+                    class="form-control form-control-lg" type="text" placeholder="Cari proyek..."
+                    aria-label="Cari proyek">
+            </form>
         </div>
     </div>
 
+    {% if featured_projects %}
     <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">FEATURED</h6>
     <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mb-5">
-        {% if featured_projects %}
         {% for project in featured_projects %}
         {% include 'projects/_project_list_item.html' with project=project %}
         {% endfor %}
-        {% endif %}
     </div>
+    {% endif %}
+
+    {% if search_query %}
+    <h6 class="section-title mb-4 text-muted text-upper text-center" style="color: #999 !important;">
+        {% if page_obj %}
+        HASIL PENCARIAN `{{ search_query|upper }}`
+        {% else %}
+        PROYEK TIDAK DITEMUKAN!
+        {% endif %}
+    </h6>
+    {% else %}
     <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">SEMUA PROYEK</h6>
+    {% endif %}
+
     <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
         {% if object_list %}
         {% for project in object_list %}
@@ -37,6 +55,8 @@
         {% endif %}
     </div>
 
-    {% include 'base/_pagination.html' with page_obj=page_obj %}
+    {% if page_obj %}
+    {% include 'base/_pagination.html' with page_obj=page_obj search_query=search_query %}
+    {% endif %}
 </div>
 {% endblock %}

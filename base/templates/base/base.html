@@ -40,7 +40,7 @@
                     <a class="nav-link {% active_class 'base:forum' %}" href="{% url 'base:forum' %}">Diskusi</a>
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
-                    <div class="btn-group ms-4">
+                    <div class="btn-group ms-4" style="margin-top: -1px">
                         <a href="{% url 'account:settings' %}" class="btn btn-outline-default nav-link">
                             {{ user|avatar_img:25 }} <span class="ms-1">{{ user.username }}</span>
                         </a>
@@ -53,7 +53,7 @@
                         </ul>
                     </div>
                     {% else %}
-                    <a class="btn btn-outline-default ms-4 nav-link" href="{% url 'account:login' %}">Login</a>
+                    <a class="nav-link ms-4" href="{% url 'account:login' %}"><i class="bi bi-person-circle me-1"></i> Login</a>
                     {% endif %}
                 </nav>
             </div>

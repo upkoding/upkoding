@@ -1,19 +1,25 @@
-from django.contrib.postgres import search
 from django.db import models
+from django.db.models import Q
 from django.db.models.deletion import CASCADE
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, SearchVectorField
+from django.contrib.postgres.search import (
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+    SearchVectorField,
+    TrigramSimilarity
+)
 
 from sorl.thumbnail import ImageField
 from account.models import User
 
 PROJECT_SEARCH_VECTORS = (SearchVector('title', weight='A') +
-                          SearchVector('tags', weight='B') +
-                          SearchVector('description_short', weight='C') +
-                          SearchVector('description', weight='D'))
+                          SearchVector('tags', weight='A') +
+                          SearchVector('description_short', weight='B') +
+                          SearchVector('description', weight='C'))
 
 
 def project_cover_path(instance, filename):
@@ -63,9 +69,13 @@ class ProjectManager(models.Manager):
         """
         search_query = SearchQuery(text)
         search_rank = SearchRank(PROJECT_SEARCH_VECTORS, search_query)
+        trigram_similarity = TrigramSimilarity('title', text) + \
+            TrigramSimilarity('tags', text) + \
+            TrigramSimilarity('description_short', text)
         return self.get_queryset() \
-            .filter(search_vector=search_query, status=2) \
-            .annotate(rank=search_rank) \
+            .annotate(rank=search_rank, similarity=trigram_similarity) \
+            .filter(status=2) \
+            .filter(Q(rank__gte=0.2) | Q(similarity__gt=0.1)) \
             .order_by('-rank')
 
 
@@ -139,13 +149,17 @@ class Project(models.Model):
         # set slug
         if not self.slug:
             self.slug = slugify(self.title)
+
         # cleanup tags
         if self.tags:
             self.tags = ','.join([
                 tag.strip().lower()
                 for tag in self.tags.split(',')])
-        # set/update search_vector
-        self.search_vector = PROJECT_SEARCH_VECTORS
+
+        # set search_vector on update
+        # TODO: update this asynchronously (using PubSub / Cloud Task)
+        if self.pk:
+            self.search_vector = PROJECT_SEARCH_VECTORS
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -203,7 +217,7 @@ class ProjectImage(models.Model):
 class UserProject(models.Model):
     """
     Status of project that picked-up by user.
-    The original project data itself may changed overtime, but UserProject will holds 
+    The original project data itself may changed overtime, but UserProject will holds
     the snapshot of important data (requirements, point) at the time user pick this project.
     """
     # statuses
@@ -297,7 +311,7 @@ class UserProject(models.Model):
             return True
         return False
 
-    @staticmethod
+    @ staticmethod
     def requirements_to_progress(requirements):
         """
         Returns progress in percent.
@@ -309,7 +323,7 @@ class UserProject(models.Model):
             reqs_progress/len(requirements)) * 100.0
         return float(format(reqs_progress_percent, '.2f'))
 
-    @staticmethod
+    @ staticmethod
     def requirements_diff(before, after):
         """
         Return the differences between before and after requirements
