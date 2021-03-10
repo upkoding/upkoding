@@ -14,7 +14,7 @@
             </label>
             <input type="text" name="demo_url" maxlength="250" class="form-control"
                 :class="{ 'is-invalid': errors.demo_url }" id="id_demo_url" value="{{ form.demo_url.value }}">
-            <div class="form-text">URL proyek live atau demo. contoh: https://www.upkoding.com</div>
+            <div class="form-text">URL proyek live atau demo. contoh: https://codepen.io/aexcode/pen/vYyQxoK</div>
             <div class="invalid-feedback" x-text="errors.demo_url && errors.demo_url[0].message"></div>
         </div>
         {% endif %}
@@ -33,10 +33,9 @@
         {% endif %}
 
         <div class="mb-4">
-            <label for="note" class="form-label"><i class="bi bi-chat-left-text"></i> Catatan</label>
+            <label for="note" class="form-label"><i class="bi bi-chat-left-text"></i> Catatan (optional)</label>
             <textarea name="note" cols="40" rows="10" class="form-control" id="id_note">{{ form.note.value }}</textarea>
-            <div class="form-text">Kesan dan pesan selama mengerjakan proyek ini, apa yang dipelajari dll. (tidak harus
-                diisi).</div>
+            <div class="form-text">Catatan untuk reviewer atau kesan dan pesan selama mengerjakan proyek ini, apa yang dipelajari dll.</div>
         </div>
 
         <div class="row mt-3">

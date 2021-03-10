@@ -21,6 +21,7 @@ class ProjectAdmin(admin.ModelAdmin):
                     'taken_count', 'completed_count', 'created', 'updated',)
     list_display_links = ('id', 'title',)
     search_fields = ('title', 'user__username',)
+    readonly_fields = ('search_vector',)
     formfield_overrides = {
         models.JSONField: {'widget': ProjectRequirementsWidget},
     }
