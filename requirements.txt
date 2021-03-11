@@ -5,3 +5,4 @@ Pillow==8.1.0
 sorl-thumbnail==12.7.0
 martor==1.5.8
 psycopg2-binary==2.8.6
+whitenoise==5.2.0
