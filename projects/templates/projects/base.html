@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block header_mb %}mb-4{% endblock %}
+
+{% block headscripts %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/default.min.css">
+<link href="{% static 'base/vendor/simpleLightbox/simpleLightbox.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block footscripts %}
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js"></script>
+<script src="{% static 'base/vendor/simpleLightbox/simpleLightbox.min.js' %}"></script>
+<script>
+    // description toggle
+    window.descriptionToggle = function () {
+        return {
+            shrink: true,
+            toggle() {
+                this.shrink = this.shrink ? false : true;
+            }
+        }
+    }
+    // simple lightbox
+    new SimpleLightbox({ elements: '.simpleLightbox a' });
+
+    // add2any
+    var a2a_config = a2a_config || {};
+    a2a_config.onclick = 1;
+    a2a_config.num_services = 6;
+    a2a_config.prioritize = ['facebook', 'twitter', 'whatsapp', 'telegram', 'email', 'facebook_messenger']
+
+    // syntax highlighting
+    hljs.highlightAll();
+</script>
+{% endblock %}

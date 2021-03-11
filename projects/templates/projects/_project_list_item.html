@@ -1,19 +1,23 @@
 {% load sorl_thumbnail %}
-<a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}">
-    <div class="col">
-        <div class="card">
-            <span class="badge bg-success" style="position: absolute; top: 10px; right: 10px; z-index: 99;">
-                {{project.get_point_display|upper }}
-            </span>
+{% load projects %}
+<div class="col">
+    <div class="card">
+        <span class="badge bg-success" style="position: absolute; top: 10px; right: 10px; z-index: 99;">
+            {{ project.get_point_display|upper }}
+        </span>
+        <a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}">
             {% thumbnail project.cover "640x360" crop="center" as im %}
             <img src="{{ im.url }}" class="card-img-top ratio ratio-16x9">
             {% endthumbnail %}
             <div class="card-body">
-                <h5 class="card-title" style="font-size: 1.05rem; color: #333 !important;">{{ project.title|title }}</h5>
-                <p class="card-text" style="color: #888 !important; line-height: 1.3em; font-size: 0.9rem;font-weight: 300;">
+                <h5 class="card-title" style="font-size: 1.05rem; color: #333 !important;">{{ project.title|title }}
+                </h5>
+                <p class="card-text"
+                    style="color: #888 !important; line-height: 1.3em; font-size: 0.9rem;font-weight: 300;">
                     {{ project.description_short|truncatechars:65 }}
                 </p>
             </div>
-        </div>
+        </a>
+        <div class="pt-0 pe-3 ps-3 pb-3" style="opacity: 0.6;">{% render_tags project 'secondary' %}</div>
     </div>
-</a>
+</div>

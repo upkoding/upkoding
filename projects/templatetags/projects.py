@@ -43,7 +43,7 @@ def render_review_request_form(context, user_project, form):
 
 
 @register.inclusion_tag('projects/templatetags/render_tags.html')
-def render_tags(project):
+def render_tags(project, color='primary'):
     """
     Render project's tags.
     """
@@ -51,6 +51,7 @@ def render_tags(project):
     if not project.tags:
         return data
     data['tags'] = project.tags.split(',')
+    data['color'] = color
     return data
 
 

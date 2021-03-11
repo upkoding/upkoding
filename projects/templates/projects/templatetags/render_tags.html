@@ -2,7 +2,7 @@
 <div class="tags">
     {% for tag in tags %}
     <a href="{% url 'projects:list' %}?s={{ tag }}">
-        <span class="badge bg-primary">{{ tag }}</span>
+        <span class="badge bg-{{ color }}">{{ tag }}</span>
     </a>
     {% endfor %}
 </div>

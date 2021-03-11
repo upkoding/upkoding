@@ -1,6 +1,5 @@
-{% extends 'base/base.html' %}
+{% extends 'projects/base.html' %}
 
-{% load static %}
 {% load martortags %}
 {% load base %}
 {% load projects %}
@@ -9,7 +8,6 @@
 {% block meta %}
 {% meta object=object title=user_project.user.first_name|add:" - "|add:object.title|title %}
 {% endblock %}
-{% block header_mb %}mb-4{% endblock %}
 
 {% block content %}
 <div class="project-detail">
@@ -90,31 +88,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block headscripts %}
-<link href="{% static 'base/vendor/simpleLightbox/simpleLightbox.min.css' %}" rel="stylesheet">
-{% endblock %}
-
-{% block footscripts %}
-<script src="{% static 'base/vendor/simpleLightbox/simpleLightbox.min.js' %}"></script>
-<script async src="https://static.addtoany.com/menu/page.js"></script>
-<script>
-    // description toggle
-    window.descriptionToggle = function () {
-        return {
-            shrink: true,
-            toggle() {
-                this.shrink = this.shrink ? false : true;
-            }
-        }
-    }
-    // simple lightbox
-    new SimpleLightbox({ elements: '.simpleLightbox a' });
-    // add2any
-    var a2a_config = a2a_config || {};
-    a2a_config.onclick = 1;
-    a2a_config.num_services = 6;
-    a2a_config.prioritize = ['facebook', 'twitter', 'whatsapp', 'telegram', 'email', 'facebook_messenger']
-</script>
 {% endblock %}
