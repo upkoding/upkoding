@@ -1,14 +1,72 @@
 # upkoding
 
-Kode sumber untuk platform UpKoding.com.
-
-!!! WORK IN PROGRESS !!!
-
 ![Screenshot Awal](https://raw.githubusercontent.com/upkoding/upkoding/main/screenshot.png)
 
-### Latar Belakang
 
-Jadi kebetulan saya sudah punya domain [upkoding.com](https://upkoding.com) :) dan ingin memanfaatkannya untuk hal yang bisa berguna buat komunitas developer Indonesia.
+🔥🔥🔥 WORK IN PROGRESS 🔥🔥🔥
+
+## Development
+
+Untuk pengembangan di local maka pengetahuan Django sangat diperlukan paling tidak sudah bisa menjalankan sampai di `./manage.py runserver`.
+
+Proyek ini memiliki fitur pencarian menggunakan fitur Full Text Search yg dimiliki PostgreSQL, jadi untuk di local juga harus menggunakan Postgres sebagai databasenya. Cara yang paling gampang yaitu menggunakan Docker imagenya postgres.
+
+**Caranya, download dulu Docker imagenya Postgres:**
+
+```
+$ docker pull postgres
+```
+
+**Start Postgres:**
+
+```
+docker run -it --rm --name dev-postgres \
+-e POSTGRES_PASSWORD=password \
+-v /Users/eka/Documents/postgres-data/:/var/lib/postgresql/data \
+-p 5432:5432 postgres
+```
+Perhatikan kita menaruh datanya di hardisknya kita (`/Users/eka/Documents/postgres-data/`) bukan didalam imagenya, jadi ketika server DB kita matikan maka data tetap ada, dan kalau di start lagi maka akan me-load data yang sama.
+
+**Setup database proyek:**
+
+Langkah ini cukup sekali. Pertama pastikan DB server jalan dengan command docker diatas, setelah itu kita login ke Postgres.
+```
+# Masuk kedalam server
+$ docker exec -it dev-postgres bash
+
+# Login ke Postgres (dari dalam server)
+$ psql -h localhost -U postgres
+
+# Buat database dan user (disini nama DB nya `upkoding` dan usernya juga `upkoding` sesuai dengan settings.py)
+CREATE DATABASE upkoding;
+CREATE USER upkoding WITH PASSWORD 'upkoding';
+ALTER ROLE upkoding SET client_encoding TO 'utf8';
+ALTER ROLE upkoding SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE upkoding TO upkoding;
+```
+Setelah itu bisa keluar dari Postgres dengan `\q`+ Enter. Dan `CTRL+C` untuk keluar dari server.
+
+**Django DB migration:**
+
+Masih dengan server yang masih berjalan, jalankan perintah berikut di terminal lainnya.
+```
+# migrate
+$ ./manage.py migrate
+
+# buat super user
+$ ./manage.py createsuperuser
+
+# jalankan server
+$ ./manage.py runserver
+```
+
+**Start developing & login ke admin:**
+
+Kalau semua lancar maka, kita akan melihat websitenya jalan di `localhost:8000`. Untuk login ke admin tinggal buka `http://localhost:8000/admin` dan login dengan username dan password yang sama pada saat kita bikin superuser.
+
+> Apabila ada yang kurang jelas, ketemu bug, feature request bisa kita diskusikan lewat github **Issue** atau **Discussion**.
+
+## Latar Belakang
 
 Saya banyak mendengar keluh-kesah teman-teman kita yang belajar pemrograman baik itu dari komentar2 di [Youtube Channel UpKoding](https://youtube.com/c/UpKoding) ataupun dari [Group Telegram UpKoding](https://t.me/upkoding). Salah satu yang saya tangkap adalah banyak yang menemui kendala ketika belajar baik itu karena hilangnya motivasi, kurangnya dukungan ataupun tidak ada sistem support yang memotivasi mereka untuk tetap belajar.
 
@@ -22,21 +80,21 @@ Akhirnya saya mulailah proyek ini, berikut fitur utama yang ada di pikiran saya 
 
 *Nanti setiap interaksi (menyelesaikan proyek, mensubmit proyek, bertanya dan menjawab pertanyaan di forum) yang dilakukkan akan mendapatkan poin.*
 
-### Sumbangan Ide
+## Sumbangan Ide
 
 Saya juga sadar alasan saya menginisiasi proyek ini adalah karena melihat situasi diatas dan pastinya merupakan asumsi pribadi. Apabila ada masukan, saran dan ide menarik lainnya yang sepertinya akan membuat platform ini berguna maka dengan senang hati saya akan mendengarkannya. Silahkan buat issue baru dan kita bisa diskusikan disana.
 
-### Ingin berkontribusi?
+## Ingin berkontribusi?
 
 Karena ini masih tahap awal sekali, saya belum menentukan struktur dan fitur yang pasti di proyek ini jadi sepertinya teman-teman mohon maaf belum bisa berkontribusi untuk saat ini. Nanti setelah diluncurkan ke public maka saat itu juga akan saya buka dan dengan senang hati menerima setiap kontribusi dari kalian.
 
 **Tapi sumbangan ide selalu saya nantikan setiap saat.** Ini yang paling saya butuhkan saat ini.
 
-### Teknologi
+## Teknologi
 
-Proyek ini dibuat dengan [Framework Django](https://www.djangoproject.com), dan databasenya saya rencanakan akan menggunakan [PostgreSQL](https://www.postgresql.org).
+Proyek ini dibuat dengan [Framework Django](https://www.djangoproject.com), database menggunakan [PostgreSQL](https://www.postgresql.org) dan dideploy di Google Appengine.
 
-### Lisensi
+## Lisensi
 
 ```
 MIT License
