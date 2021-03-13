@@ -159,6 +159,8 @@ DEFAULT_EMAIL_FROM = 'notification@upkoding.com'
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME', 'staging.upkoding.appspot.com')
+    GS_DEFAULT_ACL = 'publicRead'
+    
     sentry_sdk.init(
         dsn=os.getenv('SENTRY_DSN'),
         integrations=[DjangoIntegration()],
