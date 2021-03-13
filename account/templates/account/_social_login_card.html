@@ -23,7 +23,7 @@
                 <a href="{% url 'account:social:begin' 'google-oauth2' %}?next={% url 'account:settings' %}"
                     class="btn btn-sm btn-outline-primary">Connect</a>
                 {% else %}
-                <form action="{% url 'account:social:disconnect' 'github' %}?next={% url 'account:settings' %}"
+                <form action="{% url 'account:social:disconnect' 'google-oauth2' %}?next={% url 'account:settings' %}"
                     method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-outline-secondary">Disconnect</button>

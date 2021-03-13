@@ -1,0 +1,8 @@
+screenshot.png
+*.md
+*.sample
+.gcloudignore
+.git
+.gitignore
+media
+Makefile

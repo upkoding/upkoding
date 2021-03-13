@@ -1,0 +1,28 @@
+runtime: python39
+instance_class: F2
+inbound_services:
+  - warmup
+
+handlers:
+  - url: /static
+    static_dir: static/
+  - url: /.*
+    script: auto
+
+env_variables:
+  DEBUG: False
+  ALLOWED_HOSTS: '*'
+  SITE_DOMAIN: https://www.upkoding.com
+  DB_NAME: 
+  DB_USER: 
+  DB_PASS: 
+  DB_HOST: 
+  SOCIAL_AUTH_GITHUB_KEY: 
+  SOCIAL_AUTH_GITHUB_SECRET: 
+  SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: 
+  SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: 
+  SOCIAL_AUTH_FACEBOOK_KEY: 
+  SOCIAL_AUTH_FACEBOOK_SECRET: 
+  SENTRY_DSN: 
+  GOOGLE_APPLICATION_CREDENTIALS: upkoding-sa.json
+  GS_BUCKET_NAME: staging.upkoding.appspot.com

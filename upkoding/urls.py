@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
+from django.http.response import HttpResponse
 from django.urls import path, include
 from django.contrib.staticfiles.urls import static
+
+
+def appengine_warmup(request):
+    return HttpResponse('ok')
 
 
 urlpatterns = [
@@ -24,5 +29,6 @@ urlpatterns = [
     path('account/', include('account.urls', namespace='account')),
     path('proyek/', include('projects.urls', namespace='projects')),
     path('coders/', include('coders.urls', namespace='coders')),
+    path('_ah/warmup/', appengine_warmup),
     path('', include('base.urls', namespace='base')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

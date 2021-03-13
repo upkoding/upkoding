@@ -53,13 +53,27 @@
                         </ul>
                     </div>
                     {% else %}
-                    <a class="nav-link ms-4" href="{% url 'account:login' %}"><i class="bi bi-person-circle me-1"></i> Login</a>
+                    <a class="nav-link ms-4" href="{% url 'account:login' %}"><i class="bi bi-person-circle me-1"></i>
+                        Login</a>
                     {% endif %}
                 </nav>
             </div>
         </header>
 
         <main>
+            <div class="card text-dark bg-light mb-5">
+                <div class="card-body">
+                    <h5 class="card-title">Under Development!</h5>
+                    <p class="card-text">Terima kasih sudah berkunjung ke UpKoding, namun saat ini platform ini belum
+                        dibuka untuk umum. Sementara online untuk mengetes fitur, mengisi data proyek serta menguji
+                        workflow CI/CD nya.</p>
+                    <p class="card-text">Silahkan buat akun, lihat-lihat proyeknya dan mulai mengerjakan, tetapi data
+                        proyek yang dikerjakan akan direset(hapus) setiap hari sampai saatnya nanti sudah dibuka untuk
+                        umum. <a href="https://github.com/upkoding/upkoding/discussions" target="_blank"
+                            rel="noreferrer noopener">Any feedback are welcome!</a></p>
+                    <p class="card-text">Happy Coding!<br>Eka</p>
+                </div>
+            </div>
             {% block content %}{% endblock %}
         </main>
 
