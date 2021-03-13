@@ -12,7 +12,8 @@ handlers:
 env_variables:
   DEBUG: False
   ALLOWED_HOSTS: '*'
-  SITE_DOMAIN: https://www.upkoding.com
+  SECRET_KEY:
+  SITE_DOMAIN:
   DB_NAME: 
   DB_USER: 
   DB_PASS: 
