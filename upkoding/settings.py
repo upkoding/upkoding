@@ -160,6 +160,7 @@ if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME', 'staging.upkoding.appspot.com')
     GS_DEFAULT_ACL = 'publicRead'
+    SECURE_SSL_REDIRECT = True
     
     sentry_sdk.init(
         dsn=os.getenv('SENTRY_DSN'),
