@@ -38,7 +38,7 @@ class UserProjectEventNotification:
             to_user = p.user
             self.__context.update({'to_user': to_user})
             msg = render_to_string(tpl, self.__context)
-            emails.append(('[UpKoding] Terdapat pesan dari @{}'.format(self.__event_user.username),
+            emails.append(('[UpKoding] Ada pesan dari @{}'.format(self.__event_user.username),
                            msg, FROM, [to_user.email]))
         if emails:
             send_mass_mail(emails, fail_silently=True)

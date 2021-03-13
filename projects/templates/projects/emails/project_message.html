@@ -1,9 +1,11 @@
 Halo {{ to_user.username }},
 
-Terdapat pesan baru dari <a href="{{ domain }}{{ user.get_absolute_url }}">@{{ user.username }}</a>
-di proyek <a href="{{ domain }}{{ user_project.get_absolute_url }}">{{ project.title|title }}</a>.
+Terdapat pesan baru dari @{{ user.username }} di proyek `{{ project.title|title }}`.
 
-Silahkan <a href="{{ domain }}{{ user_project.get_absolute_url }}">Klik disini</a> untuk melihat pesannya.
+Silahkan ikuti link dibawah ini untuk melihat pesannya:
+{{ domain }}{{ user_project.get_absolute_url }}
 
 --
 Team UpKoding
+https://www.upkoding.com
+https://github.com/upkoding/upkoding

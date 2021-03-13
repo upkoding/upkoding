@@ -1,10 +1,11 @@
 Halo {{ to_user.username }},
 
 Selamat! Proyek yang kamu kerjakan:
-<a href="{{ domain }}{{ user_project.get_absolute_url }}">{{ project.title|title }}</a>
+`{{ project.title|title }}`
 
-Sudah disetujui oleh <a href="{{ domain }}{{ user.get_absolute_url }}">@{{ user.username }}</a>
-dan {{ user_project.get_point_display }} sudah ditambahkan ke akun kamu.
+Sudah disetujui oleh @{{ user.username }} dan poin sebesar `{{ user_project.get_point_display }}` sudah ditambahkan ke akun kamu.
 
 --
 Team UpKoding
+https://www.upkoding.com
+https://github.com/upkoding/upkoding

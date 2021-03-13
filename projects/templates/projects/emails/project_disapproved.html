@@ -1,11 +1,14 @@
 Halo {{ to_user.username }},
 
 Mohon maaf, proyek yang kamu kerjakan:
-<a href="{{ domain }}{{ user_project.get_absolute_url }}">{{ project.title|title }}</a>
+`{{ project.title|title }}`
 
-Yang sebelumnya telah disetujui, kini statusnya diralat menjadi Pending review.
+Yang sebelumnya telah disetujui, statusnya telah diralat menjadi Pending Review.
 
-Silahkan <a href="{{ domain }}{{ user_project.get_absolute_url }}">Klik disini</a> untuk mengetahui alasannya.
+Silahkan ikuti link dibawah ini untuk mengetahui alasannya:
+{{ domain }}{{ user_project.get_absolute_url }}
 
 --
 Team UpKoding
+https://www.upkoding.com
+https://github.com/upkoding/upkoding
