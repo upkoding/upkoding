@@ -29,5 +29,5 @@ class SocialLoginExceptionMiddleware(SocialAuthExceptionMiddleware):
             messages.info(request, message, extra_tags='danger')
 
             if request.user.is_authenticated:
-                return redirect(reverse('account:auth'))
+                return redirect(reverse('account:settings'))
             return redirect(settings.LOGIN_ERROR_URL)
