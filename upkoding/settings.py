@@ -184,6 +184,7 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 THUMBNAIL_FORCE_OVERWRITE = True
+PREPEND_WWW = True
 
 LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
