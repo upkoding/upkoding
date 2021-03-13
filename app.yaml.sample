@@ -1,5 +1,6 @@
 runtime: python39
 instance_class: F2
+entrypoint: gunicorn -b :$PORT -w 2 upkoding.wsgi:application
 inbound_services:
   - warmup
 
@@ -11,7 +12,7 @@ handlers:
 
 env_variables:
   DEBUG: False
-  ALLOWED_HOSTS: '*'
+  ALLOWED_HOSTS:
   SECRET_KEY:
   SITE_DOMAIN:
   DB_NAME: 
@@ -25,5 +26,9 @@ env_variables:
   SOCIAL_AUTH_FACEBOOK_KEY: 
   SOCIAL_AUTH_FACEBOOK_SECRET: 
   SENTRY_DSN: 
-  GOOGLE_APPLICATION_CREDENTIALS: upkoding-sa.json
-  GS_BUCKET_NAME: staging.upkoding.appspot.com
+  GOOGLE_APPLICATION_CREDENTIALS:
+  GS_BUCKET_NAME:
+  DEFAULT_EMAIL_FROM:
+  SERVER_EMAIL:
+  MAILGUN_API_KEY:
+  MAILGUN_SENDER_DOMAIN:

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'social_django',
     'sorl.thumbnail',
     'martor',
+    'anymail',
 
     'django.contrib.postgres',
     'django.contrib.humanize',
@@ -154,14 +155,20 @@ USE_L10N = True
 USE_TZ = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_EMAIL_FROM = 'notification@upkoding.com'
+DEFAULT_EMAIL_FROM = os.getenv('DEFAULT_EMAIL_FROM', 'upkoding@example.com')
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'upkoding@example.com')
+ANYMAIL = {
+    'MAILGUN_API_KEY': os.getenv('MAILGUN_API_KEY'),
+    'MAILGUN_SENDER_DOMAIN':os.getenv('MAILGUN_SENDER_DOMAIN'),
+}
 
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME', 'staging.upkoding.appspot.com')
     GS_DEFAULT_ACL = 'publicRead'
     SECURE_SSL_REDIRECT = True
-    
+    EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
+
     sentry_sdk.init(
         dsn=os.getenv('SENTRY_DSN'),
         integrations=[DjangoIntegration()],
