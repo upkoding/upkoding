@@ -1,4 +1,5 @@
 screenshot.png
+upkoding/local_settings.py
 *.md
 *.sample
 .gcloudignore
