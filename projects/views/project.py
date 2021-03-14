@@ -44,9 +44,9 @@ class ProjectDetail(DetailView):
             pk=self.kwargs.get('pk'),
             slug=self.kwargs.get('slug'),
         )
-        # - allow project creator preview inactive project
+        # - allow staff to preview inactive project
         # - or if its active
-        if obj.user == user or obj.status == Project.STATUS_ACTIVE:
+        if user.is_active or obj.status == Project.STATUS_ACTIVE:
             return obj
         raise Http404()
 
