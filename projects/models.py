@@ -189,6 +189,7 @@ class Project(models.Model):
         - If user already pick this project, return that one instead of creating new one
           since user can only work on the same project once.
         - If user never pick this project, create new `UserProject`.
+        - Add project creator to the UserProjectParticipant so we can notify them for event in this project.
         - Last, we increment the taken count.
         """
         obj, created = UserProject.objects.get_or_create(
@@ -201,6 +202,14 @@ class Project(models.Model):
                 'require_sourcecode_url': self.require_sourcecode_url,
             })
         if created:
+            # add project creator as participant
+            UserProjectParticipant.objects.get_or_create(
+                user_project=obj, user=self.user
+            )
+            # add user who working on the project as participant
+            UserProjectParticipant.objects.get_or_create(
+                user_project=obj, user=user)
+            # inc taken count
             self.inc_taken_count()
         return (obj, created)
 
@@ -378,12 +387,10 @@ class UserProject(models.Model):
 
 
 class UserProjectEvent(models.Model):
-    # type 0-9: user generated event
     TYPE_PROJECT_START = 0
     TYPE_PROGRESS_UPDATE = 1
     TYPE_PROGRESS_COMPLETE = 2
     TYPE_REVIEW_REQUEST = 3
-    # type >= 10: staff/system generated event
     TYPE_REVIEW_MESSAGE = 10
     TYPE_PROJECT_COMPLETE = 11
     TYPE_PROJECT_INCOMPLETE = 12
