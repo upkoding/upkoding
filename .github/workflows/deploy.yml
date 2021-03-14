@@ -39,7 +39,7 @@ jobs:
         run: python manage.py test
         
       - name: Run collectstatic
-        run: python manage.py collectstatic --nonput
+        run: python manage.py collectstatic --noinput
 
       - name: Get app.yaml
         run: echo -e "${{ secrets.APP_YAML }}" > app.yaml
