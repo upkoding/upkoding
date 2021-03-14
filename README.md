@@ -3,7 +3,7 @@
 ![Screenshot Awal](https://raw.githubusercontent.com/upkoding/upkoding/main/screenshot.png)
 
 
-🔥🔥🔥 WORK IN PROGRESS 🔥🔥🔥
+🔥🔥🔥  WORK IN PROGRESS 🔥🔥🔥
 
 ## Development
 
@@ -62,7 +62,7 @@ $ ./manage.py runserver
 
 **Start developing & login ke admin:**
 
-Kalau semua lancar maka, kita akan melihat websitenya jalan di `localhost:8000`. Untuk login ke admin tinggal buka `http://localhost:8000/admin` dan login dengan username dan password yang sama pada saat kita bikin superuser.
+Kalau semua lancar maka, kita akan melihat websitenya jalan di `http://localhost:8000`. Untuk login ke admin tinggal buka `http://localhost:8000/admin` dan login dengan username dan password yang sama pada saat kita bikin superuser.
 
 > Apabila ada yang kurang jelas, ketemu bug, feature request bisa kita diskusikan lewat github **Issue** atau **Discussion**.
 
