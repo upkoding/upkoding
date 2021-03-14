@@ -47,7 +47,7 @@ jobs:
       - name: Get upkoding-sa.json
         run: echo -e "${{ secrets.UPKODING_SA }}" > upkoding-sa.json
         
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.CI_SA }}
