@@ -166,8 +166,9 @@ if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME', 'staging.upkoding.appspot.com')
     GS_DEFAULT_ACL = 'publicRead'
-    SECURE_SSL_REDIRECT = True
     EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
+    PREPEND_WWW = True
+    SECURE_SSL_REDIRECT = True
 
     sentry_sdk.init(
         dsn=os.getenv('SENTRY_DSN'),
@@ -192,7 +193,6 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 THUMBNAIL_FORCE_OVERWRITE = True
-PREPEND_WWW = True
 
 LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'

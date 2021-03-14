@@ -61,7 +61,8 @@
         </header>
 
         <main>
-            <div class="card text-dark bg-light mb-5">
+            {% block content %}{% endblock %}
+            <div class="card text-dark bg-light mb-5 mt-5">
                 <div class="card-body">
                     <h5 class="card-title">Under Development!</h5>
                     <p class="card-text">Terima kasih sudah berkunjung ke UpKoding, namun saat ini platform ini belum
@@ -72,7 +73,6 @@
                     <p class="card-text">Happy Coding!<br>Eka</p>
                 </div>
             </div>
-            {% block content %}{% endblock %}
         </main>
 
         <footer class="mt-auto text-center" style="padding-top: 50px;">
