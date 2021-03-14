@@ -46,7 +46,7 @@ class ProjectDetail(DetailView):
         )
         # - allow staff to preview inactive project
         # - or if its active
-        if user.is_staff or obj.status == Project.STATUS_ACTIVE:
+        if user.is_staff or obj.is_active():
             return obj
         raise Http404()
 
