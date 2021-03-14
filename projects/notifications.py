@@ -35,7 +35,7 @@ class UserProjectEventNotification:
 
         # get all participants on this project, except the event creator.
         participants = UserProjectParticipant.objects. \
-            filter(subscribed=True). \
+            filter(user_project=self.__user_project, subscribed=True). \
             exclude(user=self.__event_user)
         emails = []
         for p in participants:
@@ -55,14 +55,14 @@ class UserProjectEventNotification:
 
         # get all participants on this project, except the event creator.
         participants = UserProjectParticipant.objects. \
-            filter(subscribed=True). \
+            filter(user_project=self.__user_project, subscribed=True). \
             exclude(user=self.__event_user)
         emails = []
         for p in participants:
             to_user = p.user
             self.__context.update({'to_user': to_user})
             msg = render_to_string(tpl, self.__context)
-            emails.append(('[UpKoding] Ada pesan dari @{}'.format(self.__event_user.username),
+            emails.append(('[UpKoding] Pesan dari @{}'.format(self.__event_user.username),
                            msg, FROM, [to_user.email]))
         if emails:
             send_mass_mail(emails, fail_silently=True)
