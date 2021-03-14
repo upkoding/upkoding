@@ -1,6 +1,6 @@
 import copy
 from django.http import HttpResponseRedirect
-from django.http.response import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
@@ -38,12 +38,17 @@ class ProjectDetail(DetailView):
         """
         We need to find object by using `pk` and `slug`.
         """
-        return get_object_or_404(
+        user = self.request.user
+        obj = get_object_or_404(
             Project,
             pk=self.kwargs.get('pk'),
             slug=self.kwargs.get('slug'),
-            status=Project.STATUS_ACTIVE
         )
+        # - allow project creator preview inactive project
+        # - or if its active
+        if obj.user == user or obj.status == Project.STATUS_ACTIVE:
+            return obj
+        raise Http404()
 
     def get(self, request, *args, **kwargs):
         if request.GET.get('me') == 'true':

@@ -48,7 +48,9 @@ terms:
         <form method="POST">
             <div class="d-grid mt-4">
                 {% csrf_token %}
-                {% if user.is_authenticated %}
+                {% if not object.is_active %}
+                <button class="btn btn-lg btn-danger" disabled>Proyek Belum Aktif</button>
+                {% elif user.is_authenticated %}
                 <button type="submit" class="btn btn-lg" x-data="checkProject()" x-init="init" :class="getBtnClass()"
                     x-html="getBtnContent()"></button>
                 {% else %}

@@ -162,6 +162,9 @@ class Project(models.Model):
             self.search_vector = PROJECT_SEARCH_VECTORS
         super().save(*args, **kwargs)
 
+    def is_active(self):
+        return self.status == self.STATUS_ACTIVE
+
     def get_absolute_url(self):
         return reverse('projects:detail', args=[self.slug, str(self.pk)])
 
