@@ -2,20 +2,22 @@ name: UpKoding CI/CD Workflow
 
 # triggers for our workflow
 on:
+  # opening a pull request to master and develop branch will be a trigger
+  pull_request:
+    branches:
+      - main
   # any code pushed to master and develop branch will also be a trigger
   push:
     branches:
       - main
 
-
-# three job definition
 jobs:
-  test-and-deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Cache dependency # caching dependency will make our build faster.
         uses: actions/cache@v2 # for more info checkout pip section documentation at https://github.com/actions/cache
         with:
@@ -23,35 +25,35 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-            
+
       - name: Setup python environment # setting python environment to 3.x
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x' # if you want multiple python version run just use matrix strategy in job config. See the documentation of GitHub Actions
-          
+          python-version: "3.x" # if you want multiple python version run just use matrix strategy in job config. See the documentation of GitHub Actions
+
       - name: Check Python version # checking the python version to see if 3.x is installed.
         run: python --version
-        
+
       - name: Install requirements
         run: pip install -r requirements.txt
-        
+
       - name: Run Test
         run: python manage.py test
-        
-      - name: Run collectstatic
-        run: python manage.py collectstatic --noinput
 
-      - name: Get app.yaml
-        run: echo -e "${{ secrets.APP_YAML }}" > app.yaml
+      # - name: Run collectstatic
+      #   run: python manage.py collectstatic --noinput
 
-      - name: Get upkoding-sa.json
-        run: echo -e "${{ secrets.UPKODING_SA }}" > upkoding-sa.json
-        
-      - uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.CI_SA }}
-          export_default_credentials: true
+      # - name: Get app.yaml
+      #   run: echo -e "${{ secrets.APP_YAML }}" > app.yaml
 
-      - name: Deploy to Appengine
-        run: gcloud --quiet app deploy --no-promote
+      # - name: Get upkoding-sa.json
+      #   run: echo -e "${{ secrets.UPKODING_SA }}" > upkoding-sa.json
+
+      # - uses: google-github-actions/setup-gcloud@master
+      #   with:
+      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+      #     service_account_key: ${{ secrets.CI_SA }}
+      #     export_default_credentials: true
+
+      # - name: Deploy to Appengine
+      #   run: gcloud --quiet app deploy --no-promote
