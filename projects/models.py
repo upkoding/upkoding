@@ -4,6 +4,7 @@ from django.db.models.deletion import CASCADE
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.conf import settings
+from django.utils.timezone import now
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import (
     SearchQuery,
@@ -24,16 +25,18 @@ PROJECT_SEARCH_VECTORS = (SearchVector('title', weight='A') +
 
 def project_cover_path(instance, filename):
     """
-    Custom cover path: projects/cover/hello-world.png
+    Custom cover path: projects/cover/123455678-hello-world.png
     """
-    return 'projects/cover/{}'.format(filename)
+    ts = int(now().timestamp())
+    return 'projects/cover/{}-{}'.format(ts, filename)
 
 
 def project_image_path(instance, filename):
     """
-    Custom cover path: projects/images/hello-world.png
+    Custom cover path: projects/images/12345678-hello-world.png
     """
-    return 'projects/images/{}'.format(filename)
+    ts = int(now().timestamp())
+    return 'projects/images/{}-{}'.format(ts, filename)
 
 
 class ProjectManager(models.Manager):
