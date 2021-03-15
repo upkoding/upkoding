@@ -1,7 +1,11 @@
 {% load sorl_thumbnail %}
 {% load projects %}
+{% load humanize %}
 <div class="col">
     <div class="card">
+        <span class="badge bg-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99; font-weight: 400;">
+            <i class="bi bi-person-fill"></i> {{ project.taken_count|intcomma }}
+        </span>
         <span class="badge bg-success" style="position: absolute; top: 10px; right: 10px; z-index: 99;">
             {{ project.get_point_display|upper }}
         </span>

@@ -1,7 +1,7 @@
 {% if images %}
 {% load sorl_thumbnail %}
 <div class="images mb-5 simpleLightbox">
-    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-5 g-2">
+    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-5 g-3">
         {% for img in images %}
         {% thumbnail img.image "200x200" crop="center" as im %}
         <div class="col">

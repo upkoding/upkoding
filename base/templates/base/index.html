@@ -1,7 +1,12 @@
 {% extends 'base/base.html' %}
+{% load base %}
+{% load sorl_thumbnail %}
+{% load humanize %}
+
+{% block header_mb %}mb-5{% endblock %}
 
 {% block content %}
-<div class="row justify-content-md-center">
+<div class="row justify-content-md-center mt-5">
     <div class="col col-lg-10">
         <div class="text-center" style="padding: 0 3em">
             <h1>Belajar coding menyenangkan!</h1>
@@ -19,4 +24,72 @@
         </div>
     </div>
 </div>
+<div class="content row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mt-5 mb-5">
+    {% if projects %}
+    {% for project in projects %}
+    {% include 'projects/_project_list_item.html' with project=project %}
+    {% endfor %}
+    {% endif %}
+</div>
+<div style="height: 20px;" class="border-top"></div>
+<div class="row mt-5 mb-5 content">
+    <div class="col col-lg-6 left">
+        <h5 class="section-title mb-5"><i class="bi bi-code-slash me-2"></i>Lagi Dikerjakan</h5>
+        {% for item in user_projects_inprogress %}
+        {% with u=item.user p=item.project %}
+        <div class="position-relative mb-4 clearfix">
+            {% thumbnail p.cover "160x160" crop="center" as im %}
+            <img src="{{ im.url }}" width="80" height="80" class="me-3 rounded float-start" alt="{{ p.title|title }}">
+            {% endthumbnail %}
+            <div>
+                <h6 class="mt-0 mb-1">{{ p.title|title }}</h6>
+                <small class="text-muted">
+                    <img src="{{ u|avatar_url:40 }}" height="20" width="20" class="rounded-circle me-1" alt="avatar" />
+                    <strong>{{ u.username }}</strong> mengerjakan
+                    {{ item.updated|naturaltime }}
+                </small>
+                <a href="{{ item.get_absolute_url }}" class="stretched-link"></a>
+                <div class="progress mt-2" style="height: 3px;">
+                    <div class="progress-bar progress-bar-striped bg-{{ item.get_color_class }}" role="progressbar"
+                        style="width: {{ item.requirements_completed_percent|safe }}%"
+                        aria-valuenow="{{ item.requirements_completed_percent|safe }}" aria-valuemin="0"
+                        aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+    </div>
+
+    <div class="col col-lg-6 right">
+        <h5 class="section-title mb-5"><i class="bi bi-check2-circle me-2"></i> Berhasil Diselesaikan</h5>
+        {% for item in user_projects_completed %}
+        {% with u=item.user p=item.project %}
+        <div class="position-relative mb-4 clearfix">
+            {% thumbnail p.cover "160x160" crop="center" as im %}
+            <img src="{{ im.url }}" width="80" height="80" class="me-3 rounded float-start" alt="{{ p.title|title }}">
+            {% endthumbnail %}
+            <div>
+                <h6 class="mt-0 mb-1">{{ p.title|title }}</h6>
+                <small class="text-muted">
+                    <img src="{{ u|avatar_url:40 }}" height="20" width="20" class="rounded-circle me-1" alt="avatar" />
+                    <strong>{{ u.username }}</strong> menyelesaikan
+                    {{ item.updated|naturaltime }}
+                </small>
+                <a href="{{ item.get_absolute_url }}" class="stretched-link"></a>
+                <div class="progress mt-2" style="height: 3px;">
+                    <div class="progress-bar progress-bar-striped bg-{{ item.get_color_class }}" role="progressbar"
+                        style="width: {{ item.requirements_completed_percent|safe }}%"
+                        aria-valuenow="{{ item.requirements_completed_percent|safe }}" aria-valuemin="0"
+                        aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}
