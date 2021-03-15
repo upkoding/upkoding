@@ -106,5 +106,4 @@ def meta(context, **kwargs):
         'image': meta_image,
         'url': meta_url,
         'desc': meta_desc,
-        'google_site_verification': settings.GOOGLE_SITE_VERIFICATION,
     }

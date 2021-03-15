@@ -22,6 +22,17 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'base/css/global.css' %}" rel="stylesheet">
     {% block headscripts %}{% endblock %}
+
+    {% if ga_tracking_id %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_tracking_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '{{ ga_tracking_id }}');
+    </script>
+    {% endif %}
 </head>
 
 <body class="d-flex h-100">
@@ -68,7 +79,8 @@
                     <p class="card-text">Terima kasih sudah berkunjung ke UpKoding, namun saat ini platform ini belum
                         dibuka untuk umum. Baru online untuk mengetes fitur, mengisi data proyek serta menguji
                         workflow CI/CD nya.</p>
-                    <p class="card-text">Silahkan buat akun, lihat-lihat proyeknya atau mulai mengerjakan. <a href="https://github.com/upkoding/upkoding/discussions" target="_blank"
+                    <p class="card-text">Silahkan buat akun, lihat-lihat proyeknya atau mulai mengerjakan. <a
+                            href="https://github.com/upkoding/upkoding/discussions" target="_blank"
                             rel="noreferrer noopener">Any feedback are welcome!</a></p>
                     <p class="card-text">Happy Coding!</p>
                 </div>

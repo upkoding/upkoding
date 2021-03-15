@@ -27,9 +27,7 @@ SECRET_KEY = os.getenv(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
-
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
-
 AUTH_USER_MODEL = 'account.User'
 
 # Application definition
@@ -145,13 +143,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'id-ID'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -159,12 +153,13 @@ DEFAULT_EMAIL_FROM = os.getenv('DEFAULT_EMAIL_FROM', 'upkoding@example.com')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'upkoding@example.com')
 ANYMAIL = {
     'MAILGUN_API_KEY': os.getenv('MAILGUN_API_KEY'),
-    'MAILGUN_SENDER_DOMAIN':os.getenv('MAILGUN_SENDER_DOMAIN'),
+    'MAILGUN_SENDER_DOMAIN': os.getenv('MAILGUN_SENDER_DOMAIN'),
 }
 
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME', 'staging.upkoding.appspot.com')
+    GS_BUCKET_NAME = os.getenv(
+        'GS_BUCKET_NAME', 'staging.upkoding.appspot.com')
     GS_DEFAULT_ACL = 'publicRead'
     EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
     PREPEND_WWW = True
@@ -238,13 +233,14 @@ SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.10'
 
 SITE_DOMAIN = os.getenv('SITE_DOMAIN')
 POINT_UNIT = 'UP'
-GOOGLE_SITE_VERIFICATION = os.getenv('GOOGLE_SITE_VERIFICATION', '')
 DEFAULT_METADATA = {
     'title': 'UpKoding',
     'image': 'base/img/logo.png',
     'description': 'Belajar Coding paling efektif adalah dengan membuat proyek.'
     + ' UpKoding menyediakan ratusan ide-ide proyek yang kamu bisa buat sebagai latihan mengasah keahlian programming kamu dan dapatkan point untuk setiap proyek yang kamu selesaikan.',
 }
+
+GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
 
 try:
     from upkoding.local_settings import *

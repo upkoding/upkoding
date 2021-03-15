@@ -8,4 +8,5 @@ def upkoding(request: HttpRequest):
     """
     return {
         'domain': settings.SITE_DOMAIN,
+        'ga_tracking_id': settings.GOOGLE_ANALYTICS_TRACKING_ID,
     }
