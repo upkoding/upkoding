@@ -52,15 +52,25 @@
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
                     <div class="btn-group ms-4" style="margin-top: -1px">
-                        <a href="{% url 'account:settings' %}" class="btn btn-outline-default nav-link">
+                        <a href="{% url 'account:index' %}" class="btn btn-outline-default nav-link">
                             {{ user|avatar_img:25 }} <span class="ms-1">{{ user.username }}</span>
+                            {% if user.is_staff %}
+                            <span class="badge me-2 bg-secondary"
+                                style="font-size: 0.7rem; font-weight: 400;">STAFF</span>
+                            {% endif %}
                         </a>
                         <button type="button" class="btn btn-outline-default dropdown-toggle dropdown-toggle-split"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a></li>
+                            <li><a class="dropdown-item" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i>
+                                    Pengaturan</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'account:logout' %}"><i
+                                        class="bi bi-box-arrow-right"></i> Logout</a></li>
                         </ul>
                     </div>
                     {% else %}

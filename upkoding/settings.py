@@ -190,7 +190,7 @@ MEDIA_URL = '/media/'
 THUMBNAIL_FORCE_OVERWRITE = True
 
 LOGIN_URL = '/account/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/account/'
 LOGIN_ERROR_URL = '/account/login/'
 LOGOUT_REDIRECT_URL = '/account/login/'
 

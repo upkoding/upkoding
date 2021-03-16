@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='Akun' %}
+{% endblock %}
+
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
+<div class="project-detail">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-12 right text-center">
+            {% include 'base/_messages.html' %}
+        </div>
+    </div>
+
+    <div class="row pb-5">
+        <div class="col col-lg-12 text-right mb-3" style="text-align: right;">
+            <a href="{% url 'account:settings' %}"><i class="bi bi-gear"></i> Pengaturan</a>
+        </div>
+        <div class="col col-lg-6">
+            {% include 'account/_projects_card.html' with projects=projects %}
+        </div>
+
+        <div class="col col-lg-6">
+            {% if projects_pending_review %}
+            {% include 'account/_pending_projects_card.html' with projects=projects_pending_review %}
+            {% endif %}
+
+            {% include 'account/_messages_card.html' with events=events %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

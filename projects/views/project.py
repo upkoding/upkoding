@@ -138,6 +138,7 @@ class ProjectDetailUser(DetailView):
         # deepcopy to preserve the original state
         requirements = copy.deepcopy(user_project.requirements)
         max_progress = user_project.requirements_completed_percent_max
+        already_completed = user_project.is_requirements_complete
 
         if requirements:
             # create a copy and modify this instead so we can compare it later
@@ -162,20 +163,20 @@ class ProjectDetailUser(DetailView):
             user_project.calculate_progress()
             user_project.save()
 
-            # if all requirements completed, ready for review
+            _, progress_after, become_complete, _ = UserProject.requirements_diff(
+                requirements, requirements_copy)
+            # only create progress update event when progress_after > progress_before
+            if progress_after > float(max_progress):
+                for msg in become_complete:
+                    user_project.add_event(
+                        UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg)
+
+           # if all requirements completed, ready for review
             if user_project.is_requirements_complete():
-                user_project.add_event(UserProjectEvent.TYPE_PROGRESS_COMPLETE)
+                # user_project.add_event(UserProjectEvent.TYPE_PROGRESS_COMPLETE)
                 messages.info(request,
                               "Mantap! Proyek kamu siap untuk direview. Klik tombol `Minta Review`",
                               extra_tags='success')
-            else:
-                _, progress_after, become_complete, _ = UserProject.requirements_diff(
-                    requirements, requirements_copy)
-                # only create progress update event when progress_after > progress_before
-                if progress_after > float(max_progress):
-                    for msg in become_complete:
-                        user_project.add_event(
-                            UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg)
 
         return HttpResponseRedirect(redirect_url)
 

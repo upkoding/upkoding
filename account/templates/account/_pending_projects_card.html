@@ -1,0 +1,42 @@
+{% load sorl_thumbnail %}
+{% load base %}
+{% load humanize %}
+
+<div class="card text-dark bg-warning mb-4">
+    <div class="card-header">
+        <i class="bi bi-eye me-2"></i>Perlu Direview
+    </div>
+    <div class="list-group list-group-flush">
+        {% if projects %}
+        {% for item in projects %}
+        {% with u=item.user p=item.project %}
+        <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action p-3">
+            <div class="position-relative">
+                {% thumbnail p.cover "160x160" crop="center" as im %}
+                <img src="{{ im.url }}" width="70" height="70" class="me-3 rounded float-start"
+                    alt="{{ p.title|title }}">
+                {% endthumbnail %}
+                <div>
+                    <h6 class="mt-0 mb-1">{{ p.title|title }}</h6>
+                    <small class="text-muted">
+                        <img src="{{ u|avatar_url:40 }}" height="20" width="20" class="rounded-circle me-1"
+                            alt="avatar" />
+                        <strong class="me-1">{{ u.username }}</strong>
+                        {% if u.is_staff %}
+                        <span class="badge me-1 bg-secondary" style="font-size: 0.7rem; font-weight: 400;">STAFF</span>
+                        {% endif %}
+                        {{ item.updated|naturaltime }}
+                    </small>
+                </div>
+            </div>
+        </a>
+        {% endwith %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card-body">
+        <span class="text-muted">Kamu belum mengerjakan proyek. Lihat daftar proyek <a
+                href="{% url 'projects:list' %}">disini</a>.</span>
+    </div>
+    {% endif %}
+</div>

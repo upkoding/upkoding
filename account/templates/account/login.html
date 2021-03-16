@@ -11,11 +11,11 @@
             <br /><br />
             <div class="d-grid gap-3 col-8 mx-auto">
                 {% include 'base/_messages.html' %}
-                <a href="{% url 'account:social:begin' 'github' %}?next={%if next %}{{ next }}{% else %}/{% endif %}"
+                <a href="{% url 'account:social:begin' 'github' %}{% if next %}?next={{ next }}{% endif %}"
                     class="btn btn-lg btn-secondary">Github</a>
-                <a href="{% url 'account:social:begin' 'google-oauth2' %}?next={%if next %}{{ next }}{% else %}/{% endif %}"
+                <a href="{% url 'account:social:begin' 'google-oauth2' %}{% if next %}?next={{ next }}{% endif %}"
                     class="btn btn-lg btn-danger">Google</a>
-                <a href="{% url 'account:social:begin' 'facebook' %}?next={%if next %}{{ next }}{% else %}/{% endif %}"
+                <a href="{% url 'account:social:begin' 'facebook' %}{% if next %}?next={{ next }}{% endif %}"
                     class="btn btn-lg btn-primary">Facebook</a>
             </div>
         </div>

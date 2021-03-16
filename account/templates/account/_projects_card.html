@@ -1,0 +1,44 @@
+{% load sorl_thumbnail %}
+{% load base %}
+{% load humanize %}
+
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-code-slash me-2"></i></i>Proyek Saya
+    </div>
+    <div class="list-group list-group-flush">
+        {% if projects %}
+        {% for item in projects %}
+        {% with u=item.user p=item.project %}
+        <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action p-3">
+            <div class="position-relative">
+                {% thumbnail p.cover "160x160" crop="center" as im %}
+                <img src="{{ im.url }}" width="80" height="80" class="me-3 rounded float-start"
+                    alt="{{ p.title|title }}">
+                {% endthumbnail %}
+                <div>
+                    <h6 class="mt-0 mb-1">{{ p.title|title }}</h6>
+                    <small class="text-muted">
+                        <span class="badge me-2 bg-{{ item.get_color_class }}">{{ item.get_status_display }}</span>
+                        {{ item.updated|naturaltime }}
+                    </small>
+                    <div class="progress mt-2" style="height: 3px;">
+                        <div class="progress-bar progress-bar-striped bg-{{ item.get_color_class }}" role="progressbar"
+                            style="width: {{ item.requirements_completed_percent|safe }}%"
+                            aria-valuenow="{{ item.requirements_completed_percent|safe }}" aria-valuemin="0"
+                            aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endwith %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card-body">
+        <span class="text-muted">Kamu belum mengerjakan proyek. Lihat daftar proyek <a
+                href="{% url 'projects:list' %}">disini</a>.</span>
+    </div>
+    {% endif %}
+</div>

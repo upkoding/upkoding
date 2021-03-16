@@ -3,9 +3,10 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import views
 from django.contrib import messages
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from projects.models import UserProject, UserProjectEvent
 from .forms import ProfileForm, LinkForm
 
 
@@ -27,6 +28,27 @@ class LogoutView(views.LogoutView):
         messages.info(request, 'Sampai jumpa di lain kesempatan :)',
                       extra_tags='success')
         return super().dispatch(request, *args, **kwargs)
+
+
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'account/index.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        if user.is_staff:
+            data['projects_pending_review'] = UserProject.objects \
+                .filter(status=UserProject.STATUS_PENDING_REVIEW) \
+                .exclude(user=user) \
+                .order_by('-updated')[:5]
+
+        data['projects'] = UserProject.objects.filter(user=user) \
+            .order_by('-updated')[:6]
+        data['events'] = UserProjectEvent.objects.filter(event_type=UserProjectEvent.TYPE_REVIEW_MESSAGE, user_project__user=user) \
+            .exclude(user=user) \
+            .order_by('-updated')[:6]
+        return data
 
 
 class SettingsView(LoginRequiredMixin, View):

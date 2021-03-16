@@ -10,4 +10,5 @@ urlpatterns = [
     path('settings/', views.SettingsView.as_view(), name='settings'),
     # complete namespace: account:social
     path('', include('social_django.urls', namespace='social')),
+    path('', views.IndexView.as_view(), name='index'),
 ]
