@@ -1,5 +1,5 @@
 {% load humanize %}
-{% load martortags %}
+{% load markdownify %}
 <div class="card">
     <div class="card-header">
         <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
@@ -13,6 +13,6 @@
         </span>
     </div>
     <div class="card-body pt-3 pb-1 ps-3 pe-3">
-        {{ object.message|safe_markdown }}
+        {{ object.message|markdownify }}
     </div>
 </div>

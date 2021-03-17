@@ -29,6 +29,7 @@ urlpatterns = [
     path('account/', include('account.urls', namespace='account')),
     path('proyek/', include('projects.urls', namespace='projects')),
     path('coders/', include('coders.urls', namespace='coders')),
+    path('mdeditor/', include('mdeditor.urls')),
     path('_ah/warmup/', appengine_warmup),
     path('', include('base.urls', namespace='base')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

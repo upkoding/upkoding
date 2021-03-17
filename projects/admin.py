@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db import models
+from mdeditor.widgets import MDEditorWidget
 
 from .models import (
     Project,
@@ -24,6 +25,7 @@ class ProjectAdmin(admin.ModelAdmin):
     readonly_fields = ('search_vector',)
     formfield_overrides = {
         models.JSONField: {'widget': ProjectRequirementsWidget},
+        models.TextField: {'widget': MDEditorWidget},
     }
     inlines = [ProjectImageAdmin]
 

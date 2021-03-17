@@ -1,6 +1,6 @@
 {% extends 'projects/base.html' %}
 
-{% load martortags %}
+{% load markdownify %}
 {% load base %}
 {% load projects %}
 
@@ -39,7 +39,7 @@
                     style="font-size: 18px; color: rgba(0, 0, 0, 0.7); font-weight: 300; font-style: italic; border-left: 2px solid #ccc;">
                     {{ object.description_short }}
                 </p>
-                {{ object.description|safe_markdown }}
+                {{ object.description|markdownify }}
                 <div class="toggle text-center">
                     <button class="btn btn-outline-secondary bg-white text-secondary btn-sm" style="margin-top: 65px;"
                         @click="toggle" title="Deskripsi selengkapnya">

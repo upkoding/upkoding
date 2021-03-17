@@ -1,7 +1,7 @@
 {% extends 'projects/base.html' %}
 
 {% load base %}
-{% load martortags %}
+{% load markdownify %}
 {% load projects %}
 
 {% block meta %}{% meta object=object %}{% endblock %}
@@ -24,7 +24,7 @@
                     style="font-size: 18px; color: rgba(0, 0, 0, 0.7); font-weight: 300; font-style: italic; border-left: 2px solid #ccc;">
                     {{ object.description_short }}
                 </p>
-                {{ object.description|safe_markdown }}
+                {{ object.description|markdownify }}
             </div>
 
             <!--

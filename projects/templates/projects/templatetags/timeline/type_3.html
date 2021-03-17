@@ -13,7 +13,9 @@
             {% if event_user.is_staff %}
             <span class="badge bg-secondary ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
             {% endif %}
-            meminta untuk direview.
+            meminta review
+
+            {% if user_project.has_details %}
             <ul class="list-group mt-3 mb-2">
                 {% if user_project.demo_url %}
                 <li class="list-group-item">Demo: <a href="{{ user_project.demo_url }}" target="_blank"
@@ -33,6 +35,8 @@
                 <li class="list-group-item">{{ user_project.note|linebreaks }}</li>
                 {% endif %}
             </ul>
+            {% endif %}
+
         </div>
     </div>
 </div>

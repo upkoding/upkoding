@@ -20,7 +20,7 @@ from account.models import User
 PROJECT_SEARCH_VECTORS = (SearchVector('title', weight='A') +
                           SearchVector('tags', weight='A') +
                           SearchVector('description_short', weight='B') +
-                          SearchVector('description', weight='C'))
+                          SearchVector('description', weight='B'))
 
 
 def project_cover_path(instance, filename):
@@ -380,6 +380,9 @@ class UserProject(models.Model):
 
     def is_in_progress(self):
         return self.status == self.STATUS_IN_PROGRESS
+
+    def has_details(self):
+        return self.demo_url or self.sourcecode_url or self.note
 
     def add_event(self, event_type, **kwargs):
         UserProjectEvent(
