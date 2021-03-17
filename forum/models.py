@@ -122,6 +122,7 @@ class ThreadStat(models.Model):
         choices=TYPES,
         default=TYPE_VIEW_COUNT,
         db_index=True)
+    value = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -186,6 +187,7 @@ class ThreadAnswerStat(models.Model):
         choices=TYPES,
         default=TYPE_REPLY_COUNT,
         db_index=True)
+    value = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
