@@ -90,7 +90,7 @@ class Project(models.Model):
             GinIndex(fields=['search_vector'],
                      name='project_search_vector_idx'),
         ]
-        ordering = ['-created']
+        ordering = ['-pk']
 
     def __str__(self, *args, **kwargs):
         return self.title
@@ -240,6 +240,7 @@ class UserProject(models.Model):
                 fields=['user', 'project'],
                 name='unique_user_project')
         ]
+        ordering = ['-pk']
 
     def __str__(self):
         return '{} - {} ({})'.format(self.user.username, self.project.slug, self.point)

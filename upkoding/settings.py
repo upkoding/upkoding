@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig',
     'projects.apps.ProjectsConfig',
     'coders.apps.CodersConfig',
+    'forum.apps.ForumConfig',
 
     # 3rd party apps
     'whitenoise.runserver_nostatic',
