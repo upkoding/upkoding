@@ -242,6 +242,7 @@ DEFAULT_METADATA = {
 }
 
 GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
+STATUSPAGE_URL = 'https://stats.uptimerobot.com/ElMQmFWXKD'
 
 MDEDITOR_CONFIGS = {
     'default': {
