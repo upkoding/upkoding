@@ -1,0 +1,82 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='Forum Diskusi Pemrograman' desc='Forum Diskusi Pemrograman'%}
+{% endblock %}
+
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center text-center">
+        <div class="col col-lg-8">
+            <h1 class="display-6">Diskusi</h1>
+            <p class="lead" style="margin-top: 1rem; margin-bottom: 4rem">
+                Forum Diskusi Pemrograman
+            </p>
+        </div>
+    </div>
+    <div class="project-detail">
+        <div class="row content mb-5">
+            <div class="col col-lg-6 left">
+                <h3 class="section-title mb-3"><i class="bi bi-code-slash me-2"></i>Topic populer</h3>
+                {% include 'forum/_topic_item.html' with title='Diskusi Umum' count=100 time='1 menit yang lalu' %}
+                {% include 'forum/_topic_item.html' with title='Bahasa Pemrograman Python' count=100 time='1 jam yang lalu' %}
+                {% include 'forum/_topic_item.html' with title='PHP Lovers' count=100 time='kemarin' %}
+                {% include 'forum/_topic_item.html' with title='Front-end Developer' count=100 time='2 hari yang lalu' %}
+                {% include 'forum/_topic_item.html' with title='AI dan Machine Learning' count=100 time='1 minggu yang lalu'%}
+            </div>
+
+            <div class="col col-lg-6 right">
+                <h3 class="section-title mb-4"><i class="bi bi-code-slash me-2"></i>Thread terbaru</h3>
+                {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' topic='Umum' %}
+                {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' topic='PHP Lovers' %}
+                {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' topic='Python' %}
+                {% include 'forum/_thread_item.html' with title='Saya 40 tahun, udah telat ndak ya belajar coding' topic='Umum' %}
+                {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' topic='Web Development' %}
+            </div>
+        </div>
+
+        <div class="my-3 p-3 bg-body shadow-sm">
+            <h6 class="border-bottom pb-2 mb-0">Diskusi Umum</h6>
+            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
+            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
+            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
+            <small class="d-block text-end mt-3">
+                <a href="#">Lihat semua</a>
+            </small>
+        </div>
+
+        <div class="my-3 p-3 bg-body shadow-sm">
+            <h6 class="border-bottom pb-2 mb-0">Bahasa Pemrograman Python</h6>
+            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
+            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
+            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
+            <small class="d-block text-end mt-3">
+                <a href="#">Lihat semua</a>
+            </small>
+        </div>
+
+        <div class="my-3 p-3 bg-body shadow-sm">
+            <h6 class="border-bottom pb-2 mb-0">PHP Lovers</h6>
+            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
+            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
+            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
+            <small class="d-block text-end mt-3">
+                <a href="#">Lihat semua</a>
+            </small>
+        </div>
+
+        <div class="my-3 p-3 bg-body shadow-sm">
+            <h6 class="border-bottom pb-2 mb-0">AI dan Machine Learning</h6>
+            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
+            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
+            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
+            <small class="d-block text-end mt-3">
+                <a href="#">Lihat semua</a>
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}
