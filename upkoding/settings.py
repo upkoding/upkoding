@@ -296,6 +296,12 @@ MARKDOWNIFY = {
             'h4',
             'h5',
             'h6',
+            'img',
+        ],
+        'WHITELIST_ATTRS': [
+            'href',
+            'src',
+            'alt',
         ],
         'MARKDOWN_EXTENSIONS': [
             'markdown.extensions.fenced_code',

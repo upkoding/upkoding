@@ -275,6 +275,9 @@ ul.timeline li .card .card-body h5,
 ul.timeline li .card .card-body h6 {
   font-weight: 700;
 }
+ul.timeline li .card .card-body img {
+  width: 100%;
+}
 /* ul.timeline > li:before {
   content: " ";
   background: white;
