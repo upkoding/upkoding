@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title=topic.title desc=topic.description %}
+{% endblock %}
+
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center text-center">
+        <div class="col col-lg-8">
+            <h1 class="display-6">{{ topic.title }}</h1>
+            <p class="lead" style="margin-top: 1rem; margin-bottom: 4rem">
+                {{ topic.description }}
+            </p>
+        </div>
+    </div>
+    <div class="project-detail">
+        <div class="row content mb-5">
+            <div class="col col-lg-8 left">
+                {% for thread in latest_threads %}
+                {% include 'forum/_thread_item.html' %}
+                {% endfor %}
+                <small class="d-block text-end mt-3">
+                    <a href="#">Lihat semua</a>
+                </small>
+
+            </div>
+
+            <div class="col col-lg-4 right">
+                <h6 class="mb-3">Thread Populer</h6>
+                {% for thread in top_threads %}
+                {% include 'forum/_thread_item.html' %}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

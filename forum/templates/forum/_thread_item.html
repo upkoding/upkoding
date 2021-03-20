@@ -1,16 +1,25 @@
 <div class="d-flex text-muted pt-3">
-    <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32"
-        xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
-        preserveAspectRatio="xMidYMid slice" focusable="false">
+    <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
+        role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false">
         <title>Placeholder</title>
-        <rect width="100%" height="100%" fill="#007bff" /><text x="50%" y="50%" fill="#007bff"
-            dy=".3em">32x32</text>
+        <rect width="100%" height="100%" fill="#007bff" /><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
     </svg>
     <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
         <div class="d-flex justify-content-between">
-            <strong class="text-gray-dark mb-1" style="font-size: 1rem; font-weight: 500; margin-top: -3px;">{{ title }}</strong>
+            <a href="{{ thread.get_absolute_url }}">
+                <strong class="text-gray-dark mb-1" style="font-size: 1rem; font-weight: 500; margin-top: -3px;">
+                    {{ thread.title }}
+                </strong>
+            </a>
         </div>
-        <span class="text-muted" style="color: #aaa !important;"><strong>username</strong> di <strong>{{ topic }}</strong></span>
-        <span class="text-muted" style="color: #aaa !important; float: right; font-size: 13px;">5 menit yang lalu</span>
+        <span class="text-muted" style="color: #aaa !important;">
+            <a href="{{ thread.user.get_absolute_url }}"><strong>{{ thread.user.username }}</strong></a> di
+            <a href="{{ thread.topic.get_absolute_url }}">
+                <strong>{{ thread.topic.title }}</strong>
+            </a>
+        </span>
+        <span class="text-muted" style="color: #aaa !important; float: right; font-size: 13px;">
+            {{ thread.created }}
+        </span>
     </div>
 </div>

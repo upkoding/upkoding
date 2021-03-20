@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.template.defaultfilters import slugify
 from sorl.thumbnail import ImageField
+from django.urls import reverse
 
 from account.models import User
 from projects.models import Project
@@ -70,6 +71,9 @@ class Topic(models.Model):
 
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse('forum:topic', args=[self.slug, ])
+
 
 class Thread(models.Model):
     STATUS_INACTIVE = 0
@@ -81,9 +85,10 @@ class Thread(models.Model):
 
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=250, blank=True, db_index=True)
+    topic = models.ForeignKey(
+        Topic, on_delete=models.CASCADE, related_name='threads')
     user = models.ForeignKey(
         User,
-        blank=True,
         null=True,
         on_delete=models.SET_NULL,
         related_name='forum_threads')
@@ -108,6 +113,9 @@ class Thread(models.Model):
             self.slug = slugify(self.title)
 
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('forum:thread', args=[self.topic.slug, self.slug, self.pk])
 
 
 class ThreadStat(models.Model):
