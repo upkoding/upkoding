@@ -17,26 +17,31 @@
             </p>
         </div>
     </div>
-    <div class="project-detail">
-        <div class="row content mb-5">
-            <div class="col col-lg-8 left">
+    <div>
+        <div class="row content mb-5 g-5">
+            <div class="col col-12 col-lg-8">
+                {% include 'forum/_question_form.html' %}
+
                 {% for thread in latest_threads %}
                 {% include 'forum/_thread_item.html' %}
                 {% endfor %}
                 <small class="d-block text-end mt-3">
                     <a href="#">Lihat semua</a>
                 </small>
-
             </div>
 
-            <div class="col col-lg-4 right">
-                <h6 class="mb-3">Thread Populer</h6>
+            <div class="col col-12 col-lg-4">
+                <h6 class="mb-3">Populer</h6>
                 {% for thread in top_threads %}
                 {% include 'forum/_thread_item.html' %}
                 {% endfor %}
             </div>
         </div>
-
     </div>
 </div>
+{% endblock %}
+
+{% block footscripts %}
+<script>
+</script>
 {% endblock %}

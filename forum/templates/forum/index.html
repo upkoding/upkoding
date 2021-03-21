@@ -17,24 +17,24 @@
             </p>
         </div>
     </div>
-    <div class="project-detail">
-        <div class="row content mb-5">
-            <div class="col col-lg-6 left">
-                <h3 class="section-title mb-3">Topic populer</h3>
+    <div>
+        <div class="row content mb-5 g-5">
+            <div class="col col-12 col-lg-6">
+                <h5 class="section-title mb-3">Topic populer</h5>
                 {% for topic in top_topics %}
                 {% include 'forum/_topic_item.html' %}
                 {% endfor %}
             </div>
 
-            <div class="col col-lg-6 right">
-                <h3 class="section-title mb-4">Thread terbaru</h3>
+            <div class="col col-12 col-lg-6">
+                <h5 class="section-title mb-4">Thread terbaru</h5>
                 {% for thread in latest_threads %}
                 {% include 'forum/_thread_item.html' %}
                 {% endfor %}
             </div>
         </div>
 
-        <div class="my-3 p-3 bg-body shadow-sm">
+        <div class="">
             <h6 class="border-bottom pb-2 mb-0">Diskusi Umum</h6>
             {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
             {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
@@ -44,7 +44,7 @@
             </small>
         </div>
 
-        <div class="my-3 p-3 bg-body shadow-sm">
+        <div class="">
             <h6 class="border-bottom pb-2 mb-0">Bahasa Pemrograman Python</h6>
             {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
             {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
@@ -54,7 +54,7 @@
             </small>
         </div>
 
-        <div class="my-3 p-3 bg-body shadow-sm">
+        <div class="">
             <h6 class="border-bottom pb-2 mb-0">PHP Lovers</h6>
             {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
             {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
@@ -64,7 +64,7 @@
             </small>
         </div>
 
-        <div class="my-3 p-3 bg-body shadow-sm">
+        <div class="">
             <h6 class="border-bottom pb-2 mb-0">AI dan Machine Learning</h6>
             {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
             {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
