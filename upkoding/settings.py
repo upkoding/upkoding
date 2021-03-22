@@ -149,6 +149,9 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# example: Eka:eka@test.com,Putra:putra@test.com
+ADMINS = [tuple(admin.split(':')) for admin in os.getenv('ADMINS', '').split(',')]
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_EMAIL_FROM = os.getenv('DEFAULT_EMAIL_FROM', 'upkoding@example.com')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'upkoding@example.com')
@@ -292,6 +295,8 @@ MARKDOWNIFY = {
             'code',
             'pre',
             'hr',
+            'h1',
+            'h2',
             'h3',
             'h4',
             'h5',

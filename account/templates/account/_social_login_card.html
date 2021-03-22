@@ -5,7 +5,7 @@
     <div class="card-body p-4">
         <ul class="list-group list-group-flush">
             <li class="list-group-item ps-0 pe-0 d-flex justify-content-between">
-                <span class="lead"><i class="bi bi-github"></i> &nbsp; Github</span>
+                <span class="lead"><i class="bi bi-github me-2"></i>Github</span>
                 {% if 'github' in backends.not_associated %}
                 <a href="{% url 'account:social:begin' 'github' %}?next={% url 'account:settings' %}"
                     class="btn btn-sm btn-outline-primary">Connect</a>
@@ -18,7 +18,7 @@
                 {% endif %}
             </li>
             <li class="list-group-item ps-0 pe-0 d-flex justify-content-between align-items-center">
-                <span class="lead"><i class="bi bi-google"></i> &nbsp; Google</span>
+                <span class="lead"><i class="bi bi-google me-2"></i>Google</span>
                 {% if 'google-oauth2' in backends.not_associated %}
                 <a href="{% url 'account:social:begin' 'google-oauth2' %}?next={% url 'account:settings' %}"
                     class="btn btn-sm btn-outline-primary">Connect</a>
@@ -31,7 +31,7 @@
                 {% endif %}
             </li>
             <li class="list-group-item ps-0 pe-0 d-flex justify-content-between align-items-center">
-                <span class="lead"><i class="bi bi-facebook"></i> &nbsp; Facebook</span>
+                <span class="lead"><i class="bi bi-facebook me-2"></i>Facebook</span>
                 {% if 'facebook' in backends.not_associated %}
                 <a href="{% url 'account:social:begin' 'facebook' %}?next={% url 'account:settings' %}"
                     class="btn btn-sm btn-outline-primary">Connect</a>

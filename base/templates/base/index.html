@@ -24,7 +24,7 @@
         </div>
     </div>
 </div>
-<div class="content row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mt-5 mb-5">
+<div class="content row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5 mt-5 mb-5">
     {% if projects %}
     {% for project in projects %}
     {% include 'projects/_project_list_item.html' with project=project %}
@@ -33,7 +33,7 @@
 </div>
 <div style="height: 20px;" class="border-top"></div>
 <div class="row mt-5 mb-5 content">
-    <div class="col col-lg-6 left">
+    <div class="col col-12 col-lg-6 left">
         <h5 class="section-title mb-5"><i class="bi bi-code-slash me-2"></i>Lagi Dikerjakan</h5>
         {% for item in user_projects_inprogress %}
         {% with u=item.user p=item.project %}
@@ -62,7 +62,7 @@
         {% endfor %}
     </div>
 
-    <div class="col col-lg-6 right">
+    <div class="col col-12 col-lg-6 right">
         <h5 class="section-title mb-5"><i class="bi bi-check2-circle me-2"></i> Berhasil Diselesaikan</h5>
         {% for item in user_projects_completed %}
         {% with u=item.user p=item.project %}

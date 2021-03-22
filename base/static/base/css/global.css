@@ -143,10 +143,6 @@ a.link-card p {
   color: rgba(0, 0, 0, 0.5);
 }
 
-.project-detail .content .right {
-  padding-left: 40px;
-}
-
 .project-detail .content .user-progress a .card {
   border: none;
 }
@@ -267,13 +263,18 @@ ul.timeline li .card .card-body * {
   font-size: 0.9rem;
   font-weight: 400;
 }
+ul.timeline li .card .card-body strong {
+  font-weight: 500;
+}
+
 ul.timeline li .card .card-body h1,
 ul.timeline li .card .card-body h2,
 ul.timeline li .card .card-body h3,
 ul.timeline li .card .card-body h4,
 ul.timeline li .card .card-body h5,
 ul.timeline li .card .card-body h6 {
-  font-weight: 700;
+  font-weight: 500;
+  font-size: 1rem;
 }
 ul.timeline li .card .card-body img {
   width: 100%;

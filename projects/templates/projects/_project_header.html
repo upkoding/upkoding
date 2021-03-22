@@ -10,8 +10,12 @@ terms:
 {% load base %}
 {% load sorl_thumbnail %}
 {% load humanize %}
+
+<div class="row justify-content-md-center header" 
 {% thumbnail object.cover "960x540" crop="center" as im %}
-<div class="row justify-content-md-center header" style="background-image: url({{ im.url }});">
+style="background-image: url({{ im.url }});"
+{% endthumbnail %}
+>
     {% with object.user as project_owner %}
     <div class="col col-lg-8 left">
         <p style="color: grey">Diposting oleh
@@ -119,4 +123,3 @@ terms:
     </div>
     <div class="overlay"></div>
 </div>
-{% endthumbnail %}

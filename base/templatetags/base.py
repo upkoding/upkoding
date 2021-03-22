@@ -98,7 +98,7 @@ def meta(context, **kwargs):
         if isinstance(obj, Project):
             meta_title = obj.title if (
                 not 'title' in kwargs) else kwargs.get('title')
-            meta_image = obj.cover.url
+            meta_image = obj.cover.url if obj.cover else ''
             meta_desc = obj.description
 
     return {

@@ -24,7 +24,7 @@
     <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
         {% if object_list %} {% for coder in object_list %}
         <a href="{{ coder.get_absolute_url }}" class="link-card" title="{{ coder.get_display_name }}">
-            <div class="col">
+            <div class="col col-12">
                 <div class="card">
                     <div class="text-center mt-4">{{ coder|avatar_img:120 }}</div>
                     <div class="card-body text-center">
