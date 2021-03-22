@@ -1,5 +1,7 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Topic, Thread, ThreadAnswer
 
@@ -42,3 +44,12 @@ class ThreadDetail(DetailView):
             topic=thread.topic,
             status=Thread.STATUS_ACTIVE)[:10]
         return data
+
+
+class CreateTopicThread(LoginRequiredMixin, DetailView):
+    queryset = Topic.objects.filter(status=Topic.STATUS_ACTIVE)
+
+    def post(self, request, slug):
+        user = request.user
+        topic = self.get_object()
+        return HttpResponse('')
