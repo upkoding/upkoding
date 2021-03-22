@@ -84,7 +84,7 @@ style="background-image: url({{ im.url }});"
                         if (this.loading) {
                             return '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>'
                         } else {
-                            if (this.project) {
+                            if (this.project && this.project.status > -1) {
                                 switch (this.project.color_class) {
                                     case 'success':
                                     case 'warning':

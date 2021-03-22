@@ -16,14 +16,14 @@
     </div>
 
     <div class="row pb-5">
-        <div class="col col-lg-12 text-right mb-3" style="text-align: right;">
+        <div class="col col-12 text-right mb-3" style="text-align: right;">
             <a href="{% url 'account:settings' %}"><i class="bi bi-gear"></i> Pengaturan</a>
         </div>
-        <div class="col col-lg-6">
+        <div class="col col-12 col-lg-6 mb-4">
             {% include 'account/_projects_card.html' with projects=projects %}
         </div>
 
-        <div class="col col-lg-6">
+        <div class="col col-12 col-lg-6">
             {% if projects_pending_review %}
             {% include 'account/_pending_projects_card.html' with projects=projects_pending_review %}
             {% endif %}

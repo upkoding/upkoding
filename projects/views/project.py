@@ -56,12 +56,17 @@ class ProjectDetail(DetailView):
                 return HttpResponseForbidden()
 
             project = self.get_object()
-            user_project = get_object_or_404(
-                UserProject, user=request.user, project=project)
+            user_project = None
+            try:
+                user_project = get_object_or_404(
+                    UserProject, user=request.user, project=project)
+            except Exception:
+                pass
             return JsonResponse({
-                'status': user_project.status,
-                'color_class': user_project.get_color_class()
+                'status': user_project.status if user_project else -1,
+                'color_class': user_project.get_color_class() if user_project else 'primary'
             })
+
         return super().get(request, *args, **kwargs)
 
     def post(self, request, slug, pk):
