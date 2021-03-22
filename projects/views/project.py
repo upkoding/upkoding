@@ -138,7 +138,6 @@ class ProjectDetailUser(DetailView):
         # deepcopy to preserve the original state
         requirements = copy.deepcopy(user_project.requirements)
         max_progress = user_project.requirements_completed_percent_max
-        already_completed = user_project.is_requirements_complete
 
         if requirements:
             # create a copy and modify this instead so we can compare it later

@@ -60,7 +60,7 @@ def render_timeline(context, user_project):
     """
     Render project's events timeline.
     """
-    events = UserProjectEvent.objects.filter(user_project=user_project)
+    events = UserProjectEvent.objects.filter(user_project=user_project).order_by('created')
     events_with_template = []
     for event in events:
         events_with_template.append({
