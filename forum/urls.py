@@ -9,7 +9,7 @@ urlpatterns = [
     path('', Index.as_view(), name='index'),
     path('<slug:slug>/',
          TopicDetail.as_view(), name='topic'),
-    path('<slug:slug>/',
+    path('<slug:slug>/threads/new/',
          CreateTopicThread.as_view(), name='new_thread'),
     path('<slug:topic_slug>/<slug:slug>-<int:pk>/',
          ThreadDetail.as_view(), name='thread'),

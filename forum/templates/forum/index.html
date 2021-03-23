@@ -36,9 +36,9 @@
 
         <div class="">
             <h6 class="border-bottom pb-2 mb-0">Diskusi Umum</h6>
-            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
-            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
-            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
+                {% for thread in latest_threads %}
+                {% include 'forum/_thread_item.html' %}
+                {% endfor %}
             <small class="d-block text-end mt-3">
                 <a href="#">Lihat semua</a>
             </small>
@@ -46,9 +46,9 @@
 
         <div class="">
             <h6 class="border-bottom pb-2 mb-0">Bahasa Pemrograman Python</h6>
-            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
-            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
-            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
+                {% for thread in latest_threads %}
+                {% include 'forum/_thread_item.html' %}
+                {% endfor %}
             <small class="d-block text-end mt-3">
                 <a href="#">Lihat semua</a>
             </small>
@@ -56,9 +56,9 @@
 
         <div class="">
             <h6 class="border-bottom pb-2 mb-0">PHP Lovers</h6>
-            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
-            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
-            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
+                {% for thread in latest_threads %}
+                {% include 'forum/_thread_item.html' %}
+                {% endfor %}
             <small class="d-block text-end mt-3">
                 <a href="#">Lihat semua</a>
             </small>
@@ -66,9 +66,9 @@
 
         <div class="">
             <h6 class="border-bottom pb-2 mb-0">AI dan Machine Learning</h6>
-            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
-            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
-            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
+                {% for thread in latest_threads %}
+                {% include 'forum/_thread_item.html' %}
+                {% endfor %}
             <small class="d-block text-end mt-3">
                 <a href="#">Lihat semua</a>
             </small>

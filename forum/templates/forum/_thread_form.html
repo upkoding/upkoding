@@ -1,0 +1,22 @@
+<form method="POST" @submit.prevent="submit" action="{% url 'forum:new_thread' topic.slug %}">
+    {% csrf_token %}
+    <div class="card mb-5">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="title" class="form-label">Pertanyaan</label>
+                <input type="text" maxlength="200" class="form-control" id="title" name="title"
+                    :class="{ 'is-invalid': errors.title }">
+                <div class="invalid-feedback" x-text="errors.title && errors.title[0].message"></div>
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Detail pertanyaan</label>
+                <textarea class="form-control" id="message" name="description" rows="8"
+                    :class="{ 'is-invalid': errors.description }"></textarea>
+                <div class="invalid-feedback" x-text="errors.description && errors.description[0].message"></div>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <input type="submit" class="btn btn-primary" value="Kirim Pertanyaan" />
+        </div>
+    </div>
+</form>

@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load base %}
+{% load static %}
 
 {% block meta %}
 {% meta title=topic.title desc=topic.description %}
@@ -8,7 +9,7 @@
 {% block header_mb %}mb-5{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container" x-data="topic()">
     <div class="row justify-content-md-center text-center">
         <div class="col col-lg-8">
             <h1 class="display-6">{{ topic.title }}</h1>
@@ -20,11 +21,14 @@
     <div>
         <div class="row content mb-5 g-5">
             <div class="col col-12 col-lg-8">
-                {% include 'forum/_question_form.html' %}
+                {% include 'forum/_thread_form.html' %}
 
-                {% for thread in latest_threads %}
-                {% include 'forum/_thread_item.html' %}
-                {% endfor %}
+                <div class="threads" x-ref="threads">
+                    {% for thread in latest_threads %}
+                    {% include 'forum/_thread_item.html' %}
+                    {% endfor %}
+                </div>
+
                 <small class="d-block text-end mt-3">
                     <a href="#">Lihat semua</a>
                 </small>
@@ -42,6 +46,5 @@
 {% endblock %}
 
 {% block footscripts %}
-<script>
-</script>
+<script src="{% static 'forum/js/topic.js' %}"></script>
 {% endblock %}
