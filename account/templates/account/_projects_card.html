@@ -6,8 +6,8 @@
     <div class="card-header">
         <i class="bi bi-code-slash me-2"></i></i>Proyek Saya
     </div>
+    {% if not projects %}
     <div class="list-group list-group-flush">
-        {% if projects %}
         {% for item in projects %}
         {% with u=item.user p=item.project %}
         <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action p-3">
