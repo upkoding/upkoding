@@ -6,7 +6,7 @@
     <div class="card-header">
         <i class="bi bi-code-slash me-2"></i></i>Proyek Saya
     </div>
-    {% if not projects %}
+    {% if projects %}
     <div class="list-group list-group-flush">
         {% for item in projects %}
         {% with u=item.user p=item.project %}
