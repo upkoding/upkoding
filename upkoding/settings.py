@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -101,6 +102,7 @@ WSGI_APPLICATION = 'upkoding.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 if os.getenv('GAE_APPLICATION'):
+    # Google Appengine
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -112,14 +114,12 @@ if os.getenv('GAE_APPLICATION'):
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'upkoding',
-            'USER': 'upkoding',
-            'PASSWORD': 'upkoding',
-            'HOST': 'localhost',
-        }
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            default='postgres://upkoding:upkoding@localhost:5432/upkoding'
+        )
     }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -158,12 +158,20 @@ ANYMAIL = {
 }
 
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    GS_BUCKET_NAME = os.getenv(
-        'GS_BUCKET_NAME', 'staging.upkoding.appspot.com')
-    GS_DEFAULT_ACL = 'publicRead'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+    AWS_S3_ENDPOINT_URL = 'https://{}.digitaloceanspaces.com'.format(
+        AWS_S3_REGION_NAME
+    )
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_S3_REGION_NAME')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_S3_REGION_NAME')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_S3_REGION_NAME')
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_IS_GZIPPED = True
+
     EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
-    PREPEND_WWW = True
+    PREPEND_WWW = os.getenv('PREPEND_WWW', 'False') == 'True'
     SECURE_SSL_REDIRECT = True
 
     sentry_sdk.init(
