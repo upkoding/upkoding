@@ -37,7 +37,6 @@ else:
         path('account/', include('account.urls', namespace='account')),
         path('proyek/', include('projects.urls', namespace='projects')),
         path('coders/', include('coders.urls', namespace='coders')),
-        path('diskusi/', include('forum.urls', namespace='forum')),
         path('mdeditor/', include('mdeditor.urls')),
         path('_ah/warmup/', appengine_warmup),
         path('', include('base.urls', namespace='base')),
