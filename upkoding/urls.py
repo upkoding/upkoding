@@ -18,18 +18,27 @@ from django.contrib import admin
 from django.http.response import HttpResponse
 from django.urls import path, include
 from django.contrib.staticfiles.urls import static
+from django.conf import settings
+
+from base.views import render_template
 
 
 def appengine_warmup(request):
     return HttpResponse('ok')
 
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('account/', include('account.urls', namespace='account')),
-    path('proyek/', include('projects.urls', namespace='projects')),
-    path('coders/', include('coders.urls', namespace='coders')),
-    path('mdeditor/', include('mdeditor.urls')),
-    path('_ah/warmup/', appengine_warmup),
-    path('', include('base.urls', namespace='base')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.MAINTENANCE_MODE:
+    urlpatterns = [
+        path('', render_template('base/maintenance.html')),
+    ]
+else:
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('account/', include('account.urls', namespace='account')),
+        path('proyek/', include('projects.urls', namespace='projects')),
+        path('coders/', include('coders.urls', namespace='coders')),
+        path('diskusi/', include('forum.urls', namespace='forum')),
+        path('mdeditor/', include('mdeditor.urls')),
+        path('_ah/warmup/', appengine_warmup),
+        path('', include('base.urls', namespace='base')),
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

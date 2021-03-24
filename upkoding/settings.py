@@ -149,9 +149,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# example: Eka:eka@test.com,Putra:putra@test.com
-ADMINS = [tuple(admin.split(':')) for admin in os.getenv('ADMINS', '').split(',')]
-
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_EMAIL_FROM = os.getenv('DEFAULT_EMAIL_FROM', 'upkoding@example.com')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'upkoding@example.com')
@@ -246,6 +243,7 @@ DEFAULT_METADATA = {
 
 GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
 STATUSPAGE_URL = 'https://stats.uptimerobot.com/ElMQmFWXKD'
+MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
 
 MDEDITOR_CONFIGS = {
     'default': {
@@ -295,18 +293,10 @@ MARKDOWNIFY = {
             'code',
             'pre',
             'hr',
-            'h1',
-            'h2',
             'h3',
             'h4',
             'h5',
             'h6',
-            'img',
-        ],
-        'WHITELIST_ATTRS': [
-            'href',
-            'src',
-            'alt',
         ],
         'MARKDOWN_EXTENSIONS': [
             'markdown.extensions.fenced_code',
