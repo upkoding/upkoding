@@ -1,3 +1,4 @@
+{% load markdownify %}
 <div class="card text-dark bg-light shadow-sm">
     <div class="card-header">
         {% if fullmode %}Review Form{% else %}Pesan{% endif %}
@@ -18,7 +19,7 @@
         </li>
         {% endif %}
         {% if user_project.note %}
-        <li class="list-group-item">{{ user_project.note|linebreaks }}</li>
+        <li class="list-group-item">{{ user_project.note|markdownify }}</li>
         {% endif %}
     </ul>
     {% endif %}

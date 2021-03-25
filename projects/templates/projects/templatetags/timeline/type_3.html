@@ -1,4 +1,5 @@
 {% load humanize %}
+{% load markdownify %}
 <div class="card border-warning bg-light shadow-sm">
     <div class="card-body pt-2 pb-2 ps-3 pe-3">
         <span class="float-end d-inline-block ps-2 created">
@@ -32,7 +33,7 @@
                 </li>
                 {% endif %}
                 {% if user_project.note %}
-                <li class="list-group-item">{{ user_project.note|linebreaks }}</li>
+                <li class="list-group-item">{{ user_project.note|markdownify }}</li>
                 {% endif %}
             </ul>
             {% endif %}
