@@ -103,13 +103,13 @@
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
             </nav>
 
-            <p style="color: grey; margin-top: 1em;">&copy; 2021 <a href="https://github.com/upkoding/upkoding"
-                    target="_blank">upkoding</a>
+            <p style="color: grey; margin-top: 1em;">&copy; 2021 UpKoding / <a href="https://github.com/upkoding/upkoding"
+                    target="_blank">we're open source</a>
                 {% if statuspage_url %}
-                | <a href="{{ statuspage_url }}" target="_blank" rel="noopener noreferrer">status</a>
+                / <a href="{{ statuspage_url }}" target="_blank" rel="noopener noreferrer">status</a>
                 {% endif %}
                 {% if user.is_authenticated and user.is_staff %}
-                | <a href="{% url 'admin:index' %}">admin</a>
+                / <a href="{% url 'admin:index' %}">admin</a>
                 {% endif %}
             </p>
             <p class="mt-4">

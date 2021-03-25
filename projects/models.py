@@ -6,21 +6,11 @@ from django.urls import reverse
 from django.conf import settings
 from django.utils.timezone import now
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import (
-    SearchQuery,
-    SearchRank,
-    SearchVector,
-    SearchVectorField,
-    TrigramSimilarity
-)
-
+from django.contrib.postgres.search import SearchVectorField
 from sorl.thumbnail import ImageField
-from account.models import User
 
-PROJECT_SEARCH_VECTORS = (SearchVector('title', weight='A') +
-                          SearchVector('tags', weight='A') +
-                          SearchVector('description_short', weight='B') +
-                          SearchVector('description', weight='B'))
+from account.models import User
+from .managers import ProjectManager, PROJECT_SEARCH_VECTORS
 
 
 def project_cover_path(instance, filename):
@@ -37,49 +27,6 @@ def project_image_path(instance, filename):
     """
     ts = int(now().timestamp())
     return 'projects/images/{}-{}'.format(ts, filename)
-
-
-class ProjectManager(models.Manager):
-    """
-    Custom manager for `Project` with some helper methods to work with Project.
-    """
-
-    def active(self):
-        """
-        Returns active projects only.
-        Usage:
-            `Project.objects.active()`
-        Which is equivalent to:
-            `Project.objects.all(status=2)`
-        """
-        return self.filter(status=2)
-
-    def featured(self):
-        """
-        Returns featured projects only.
-        Usage:
-            `Project.objects.featured()`
-        Which is equivalent to:
-            `Project.objects.all(status=2, is_featured=True)`
-        """
-        return self.filter(status=2, is_featured=True)
-
-    def search(self, text):
-        """
-        Provides an easy way to do Full Text Search.
-        Usage:
-            `Project.objects.search('django')`
-        """
-        search_query = SearchQuery(text)
-        search_rank = SearchRank(PROJECT_SEARCH_VECTORS, search_query)
-        trigram_similarity = TrigramSimilarity('title', text) + \
-            TrigramSimilarity('tags', text) + \
-            TrigramSimilarity('description_short', text)
-        return self.get_queryset() \
-            .annotate(rank=search_rank, similarity=trigram_similarity) \
-            .filter(status=2) \
-            .filter(Q(rank__gte=0.2) | Q(similarity__gt=0.1)) \
-            .order_by('-rank')
 
 
 class Project(models.Model):

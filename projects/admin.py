@@ -30,7 +30,12 @@ class ProjectAdmin(admin.ModelAdmin):
     inlines = [ProjectImageAdmin]
 
 
-class UserProjectEventAdmin(admin.TabularInline):
+class UserProjectEventAdmin(admin.ModelAdmin):
+    model = UserProjectEvent
+    list_display = ('user', 'event_type')
+
+
+class UserProjectEventAdminInline(admin.TabularInline):
     model = UserProjectEvent
 
 
@@ -48,8 +53,9 @@ class UserProjectAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.JSONField: {'widget': ProjectRequirementsWidget},
     }
-    inlines = [UserProjectParticipantAdmin, UserProjectEventAdmin]
+    inlines = [UserProjectParticipantAdmin, UserProjectEventAdminInline]
 
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(UserProject, UserProjectAdmin)
+admin.site.register(UserProjectEvent, UserProjectEventAdmin)

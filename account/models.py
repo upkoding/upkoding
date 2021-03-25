@@ -89,3 +89,37 @@ class Link(models.Model):
 
     def __str__(self):
         return "Links: {}".format(self.user.username)
+
+
+class UserSetting(models.Model):
+    TYPE_BOOL = 0  # true/false
+    TYPE_INT = 1  # 99
+    TYPE_FLOAT = 2  # 1.5
+    TYPE_STRING = 3  # 'hello'
+
+    TYPES = (
+        (TYPE_BOOL, 'bool'),
+        (TYPE_INT, 'int'),
+        (TYPE_FLOAT, 'float'),
+        (TYPE_STRING, 'string'),
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user_settings')
+    key = models.CharField(max_length=64, db_index=True)
+    value = models.CharField(max_length=200, blank=True, default='true')
+    type = models.SmallIntegerField(default=TYPE_BOOL, choices=TYPES)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['user', 'key'], name='user_setting_key_idx'),
+        ]
+
+        constraints = [
+            # to make sure there's only one UserSetting record with the same `user` and `key`
+            models.UniqueConstraint(
+                fields=['user', 'key'],
+                name='unique_user_setting_key')
+        ]
+
+    def __str__(self):
+        return '[{}] {}:{}'.format(self.user.pk, self.key, self.value)
