@@ -17,7 +17,7 @@
                     {{ object.get_display_name|title }}
                 </h1>
                 <span class="badge bg-primary" style="font-size: 0.9rem;">
-                    @{{ object.username }}
+                    {{ object.username }}
                 </span>
                 {% if object.point > 0 %}
                 <span class="badge bg-success" style="font-size: 0.9rem;">
@@ -29,7 +29,7 @@
     </div>
 
     <div class="row mt-5 content">
-        <div class="col col-lg-6 left">
+        <div class="col col-12 col-lg-6 left">
             <h3 class="section-title mb-3"><i class="bi bi-person-fill me-2"></i>Tentang</h3>
             <div class="description mt-3">
                 {{ object.description|markdownify }}
@@ -48,7 +48,7 @@
             {% endif %}
         </div>
 
-        <div class="col col-lg-6 right">
+        <div class="col col-12 col-lg-6 ps-lg-5 right">
             <h3 class="section-title mb-4"><i class="bi bi-code-slash me-2"></i>Sedang Mengerjakan</h3>
             <div>
                 {% if current_projects %}

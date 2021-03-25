@@ -6,7 +6,7 @@
 
 
 {% block meta %}
-{% meta object=object title=user_project.user.first_name|add:" - "|add:object.title|title %}
+{% meta object=object title=user_project.user.get_display_name|add:" - "|add:object.title|title %}
 {% endblock %}
 
 {% block content %}
@@ -85,7 +85,7 @@
             <h3 class="section-title mt-5 mb-3">Berhasil Menyelesaikan</h3>
             {% render_completed_projects object %}
             <h3 class="section-title mt-5 mb-3">Tags</h3>
-            {% render_tags object %}
+            {% render_tags object 'secondary' %}
         </div>
     </div>
 </div>

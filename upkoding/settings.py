@@ -101,25 +101,12 @@ WSGI_APPLICATION = 'upkoding.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-if os.getenv('GAE_APPLICATION'):
-    # Google Appengine
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASS'),
-            'HOST': os.getenv('DB_HOST'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(
-            conn_max_age=600,
-            default='postgres://upkoding:upkoding@localhost:5432/upkoding'
-        )
-    }
-
+DATABASES = {
+    'default': dj_database_url.config(
+        conn_max_age=600,
+        default='postgres://upkoding:upkoding@localhost:5432/upkoding'
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -247,7 +234,7 @@ DEFAULT_METADATA = {
     'title': 'UpKoding',
     'image': 'base/img/logo.png',
     'description': 'Belajar Coding paling efektif adalah dengan membuat proyek.'
-    + ' UpKoding menyediakan ratusan ide-ide proyek yang kamu bisa buat sebagai latihan mengasah keahlian programming kamu dan dapatkan point untuk setiap proyek yang kamu selesaikan.',
+    + ' UpKoding menyediakan ratusan ide-ide proyek yang kamu bisa buat sebagai latihan mengasah keahlian programming dan dapatkan point untuk setiap proyek yang kamu selesaikan.',
 }
 
 GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
@@ -302,10 +289,18 @@ MARKDOWNIFY = {
             'code',
             'pre',
             'hr',
+            'h1',
+            'h2',
             'h3',
             'h4',
             'h5',
             'h6',
+            'img',
+        ],
+        'WHITELIST_ATTRS': [
+            'href',
+            'src',
+            'alt',
         ],
         'MARKDOWN_EXTENSIONS': [
             'markdown.extensions.fenced_code',

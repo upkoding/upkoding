@@ -27,7 +27,7 @@
 <div class="content row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5 mt-5 mb-5">
     {% if projects %}
     {% for project in projects %}
-    {% include 'projects/_project_list_item.html' with project=project %}
+    {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
     {% endfor %}
     {% endif %}
 </div>

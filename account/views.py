@@ -19,17 +19,6 @@ class LoginView(views.LoginView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class LogoutView(views.LogoutView):
-    """
-    Extends LogoutView to add logout message
-    """
-
-    def dispatch(self, request, *args, **kwargs):
-        messages.info(request, 'Sampai jumpa di lain kesempatan :)',
-                      extra_tags='success')
-        return super().dispatch(request, *args, **kwargs)
-
-
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'account/index.html'
 

@@ -1,5 +1,9 @@
 {% extends 'base/base.html' %}
-{% block title %}Tentang UpKoding{% endblock %}
+{% load base %}
+
+{% block meta %}
+{% meta title='Tentang UpKoding' desc='Tempat belajar, berlatih dan berdiskusi tentang dunia IT dan Pemrograman Indonesia.'%}
+{% endblock %}
 
 {% block content %}
 {% include 'base/_inprogress.html' %}

@@ -1,6 +1,6 @@
 {% load humanize %}
 {% load markdownify %}
-<div class="card border-success">
+<div class="card border-success shadow-sm">
     {% if object.message %}
     <div class="card-header">
         <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">

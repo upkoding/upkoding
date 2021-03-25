@@ -2,9 +2,7 @@
 
 ![Screenshot Awal](https://raw.githubusercontent.com/upkoding/upkoding/main/screenshot.png)
 
-
-🔥🔥🔥  WORK IN PROGRESS 🔥🔥🔥
-
+Platform UpKoding menyediakan wadah buat para programmer/calon programmer Indonesia untuk belajar, berlatih, berdiskusi serta saling mendukung dan memotivasi satu sama lain.
 ## Development
 
 Untuk pengembangan di local maka pengetahuan Django sangat diperlukan paling tidak sudah bisa menjalankan sampai di `./manage.py runserver`.
@@ -65,6 +63,20 @@ $ ./manage.py runserver
 Kalau semua lancar maka, kita akan melihat websitenya jalan di `http://localhost:8000`. Untuk login ke admin tinggal buka `http://localhost:8000/admin` dan login dengan username dan password yang sama pada saat kita bikin superuser.
 
 > Apabila ada yang kurang jelas, ketemu bug, feature request bisa kita diskusikan lewat github **Issue** atau **Discussion**.
+## Teknologi
+
+Platform ini dibuat dengan [Framework Django](https://www.djangoproject.com), database [PostgreSQL](https://www.postgresql.org) dan hosting di [Digital Ocean](https://m.do.co/c/71f884aaaabb) (link afiliasi).
+
+## Beri Dukungan
+
+Kode proyek selalu terbuka dan siapa saja bisa bergabung dan memanfaatkannya secara gratis, tapi untuk menjaga platform tetap berjalan dan mendukung pengembangannya pastinya perlu tenaga dan biaya (infrastruktur/maintenance/support).
+
+Untuk itu bagi siapapun yang berkenan untuk mendukung bisa dengan cara berikut ini:
+
+- Bantu mengembangkan
+- Bagikan ke media sosial, referensikan ke teman
+- Jadi sponsor (perusahaan atau perorangan)
+- Sponsor perorangan via [Saweria](https://saweria.co/upkoding) atau [Paypal](https://www.paypal.com/paypalme/UpKoding)
 
 ## Latar Belakang
 
@@ -78,21 +90,7 @@ Akhirnya saya mulailah proyek ini, berikut fitur utama yang ada di pikiran saya 
 - **Coders**, disini kita bisa melihat profile para coders (pengguna), proyek yang dikerjakan, proyek yang disubmit dan diskusi yang diikuti.
 - **Diskusi**, disinilah tempat mereka berdiskusi, sharing, bertanya dan berinteraksi dengan pengguna lainnya. Saya ingin forum ini bisa menjadi Stack Overflow nya Indonesia :)
 
-*Nanti setiap interaksi (menyelesaikan proyek, mensubmit proyek, bertanya dan menjawab pertanyaan di forum) yang dilakukkan akan mendapatkan poin.*
-
-## Sumbangan Ide
-
-Saya juga sadar alasan saya menginisiasi proyek ini adalah karena melihat situasi diatas dan pastinya merupakan asumsi pribadi. Apabila ada masukan, saran dan ide menarik lainnya yang sepertinya akan membuat platform ini berguna maka dengan senang hati saya akan mendengarkannya. Silahkan buat issue baru dan kita bisa diskusikan disana.
-
-## Ingin berkontribusi?
-
-Karena ini masih tahap awal sekali, saya belum menentukan struktur dan fitur yang pasti di proyek ini jadi sepertinya teman-teman mohon maaf belum bisa berkontribusi untuk saat ini. Nanti setelah diluncurkan ke public maka saat itu juga akan saya buka dan dengan senang hati menerima setiap kontribusi dari kalian.
-
-**Tapi sumbangan ide selalu saya nantikan setiap saat.** Ini yang paling saya butuhkan saat ini.
-
-## Teknologi
-
-Proyek ini dibuat dengan [Framework Django](https://www.djangoproject.com), database menggunakan [PostgreSQL](https://www.postgresql.org) dan dideploy di Google Appengine.
+Nanti setiap interaksi (menyelesaikan proyek, mensubmit proyek, bertanya dan menjawab pertanyaan di forum) yang dilakukkan akan mendapatkan poin.
 
 ## Lisensi
 

@@ -1,6 +1,10 @@
 {% extends 'base/base.html' %}
+{% load base %}
 
-{% block title %}Forum Diskusi Pemrograman{% endblock %}
+{% block meta %}
+{% meta title='Forum Diskusi Pemrograman' desc='Forum diskusi seputaran pemrograman komputer dan IT, bertanya, menjawab dan saling mendukung.' %}
+{% endblock %}
+
 
 {% block content %}
 {% include 'base/_inprogress.html' %}

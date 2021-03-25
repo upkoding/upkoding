@@ -30,7 +30,7 @@
     <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">FEATURED</h6>
     <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mb-5">
         {% for project in featured_projects %}
-        {% include 'projects/_project_list_item.html' with project=project %}
+        {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
         {% endfor %}
     </div>
     {% endif %}
@@ -50,7 +50,7 @@
     <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
         {% if object_list %}
         {% for project in object_list %}
-        {% include 'projects/_project_list_item.html' with project=project %}
+        {% include 'projects/_project_list_item.html' with project=project classes='shadow-sm' %}
         {% endfor %}
         {% endif %}
     </div>

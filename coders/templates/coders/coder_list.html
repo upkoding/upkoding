@@ -25,12 +25,12 @@
         {% if object_list %} {% for coder in object_list %}
         <a href="{{ coder.get_absolute_url }}" class="link-card" title="{{ coder.get_display_name }}">
             <div class="col col-12">
-                <div class="card">
+                <div class="card shadow-sm">
                     <div class="text-center mt-4">{{ coder|avatar_img:120 }}</div>
                     <div class="card-body text-center">
                         <h5 class="card-title mb-1">{{ coder.get_display_name|title }}</h5>
                         <span class="badge bg-primary">
-                            @{{ coder.username }}
+                            {{ coder.username }}
                         </span>
                         {% if coder.point > 0 %}
                         <span class="badge bg-success">{{ coder.get_point_display }}</span>

@@ -79,21 +79,23 @@
 
         <main>
             {% block content %}{% endblock %}
-            <div class="card text-dark bg-light mb-5 mt-5">
+            {% block announcement %}
+            <div class="card text-dark bg-light mb-5 mt-5 shadow-lg">
                 <div class="card-body">
                     <h5 class="card-title">Under Development!</h5>
-                    <p class="card-text">Terima kasih sudah berkunjung ke UpKoding, namun saat ini platform ini belum
+                    <p class="card-text">Terima kasih sudah berkunjung, namun saat ini platform ini belum
                         dibuka untuk umum. Baru online untuk mengetes fitur, mengisi data proyek serta menguji
-                        workflow CI/CD nya.</p>
+                        workflow development nya.</p>
                     <p class="card-text">Silahkan buat akun, lihat-lihat proyeknya atau mulai mengerjakan. <a
                             href="https://github.com/upkoding/upkoding/discussions" target="_blank"
                             rel="noreferrer noopener">Any feedback are welcome!</a></p>
                     <p class="card-text">Happy Coding!</p>
                 </div>
             </div>
+            {% endblock %}
         </main>
 
-        <footer class="mt-auto text-center" style="padding-top: 50px;">
+        <footer class="mt-auto text-center" style="padding-top: 50px; padding-bottom: 20px;">
             <nav class="nav nav-masthead justify-content-center">
                 <a class="nav-link" href="{% url 'projects:list' %}">Proyek</a>
                 <a class="nav-link" href="{% url 'coders:list' %}">Coders</a>
@@ -101,15 +103,19 @@
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
             </nav>
 
-            <p style="color: grey; margin-top: 1em;">powered by <a href="https://github.com/upkoding/upkoding"
+            <p style="color: grey; margin-top: 1em;">&copy; 2021 <a href="https://github.com/upkoding/upkoding"
                     target="_blank">upkoding</a>
                 {% if statuspage_url %}
-                | <a href="{{ statuspage_url }}" target="_blank"
-                    rel="noopener noreferrer">status</a>
+                | <a href="{{ statuspage_url }}" target="_blank" rel="noopener noreferrer">status</a>
                 {% endif %}
                 {% if user.is_authenticated and user.is_staff %}
                 | <a href="{% url 'admin:index' %}">admin</a>
                 {% endif %}
+            </p>
+            <p class="mt-4">
+                <a href="https://m.do.co/c/71f884aaaabb" target="_blank" title="Powered by Digital Ocean">
+                    <img src="{% static 'base/img/do-black.svg' %}" height="30" style="opacity: 0.5;" />
+                </a>
             </p>
         </footer>
     </div>
