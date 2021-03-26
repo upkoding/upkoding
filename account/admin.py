@@ -2,11 +2,15 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import User, Link
+from .models import User, Link, UserSetting
 
 
 class LinkAdmin(admin.StackedInline):
     model = Link
+
+
+class UserSettingAdmin(admin.ModelAdmin):
+    model = UserSetting
 
 
 class CustomUserAdmin(UserAdmin):
@@ -23,3 +27,4 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(UserSetting, UserSettingAdmin)

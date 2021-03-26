@@ -7,7 +7,7 @@ from django.views.generic import View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from projects.models import UserProject, UserProjectEvent
-from .forms import ProfileForm, LinkForm
+from .forms import ProfileForm, LinkForm, EmailNotificationSettings, StaffEmailNotificationSettings
 
 
 class LoginView(views.LoginView):
@@ -40,10 +40,9 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return data
 
 
-class SettingsView(LoginRequiredMixin, View):
-
+class ProfileView(LoginRequiredMixin, View):
     def __render(self, request, profile_form, link_form):
-        return render(request, 'account/settings.html', {
+        return render(request, 'account/profile.html', {
             'profile_form': profile_form,
             'link_form': link_form
         })
@@ -58,7 +57,7 @@ class SettingsView(LoginRequiredMixin, View):
         user = request.user
         kind = request.POST.get('kind')
 
-        if kind == 'profile':
+        if kind == ProfileForm.NAME:
             form = ProfileForm(
                 request.POST, request.FILES, instance=request.user)
             if not form.is_valid():
@@ -66,17 +65,47 @@ class SettingsView(LoginRequiredMixin, View):
                 return self.__render(request, form, link_form)
 
             form.save()
-            messages.info(self.request, 'Profile berhasil diupdate!',
+            messages.info(self.request, 'Profil berhasil disimpan!',
                           extra_tags='success')
 
-        if kind == 'link':
+        if kind == LinkForm.NAME:
             form = LinkForm(user, request.POST, instance=user.get_link())
             if not form.is_valid():
                 profile_form = ProfileForm(instance=user)
                 return self.__render(request, profile_form, form)
 
             form.save()
-            messages.info(self.request, 'Links berhasil diupdate!',
+            messages.info(self.request, 'Links berhasil disimpan!',
                           extra_tags='success')
+
+        return HttpResponseRedirect(reverse('account:profile'))
+
+
+class SettingsView(LoginRequiredMixin, View):
+
+    def __render(self, request, email_notification_form):
+        return render(request, 'account/settings.html', {
+            'email_notification_form': email_notification_form,
+        })
+
+    def get(self, request):
+        user = request.user
+        email_notification_form = StaffEmailNotificationSettings(
+            user) if user.is_staff else EmailNotificationSettings(user)
+        email_notification_form.load()
+
+        return self.__render(request, email_notification_form)
+
+    def post(self, request):
+        user = request.user
+        kind = request.POST.get('kind')
+
+        if kind == EmailNotificationSettings.NAME:
+            form = StaffEmailNotificationSettings(
+                user, request.POST) if user.is_staff else EmailNotificationSettings(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.info(self.request, 'Pengaturan notifikasi berhasil disimpan!',
+                              extra_tags='success')
 
         return HttpResponseRedirect(reverse('account:settings'))
