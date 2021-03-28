@@ -15,17 +15,11 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.http.response import HttpResponse
 from django.urls import path, include
 from django.contrib.staticfiles.urls import static
 from django.conf import settings
 
 from base.views import render_template
-
-
-def appengine_warmup(request):
-    return HttpResponse('ok')
-
 
 if settings.MAINTENANCE_MODE:
     urlpatterns = [
@@ -38,6 +32,6 @@ else:
         path('proyek/', include('projects.urls', namespace='projects')),
         path('coders/', include('coders.urls', namespace='coders')),
         path('mdeditor/', include('mdeditor.urls')),
-        path('_ah/warmup/', appengine_warmup),
+        path('__bgtask/', include('bgtask.urls', namespace='bgtask')),
         path('', include('base.urls', namespace='base')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

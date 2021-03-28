@@ -34,11 +34,14 @@ AUTH_USER_MODEL = 'account.User'
 # Application definition
 
 INSTALLED_APPS = [
+    # upkoding apps
     'account.apps.AccountConfig',
     'base.apps.BaseConfig',
     'projects.apps.ProjectsConfig',
     'coders.apps.CodersConfig',
+    'bgtask.apps.BgTaskConfig',
 
+    # 3rd party apps
     'whitenoise.runserver_nostatic',
     'social_django',
     'sorl.thumbnail',
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
     'mdeditor',
     'anymail',
 
+    # django contribs
     'django.contrib.postgres',
     'django.contrib.humanize',
     'django.contrib.admin',
@@ -240,6 +244,8 @@ DEFAULT_METADATA = {
 GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
 STATUSPAGE_URL = 'https://stats.uptimerobot.com/ElMQmFWXKD'
 MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
+
+BGTASK_ENDPOINT_KEY = os.getenv('BGTASK_ENDPOINT_KEY')
 
 MDEDITOR_CONFIGS = {
     'default': {
