@@ -2,7 +2,7 @@
 {% load base %}
 
 {% block meta %}
-{% meta title='Pengaturan' %}
+{% meta title='Edit Profil' %}
 {% endblock %}
 
 {% block header_mb %}mb-5{% endblock %}
@@ -17,11 +17,11 @@
 
     <div class="row pb-5">
         <div class="col col-12 col-lg-6">
-            {% include 'account/_social_login_card.html' %}
+            {% include 'account/_profile_card.html' with form=profile_form %}
         </div>
 
         <div class="col col-12 col-lg-6">
-            {% include 'account/_email_notifications_card.html' with form=email_notification_form %}
+            {% include 'account/_links_card.html' with form=link_form %}
         </div>
 
     </div>

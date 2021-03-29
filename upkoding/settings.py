@@ -34,11 +34,13 @@ AUTH_USER_MODEL = 'account.User'
 # Application definition
 
 INSTALLED_APPS = [
+    # upkoding apps
     'account.apps.AccountConfig',
     'base.apps.BaseConfig',
     'projects.apps.ProjectsConfig',
     'coders.apps.CodersConfig',
 
+    # 3rd party apps
     'whitenoise.runserver_nostatic',
     'social_django',
     'sorl.thumbnail',
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'mdeditor',
     'anymail',
 
+    # django contribs
     'django.contrib.postgres',
     'django.contrib.humanize',
     'django.contrib.admin',

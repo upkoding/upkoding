@@ -60,8 +60,14 @@
                             <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i>
-                                    Pengaturan</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'account:profile' %}"><i class="bi bi-person"></i>
+                                    Edit Profil</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i>
+                                    Pengaturan</a>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -103,13 +109,13 @@
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
             </nav>
 
-            <p style="color: grey; margin-top: 1em;">&copy; 2021 <a href="https://github.com/upkoding/upkoding"
-                    target="_blank">upkoding</a>
+            <p style="color: grey; margin-top: 1em;">&copy; 2021 UpKoding / <a
+                    href="https://github.com/upkoding/upkoding" target="_blank">github</a>
                 {% if statuspage_url %}
-                | <a href="{{ statuspage_url }}" target="_blank" rel="noopener noreferrer">status</a>
+                / <a href="{{ statuspage_url }}" target="_blank" rel="noopener noreferrer">status</a>
                 {% endif %}
                 {% if user.is_authenticated and user.is_staff %}
-                | <a href="{% url 'admin:index' %}">admin</a>
+                / <a href="{% url 'admin:index' %}">admin</a>
                 {% endif %}
             </p>
             <p class="mt-4">

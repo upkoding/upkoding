@@ -7,7 +7,7 @@
     <div class="card-body p-4">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="hidden" name="kind" value="profile" />
+            {{ form.kind }}
             <div class="mb-4 text-center">
                 {{ user|avatar_img:200 }}
                 <br>
@@ -22,10 +22,10 @@
 
             {% for field in form.visible_fields %}
             {% if field.name != 'avatar' %}
-            {% include 'base/_field.html' with field=field classes='mb-4' %}
+            {% include 'base/form/_text.html' with field=field classes='mb-4' %}
             {% endif %}
             {% endfor %}
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
     </div>
 </div>

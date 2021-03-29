@@ -1,3 +1,4 @@
+from django.db.models import manager
 from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -6,6 +7,7 @@ from django.contrib.humanize.templatetags import humanize
 from django.conf import settings
 
 from sorl.thumbnail import ImageField, get_thumbnail
+from .managers import UserSettingManager, USER_SETTING_TYPES, USER_SETTING_TYPE_BOOL
 
 
 def avatar_path(instance, filename):
@@ -89,3 +91,31 @@ class Link(models.Model):
 
     def __str__(self):
         return "Links: {}".format(self.user.username)
+
+
+class UserSetting(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user_settings')
+    key = models.CharField(max_length=64, db_index=True)
+    value = models.CharField(max_length=200, blank=True, default='true')
+    type = models.SmallIntegerField(
+        default=USER_SETTING_TYPE_BOOL,
+        choices=USER_SETTING_TYPES)
+
+    objects = UserSettingManager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['user', 'key', 'type'],
+                         name='user_setting_key_type_idx'),
+        ]
+
+        constraints = [
+            # to make sure there's only one UserSetting record with the same `user` and `key`
+            models.UniqueConstraint(
+                fields=['user', 'key', 'type'],
+                name='unique_user_setting_key_type')
+        ]
+
+    def __str__(self):
+        return '[{}] {}:{}'.format(self.user.pk, self.key, self.value)
