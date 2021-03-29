@@ -32,6 +32,5 @@ else:
         path('proyek/', include('projects.urls', namespace='projects')),
         path('coders/', include('coders.urls', namespace='coders')),
         path('mdeditor/', include('mdeditor.urls')),
-        path('__bgtask/', include('bgtask.urls', namespace='bgtask')),
         path('', include('base.urls', namespace='base')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

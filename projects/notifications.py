@@ -2,6 +2,7 @@ from django.core.mail import send_mail, send_mass_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 
+from account.models import UserSetting
 from .models import UserProjectEvent, UserProjectParticipant
 
 FROM = settings.DEFAULT_EMAIL_FROM
@@ -37,13 +38,16 @@ class UserProjectEventNotification:
         participants = UserProjectParticipant.objects. \
             filter(user_project=self.__user_project, subscribed=True). \
             exclude(user=self.__event_user)
+
         emails = []
         for p in participants:
             to_user = p.user
-            self.__context.update({'to_user': to_user})
-            msg = render_to_string(tpl, self.__context)
-            emails.append(('[UpKoding] Permintaan review dari @{}'.format(self.__event_user.username),
-                           msg, FROM, [to_user.email]))
+            # check user notification settings
+            if UserSetting.objects.email_notify_project_review_request(to_user):
+                self.__context.update({'to_user': to_user})
+                msg = render_to_string(tpl, self.__context)
+                emails.append(('[UpKoding] Permintaan review dari @{}'.format(self.__event_user.username),
+                               msg, FROM, [to_user.email]))
         if emails:
             send_mass_mail(emails, fail_silently=True)
 
@@ -57,13 +61,16 @@ class UserProjectEventNotification:
         participants = UserProjectParticipant.objects. \
             filter(user_project=self.__user_project, subscribed=True). \
             exclude(user=self.__event_user)
+
         emails = []
         for p in participants:
             to_user = p.user
-            self.__context.update({'to_user': to_user})
-            msg = render_to_string(tpl, self.__context)
-            emails.append(('[UpKoding] Pesan dari @{}'.format(self.__event_user.username),
-                           msg, FROM, [to_user.email]))
+            # check user notification settings
+            if UserSetting.objects.email_notify_project_message(to_user):
+                self.__context.update({'to_user': to_user})
+                msg = render_to_string(tpl, self.__context)
+                emails.append(('[UpKoding] Pesan dari @{}'.format(self.__event_user.username),
+                               msg, FROM, [to_user.email]))
         if emails:
             send_mass_mail(emails, fail_silently=True)
 
@@ -73,10 +80,13 @@ class UserProjectEventNotification:
         """
         tpl = 'projects/emails/project_approved.html'
         user_project_owner = self.__user_project.user
-        self.__context.update({'to_user': user_project_owner})
-        msg = render_to_string(tpl, self.__context)
-        send_mail('[UpKoding] Proyek kamu telah disetujui!',
-                  msg, FROM, [user_project_owner.email], fail_silently=True)
+
+        # check user notification settings
+        if UserSetting.objects.email_notify_project_approved(user_project_owner):
+            self.__context.update({'to_user': user_project_owner})
+            msg = render_to_string(tpl, self.__context)
+            send_mail('[UpKoding] Proyek kamu telah disetujui!',
+                      msg, FROM, [user_project_owner.email], fail_silently=True)
 
     def __notify_project_disapproved(self):
         """
@@ -84,7 +94,10 @@ class UserProjectEventNotification:
         """
         tpl = 'projects/emails/project_disapproved.html'
         user_project_owner = self.__user_project.user
-        self.__context.update({'to_user': user_project_owner})
-        msg = render_to_string(tpl, self.__context)
-        send_mail('[UpKoding] Status proyek kamu diralat',
-                  msg, FROM, [user_project_owner.email], fail_silently=True)
+
+        # check user notification settings
+        if UserSetting.objects.email_notify_project_disapproved(user_project_owner):
+            self.__context.update({'to_user': user_project_owner})
+            msg = render_to_string(tpl, self.__context)
+            send_mail('[UpKoding] Status proyek kamu diralat',
+                      msg, FROM, [user_project_owner.email], fail_silently=True)
