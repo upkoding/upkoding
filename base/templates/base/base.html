@@ -48,7 +48,7 @@
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}">Proyek</a>
                     <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Coders</a>
-                    <a class="nav-link {% active_class '/diskusi/*' %}" href="{% url 'forum:index' %}">Diskusi</a>
+                    <a class="nav-link {% active_class '/forum/*' %}" href="{% url 'forum:index' %}">Forum</a>
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
                     <div class="btn-group ms-4" style="margin-top: -1px">
@@ -105,7 +105,7 @@
             <nav class="nav nav-masthead justify-content-center">
                 <a class="nav-link" href="{% url 'projects:list' %}">Proyek</a>
                 <a class="nav-link" href="{% url 'coders:list' %}">Coders</a>
-                <a class="nav-link" href="{% url 'forum:index' %}">Diskusi</a>
+                <a class="nav-link" href="{% url 'forum:index' %}">Forum</a>
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
             </nav>
 

@@ -1,0 +1,4 @@
+{% load base %}
+<a href="{{ u.get_absolute_url }}" class="avatar" title="{{ u.get_display_name }}">
+    <img src="{{ u|avatar_url:50}}" height="25" width="25" class="rounded-circle" alt="avatar" />
+</a>

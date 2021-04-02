@@ -1,22 +1,32 @@
-<form method="POST" @submit.prevent="submit" action="{% url 'forum:new_thread' topic.slug %}">
+<form method="POST" @submit.prevent="{% if thread %}updateThread{% else %}createThread{% endif %}"
+    action="{% if thread %}{% url 'forum:api_thread_detail' thread.pk %}{% else %}{% url 'forum:api_threads' %}{% endif %}">
     {% csrf_token %}
-    <div class="card mb-5">
+    {% if not thread %}
+    <input type="hidden" name="topic" value="{{ topic.pk }}" />
+    {% endif %}
+
+    <div class="card mb-3">
         <div class="card-body">
             <div class="mb-3">
                 <label for="title" class="form-label">Pertanyaan</label>
                 <input type="text" maxlength="200" class="form-control" id="title" name="title"
-                    :class="{ 'is-invalid': errors.title }">
+                    :class="{ 'is-invalid': errors.title }" value="{{ thread.title }}">
                 <div class="invalid-feedback" x-text="errors.title && errors.title[0].message"></div>
             </div>
             <div class="mb-3">
                 <label for="message" class="form-label">Detail pertanyaan</label>
                 <textarea class="form-control" id="message" name="description" rows="8"
-                    :class="{ 'is-invalid': errors.description }"></textarea>
+                    :class="{ 'is-invalid': errors.description }">{{ thread.description }}</textarea>
                 <div class="invalid-feedback" x-text="errors.description && errors.description[0].message"></div>
             </div>
         </div>
-        <div class="card-footer text-end">
-            <input type="submit" class="btn btn-primary" value="Kirim Pertanyaan" />
+        <div class="card-footer bg-light">
+            {% if thread %}
+            <a href="?#thread" class="btn btn-outline-secondary" x-ref="cancel_edit_thread">Batal</a>
+            <input type="submit" class="btn btn-success float-end" value="Perbarui" />
+            {% else %}
+            <input type="submit" class="btn btn-primary float-end" value="Submit" />
+            {% endif %}
         </div>
     </div>
 </form>

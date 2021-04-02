@@ -1,7 +1,7 @@
 function topic() {
   return {
     errors: {},
-    submit(e) {
+    createThread(e) {
       fetch(e.target.action, {
         method: "POST",
         body: new FormData(e.target),
@@ -12,6 +12,8 @@ function topic() {
               "afterbegin",
               await resp.text()
             );
+            this.errors = {};
+            e.target.reset();
           } else {
             this.errors = await resp.json();
           }

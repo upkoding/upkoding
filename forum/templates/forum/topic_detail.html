@@ -21,7 +21,7 @@
     <div>
         <div class="row content mb-5 g-5">
             <div class="col col-12 col-lg-8">
-                {% include 'forum/_thread_form.html' %}
+                {% include 'forum/_thread_form.html' with topic=topic %}
 
                 <div class="threads" x-ref="threads">
                     {% for thread in latest_threads %}

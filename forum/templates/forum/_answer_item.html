@@ -1,0 +1,63 @@
+{% load humanize %}
+{% load markdownify %}
+<li id="answer-{{ answer.pk }}" x-ref="answer_{{ answer.pk }}">
+    {% with answer_user=answer.user %}
+    {% include 'forum/_answer_avatar.html' with u=answer_user %}
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <a href="{{ answer_user.get_absolute_url }}" title="{{ answer_user.get_display_name }}">
+                {{ answer_user.username }}
+            </a>
+            {% if answer_user.is_staff %}
+            <span class="badge bg-secondary ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
+            {% endif %}
+            <span class="float-end d-inline-block ps-2 created">
+                {{ answer.created|naturaltime }}
+            </span>
+        </div>
+        <div class="card-body pt-3 pb-1 ps-3 pe-3">
+            {% if answer.pk == edit_answer %}
+            <!-- edit mode -->
+            <form method="POST" @submit.prevent="updateAnswer" action="{% url 'forum:api_answer_detail' answer.pk %}"
+                data-success="?#answer-{{ answer.pk }}">
+                {% csrf_token %}
+                <textarea class="form-control" name="message" rows="5" placeholder="Tulis respon disini..."
+                    :class="{ 'is-invalid': errors.message }">{{ answer.message }}</textarea>
+                <div class="invalid-feedback" x-text="errors.message && errors.message[0].message"></div>
+                <div class="row mt-3 mb-2">
+                    <div class="col col-12">
+                        <a href="?#answer-{{ answer.pk }}" class="btn btn-outline-secondary"
+                            x-ref="cancel_edit_answer">Batal</a>
+                        <input type="submit" class="btn btn-success float-end" value="Perbarui" />
+                    </div>
+                </div>
+            </form>
+
+            {% else %}
+            <!-- display mode -->
+            {{ answer.message|markdownify }}
+            {% endif %}
+        </div>
+
+        <!-- hide answer footer on edit mode -->
+        {% if answer.pk != edit_answer %}
+        <div class="card-footer bg-light" style="border-top: 1px solid #eee;">
+            <a href="#"><i class="bi bi-hand-thumbs-up"></i></a>
+
+            <!-- show if owner -->
+            {% if user == answer_user %}
+            <span class="dropdown float-end">
+                <a href="#" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><i
+                        class="bi bi-three-dots"></i></a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="?edit_answer={{ answer.pk }}#answer-{{ answer.pk}}">Edit</a></li>
+                    <li><a class="dropdown-item" href="javascript:;" style="color: red;"
+                            @click="deleteAnswer({{ answer.pk }})">Hapus</a></li>
+                </ul>
+            </span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% endwith %}
+</li>

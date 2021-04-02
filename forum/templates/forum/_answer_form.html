@@ -1,0 +1,34 @@
+{% load markdownify %}
+<li x-ref="answer_form">
+    {% include 'forum/_answer_avatar.html' with u=user %}
+
+    <div class="card text-dark bg-light shadow-sm">
+        <div class="card-header">
+            <a href="{{ user.get_absolute_url }}" title="{{ user.get_display_name }}">
+                {{ user.username }}
+            </a>
+            {% if user.is_staff %}
+            <span class="badge bg-secondary ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
+            {% endif %}
+        </div>
+        <div class="card-body pt-3 pb-2 ps-3 pe-3">
+            <form method="POST" @submit.prevent="createAnswer" action="{% url 'forum:api_answers' %}">
+                {% csrf_token %}
+                <input type="hidden" name="thread" value="{{ thread.pk }}" />
+                <textarea class="form-control" name="message" rows="5" placeholder="Tulis respon disini..."
+                    :class="{ 'is-invalid': errors.message }"></textarea>
+                <div class="invalid-feedback" x-text="errors.message && errors.message[0].message"></div>
+
+                <div class="alert"
+                    :class="{'alert-warning': alert.type=='client', 'alert-danger': alert.type=='server', 'alert-success': alert.type=='success'}"
+                    role="alert" x-show="false" x-text="alert.message"></div>
+
+                <div class="row mt-3 mb-2">
+                    <div class="col col-12">
+                        <input type="submit" class="btn btn-primary float-end" value="Submit" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</li>

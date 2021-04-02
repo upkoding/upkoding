@@ -1,82 +1,92 @@
 {% extends 'base/base.html' %}
 {% load base %}
+{% load static %}
+{% load markdownify %}
+{% load humanize %}
 
 {% block meta %}
-{% meta title=thread.title desc=thread.description %}
+{% meta title=thread.title thread=thread.description %}
 {% endblock %}
 
 {% block header_mb %}mb-5{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-md-center text-center">
-        <div class="col col-lg-8">
-            <h1 class="display-6">{{ topic.title }}</h1>
-            <p class="lead" style="margin-top: 1rem; margin-bottom: 4rem">
-                Forum Diskusi Pemrograman
-            </p>
-        </div>
-    </div>
-    <div class="project-detail">
-        <div class="row content mb-5">
-            <div class="col col-lg-6 left">
-                <h3 class="section-title mb-3"><i class="bi bi-code-slash me-2"></i>Topic populer</h3>
-                {% include 'forum/_topic_item.html' with title='Diskusi Umum' count=100 time='1 menit yang lalu' %}
-                {% include 'forum/_topic_item.html' with title='Bahasa Pemrograman Python' count=100 time='1 jam yang lalu' %}
-                {% include 'forum/_topic_item.html' with title='PHP Lovers' count=100 time='kemarin' %}
-                {% include 'forum/_topic_item.html' with title='Front-end Developer' count=100 time='2 hari yang lalu' %}
-                {% include 'forum/_topic_item.html' with title='AI dan Machine Learning' count=100 time='1 minggu yang lalu'%}
+<div class="container" x-data="thread()">
+    <div class="row content mb-5 g-5">
+        <div class="col col-12 col-lg-8">
+            <div id="thread">
+                {% if thread.pk == edit_thread %}
+                {% include 'forum/_thread_form.html' with thread=thread %}
+                {% else %}
+                <h1 class="display-6 mb-4">{{ thread.title }}</h1>
+                {{ thread.description|markdownify }}
+                {% endif %}
+
+                <!-- hide answer footer on edit mode -->
+                <div class="pb-3 mb-3">
+                    {% with u=thread.user %}
+                    <div class="d-flex pt-3 {% if is_new%}is-new{% endif %}">
+                        <a href="{{ u.get_absolute_url }}" class="avatar flex-shrink-0 me-2"
+                            title="{{ u.get_display_name }}">
+                            <img src="{{ u|avatar_url:64}}" height="40" width="40" class="rounded" alt="avatar" />
+                        </a>
+
+                        <div class="small lh-sm w-100 ms-1">
+                            <span class="text-muted" style="color: #aaa !important;">
+                                <a href="{{ u.get_absolute_url }}"><strong>{{ u.username }}</strong></a>
+                                <!-- {% if u.point > 0 %}
+                                <span class="badge bg-secondary mt-1">{{ u.get_point_display }}</span>
+                                {% endif %} -->
+                                <br />
+                                <span class="text-muted" style="color: #aaa !important; font-size: 13px;">
+                                    {{ thread.created|naturaltime }}
+                                </span>
+                            </span>
+                            <!-- show if owner -->
+                            {% if user == thread.user and edit_thread == 0 %}
+                            <span class="dropdown float-end">
+                                <a href="#" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><i
+                                        class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="?edit_thread={{ thread.pk }}#thread">Edit</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="javascript:;" style="color: red;"
+                                            @click.prevent="deleteThread({{ thread.pk }}, '{{ thread.topic.get_absolute_url }}')">Hapus</a>
+                                    </li>
+                                </ul>
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endwith %}
+                </div>
+
             </div>
 
-            <div class="col col-lg-6 right">
-                <h3 class="section-title mb-4"><i class="bi bi-code-slash me-2"></i>Thread terbaru</h3>
-                {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' topic='Umum' %}
-                {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' topic='PHP Lovers' %}
-                {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' topic='Python' %}
-                {% include 'forum/_thread_item.html' with title='Saya 40 tahun, udah telat ndak ya belajar coding' topic='Umum' %}
-                {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' topic='Web Development' %}
+            <div class="mt-5">
+                <ul class="timeline mt-4" x-ref="answers">
+                    {% for answer in answers %}
+                    {% include 'forum/_answer_item.html' with answer=answer %}
+                    {% endfor %}
+                    <!-- hide new answer form edit mode -->
+                    {% if user.is_authenticated and edit_thread == 0 and edit_answer == 0 %}
+                    {% include 'forum/_answer_form.html' with thread=thread %}
+                    {% endif %}
+                </ul>
             </div>
         </div>
 
-        <div class="my-3 p-3 bg-body shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">Diskusi Umum</h6>
-            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
-            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
-            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
-            <small class="d-block text-end mt-3">
-                <a href="#">Lihat semua</a>
-            </small>
-        </div>
-
-        <div class="my-3 p-3 bg-body shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">Bahasa Pemrograman Python</h6>
-            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
-            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
-            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
-            <small class="d-block text-end mt-3">
-                <a href="#">Lihat semua</a>
-            </small>
-        </div>
-
-        <div class="my-3 p-3 bg-body shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">PHP Lovers</h6>
-            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
-            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
-            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
-            <small class="d-block text-end mt-3">
-                <a href="#">Lihat semua</a>
-            </small>
-        </div>
-
-        <div class="my-3 p-3 bg-body shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">AI dan Machine Learning</h6>
-            {% include 'forum/_thread_item.html' with title='Bahasa pemrograman apa yang paling bagus ya?' %}
-            {% include 'forum/_thread_item.html' with title='Disini ada yang bisa benerin laptop ndak?' %}
-            {% include 'forum/_thread_item.html' with title='Bang bisa setup printer?' %}
-            <small class="d-block text-end mt-3">
-                <a href="#">Lihat semua</a>
-            </small>
+        <div class="col col-12 col-lg-4">
+            <h6 class="mb-3">Populer</h6>
+            {% for thread in related_threads %}
+            {% include 'forum/_thread_item.html' %}
+            {% endfor %}
         </div>
     </div>
+
 </div>
+{% endblock %}
+
+{% block footscripts %}
+<script src="{% static 'forum/js/thread.js' %}"></script>
 {% endblock %}

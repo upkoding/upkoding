@@ -72,7 +72,7 @@ class Topic(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('forum:topic', args=[self.slug, ])
+        return reverse('forum:topic_detail', args=[self.slug, ])
 
 
 class Thread(models.Model):
@@ -115,7 +115,7 @@ class Thread(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('forum:thread', args=[self.topic.slug, self.slug, self.pk])
+        return reverse('forum:thread_detail', args=[self.topic.slug, self.slug, self.pk])
 
 
 class ThreadStat(models.Model):
@@ -184,11 +184,19 @@ class ThreadAnswer(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['pk']
+
+    def owned_by(self, user):
+        return self.user == user
+
 
 class ThreadAnswerStat(models.Model):
     TYPE_REPLY_COUNT = 0
+    TYPE_LIKE_COUNT = 0
     TYPES = (
         (TYPE_REPLY_COUNT, 'Reply Count'),
+        (TYPE_LIKE_COUNT, 'Like Count'),
     )
     thread_answer = models.ForeignKey(ThreadAnswer, on_delete=models.CASCADE)
     type = models.SmallIntegerField(
