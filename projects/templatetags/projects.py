@@ -60,7 +60,11 @@ def render_timeline(context, user_project):
     """
     Render project's events timeline.
     """
-    events = UserProjectEvent.objects.filter(user_project=user_project).order_by('created')
+    events = UserProjectEvent.objects \
+        .select_related('user') \
+        .filter(user_project=user_project) \
+        .order_by('created')
+
     events_with_template = []
     for event in events:
         events_with_template.append({
@@ -76,7 +80,7 @@ def render_timeline(context, user_project):
 
 @register.inclusion_tag('projects/templatetags/inprogress_projects.html')
 def render_inprogress_projects(project):
-    user_projects = UserProject.objects.filter(
+    user_projects = UserProject.objects.select_related('user').filter(
         project=project,
         status__in=(UserProject.STATUS_IN_PROGRESS,
                     UserProject.STATUS_PENDING_REVIEW,
@@ -89,7 +93,7 @@ def render_inprogress_projects(project):
 
 @register.inclusion_tag('projects/templatetags/completed_projects.html')
 def render_completed_projects(project):
-    user_projects = UserProject.objects.filter(
+    user_projects = UserProject.objects.select_related('user').filter(
         project=project,
         status=UserProject.STATUS_COMPLETE
     )[:5]

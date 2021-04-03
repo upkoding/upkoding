@@ -71,6 +71,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+if DEBUG:
+    MIDDLEWARE = [
+        'upkoding.middlewares.QueryCountDebugMiddleware',
+    ] + MIDDLEWARE
 
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',

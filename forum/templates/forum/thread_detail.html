@@ -80,7 +80,7 @@
         <div class="col col-12 col-lg-4">
             <h6 class="mb-3">Populer</h6>
             {% for thread in related_threads %}
-            {% include 'forum/_thread_item.html' %}
+            {% include 'forum/_thread_item.html' with show_topic=False %}
             {% endfor %}
         </div>
     </div>

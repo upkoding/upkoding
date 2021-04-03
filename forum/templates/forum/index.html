@@ -29,16 +29,16 @@
             <div class="col col-12 col-lg-6">
                 <h5 class="section-title mb-4">Thread terbaru</h5>
                 {% for thread in latest_threads %}
-                {% include 'forum/_thread_item.html' %}
+                {% include 'forum/_thread_item.html' with show_topic=True %}
                 {% endfor %}
             </div>
         </div>
 
         <div class="">
             <h6 class="border-bottom pb-2 mb-0">Diskusi Umum</h6>
-                {% for thread in latest_threads %}
-                {% include 'forum/_thread_item.html' %}
-                {% endfor %}
+            {% for thread in latest_threads %}
+            {% include 'forum/_thread_item.html' with show_topic=False %}
+            {% endfor %}
             <small class="d-block text-end mt-3">
                 <a href="#">Lihat semua</a>
             </small>
@@ -46,9 +46,9 @@
 
         <div class="">
             <h6 class="border-bottom pb-2 mb-0">Bahasa Pemrograman Python</h6>
-                {% for thread in latest_threads %}
-                {% include 'forum/_thread_item.html' %}
-                {% endfor %}
+            {% for thread in latest_threads %}
+            {% include 'forum/_thread_item.html' with show_topic=False %}
+            {% endfor %}
             <small class="d-block text-end mt-3">
                 <a href="#">Lihat semua</a>
             </small>
@@ -56,9 +56,9 @@
 
         <div class="">
             <h6 class="border-bottom pb-2 mb-0">PHP Lovers</h6>
-                {% for thread in latest_threads %}
-                {% include 'forum/_thread_item.html' %}
-                {% endfor %}
+            {% for thread in latest_threads %}
+            {% include 'forum/_thread_item.html' with show_topic=False %}
+            {% endfor %}
             <small class="d-block text-end mt-3">
                 <a href="#">Lihat semua</a>
             </small>
@@ -66,9 +66,9 @@
 
         <div class="">
             <h6 class="border-bottom pb-2 mb-0">AI dan Machine Learning</h6>
-                {% for thread in latest_threads %}
-                {% include 'forum/_thread_item.html' %}
-                {% endfor %}
+            {% for thread in latest_threads %}
+            {% include 'forum/_thread_item.html' with show_topic=False %}
+            {% endfor %}
             <small class="d-block text-end mt-3">
                 <a href="#">Lihat semua</a>
             </small>

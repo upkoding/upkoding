@@ -1,3 +1,4 @@
+from django.db.models.query import Prefetch
 from django.http.response import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView, DetailView, View
@@ -15,7 +16,7 @@ class PageIndex(TemplateView):
         data = super().get_context_data(**kwargs)
         data['top_topics'] = Topic.objects.filter(
             status=Topic.STATUS_ACTIVE)[:5]
-        data['latest_threads'] = Thread.objects.filter(
+        data['latest_threads'] = Thread.objects.select_related('user', 'topic').filter(
             status=Thread.STATUS_ACTIVE)[:5]
         return data
 
@@ -25,10 +26,10 @@ class PageTopicDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['top_threads'] = Thread.objects.filter(
+        data['top_threads'] = Thread.objects.select_related('user').filter(
             topic=self.object,
             status=Topic.STATUS_ACTIVE)[:5]
-        data['latest_threads'] = Thread.objects.filter(
+        data['latest_threads'] = Thread.objects.select_related('user').filter(
             topic=self.object,
             status=Thread.STATUS_ACTIVE)[:10]
         return data
@@ -42,11 +43,15 @@ class PageThreadDetail(DetailView):
         thread = self.object
         data['edit_thread'] = int(self.request.GET.get('edit_thread', 0))
         data['edit_answer'] = int(self.request.GET.get('edit_answer', 0))
-        data['answers'] = ThreadAnswer.objects.filter(
+        # TODO: paginate results
+        data['answers'] = ThreadAnswer.objects \
+            .select_related('user') \
+            .prefetch_related(Prefetch('replies', queryset=ThreadAnswer.objects.active())) \
+            .filter(
             thread=thread,
             parent=None,
             status=ThreadAnswer.STATUS_ACTIVE)
-        data['related_threads'] = Thread.objects.filter(
+        data['related_threads'] = Thread.objects.select_related('user').filter(
             topic=thread.topic,
             status=Thread.STATUS_ACTIVE)[:10]
         return data

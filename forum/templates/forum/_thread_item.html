@@ -14,13 +14,13 @@
             </a>
         </div>
         <span class="text-muted" style="color: #aaa !important;">
-            {% if topic %}
-            Oleh <a href="{{ u.get_absolute_url }}"><strong>{{ u.username }}</strong></a>
-            {% else %}
+            {% if show_topic %}
             <a href="{{ u.get_absolute_url }}"><strong>{{ u.username }}</strong></a> di
             <a href="{{ thread.topic.get_absolute_url }}">
                 <strong>{{ thread.topic.title }}</strong>
             </a>
+            {% else %}
+            Oleh <a href="{{ u.get_absolute_url }}"><strong>{{ u.username }}</strong></a>
             {% endif %}
         </span>
         <span class="text-muted" style="color: #aaa !important; float: right; font-size: 13px;">
