@@ -7,6 +7,8 @@ from django.urls import reverse
 from account.models import User
 from projects.models import Project
 
+from .managers import ThreadAnswerManager
+
 
 def topic_image(instance, filename):
     """
@@ -174,8 +176,8 @@ class ThreadAnswer(models.Model):
     parent = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
-        blank=True,
-        null=True)
+        blank=True, null=True,
+        related_name='replies')
     status = models.PositiveSmallIntegerField(
         'Status',
         choices=STATUSES,
@@ -183,6 +185,8 @@ class ThreadAnswer(models.Model):
         db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    objects = ThreadAnswerManager()
 
     class Meta:
         ordering = ['pk']

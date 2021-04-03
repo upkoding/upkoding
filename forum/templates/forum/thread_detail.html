@@ -5,7 +5,7 @@
 {% load humanize %}
 
 {% block meta %}
-{% meta title=thread.title thread=thread.description %}
+{% meta title=thread.title desc=thread.description %}
 {% endblock %}
 
 {% block header_mb %}mb-5{% endblock %}
@@ -45,13 +45,14 @@
                             <!-- show if owner -->
                             {% if user == thread.user and edit_thread == 0 %}
                             <span class="dropdown float-end">
-                                <a href="#" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                        class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a href="#" id="dropdownMenuLink_{{ thread.pk }}" data-bs-toggle="dropdown"
+                                    aria-expanded="false"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink_{{ thread.pk }}">
                                     <li><a class="dropdown-item" href="?edit_thread={{ thread.pk }}#thread">Edit</a>
                                     </li>
                                     <li><a class="dropdown-item" href="javascript:;" style="color: red;"
-                                            @click.prevent="deleteThread({{ thread.pk }}, '{{ thread.topic.get_absolute_url }}')">Hapus</a>
+                                            @click.prevent="deleteThread" data-id="{{ thread.pk }}"
+                                            data-redirect="{{ thread.topic.get_absolute_url }}">Hapus</a>
                                     </li>
                                 </ul>
                             </span>

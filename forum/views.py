@@ -44,7 +44,8 @@ class PageThreadDetail(DetailView):
         data['edit_answer'] = int(self.request.GET.get('edit_answer', 0))
         data['answers'] = ThreadAnswer.objects.filter(
             thread=thread,
-            status=ThreadAnswer.STATUS_ACTIVE)[:10]
+            parent=None,
+            status=ThreadAnswer.STATUS_ACTIVE)
         data['related_threads'] = Thread.objects.filter(
             topic=thread.topic,
             status=Thread.STATUS_ACTIVE)[:10]
@@ -104,7 +105,14 @@ class ApiAnswers(LoginRequiredMixin, View):
         form = ThreadAnswerForm(user, request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'forum/_answer_item.html', {'answer': form.instance})
+            instance = form.instance
+
+            if instance.parent:
+                # reply to an answer
+                return render(request, 'forum/_answer_item_replies_item.html', {'answer': instance})
+            else:
+                # answer to thread
+                return render(request, 'forum/_answer_item.html', {'answer': instance, 'edit_thread': 0, 'edit_answer': 0})
         return HttpResponseBadRequest(form.errors.as_json(), content_type='application/json; charset=utf-8')
 
 

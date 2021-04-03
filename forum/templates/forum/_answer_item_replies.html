@@ -1,0 +1,41 @@
+{% load base %}
+
+{% with replies=answer.replies.active %}
+<div class="list-group list-group-flush">
+    <!-- replies -->
+
+    {% for reply in replies %}
+    {% include 'forum/_answer_item_replies_item.html' with answer=reply %}
+    {% endfor %}
+
+    {% if edit_thread == 0 and edit_answer == 0 %}
+    <!-- reply form -->
+    <div class="list-group-item list-group-item-warning p-3" x-ref="reply_form_{{ answer.pk }}"
+        x-show="reply == {{ answer.pk }}">
+        <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1" style="font-size: 0.9rem;">
+                <img src="{{ user|avatar_url:40 }}" height="20" width="20" class="rounded-circle me-1" alt="avatar" />
+                {{ user.username }}
+            </h6>
+        </div>
+        <form method="POST" action="{% url 'forum:api_answers' %}" @submit.prevent="createReply"
+            data-id="{{ answer.pk }}">
+            {% csrf_token %}
+            <input type="hidden" name="parent" value="{{ answer.pk }}">
+            <input type="hidden" name="thread" value="{{ thread.pk }}">
+            <textarea class="form-control mt-2" name="message" required rows="2" placeholder="Tulis balasan..."
+                :class="{ 'is-invalid': replyErrors.message }"></textarea>
+            <input type="submit" class="btn btn-sm btn-success float-end mt-2" value="Kirim balasan">
+        </form>
+    </div>
+
+    <!-- reply button -->
+    {% if replies %}
+    <div class="list-group-item list-group-item-light" x-show="reply !== {{ answer.pk }}">
+        <a href="javascript:;" @click="showReply({{ answer.pk }})">Balas...</a>
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>
+{% endwith %}

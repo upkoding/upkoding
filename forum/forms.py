@@ -31,20 +31,21 @@ class ThreadUpdateForm(forms.ModelForm):
 class ThreadAnswerForm(forms.ModelForm):
     thread = forms.ModelChoiceField(
         queryset=Thread.objects.filter(status=Thread.STATUS_ACTIVE))
+    parent = forms.ModelChoiceField(
+        required=False,
+        queryset=ThreadAnswer.objects.filter(status=ThreadAnswer.STATUS_ACTIVE))
 
     class Meta:
         model = ThreadAnswer
-        fields = ['thread', 'message']
+        fields = ['thread', 'parent', 'message']
 
-    def __init__(self, user: User, *args, parent: ThreadAnswer = None, **kwargs):
+    def __init__(self, user: User, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
-        self.parent = parent
 
     def save(self, *args, **kwargs):
         answer = super().save(commit=False)
         answer.user = self.user
-        answer.parent = self.parent
         answer.save()
 
 
