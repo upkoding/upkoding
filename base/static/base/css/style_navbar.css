@@ -1,0 +1,173 @@
+header {
+    position: fixed;
+    width: 100%;
+    background: #fff;
+    z-index: 999999;
+    top: 0;
+    right: 0;
+    border-bottom: 1px solid #f8f6f6;
+    
+}
+header nav{
+    position: relative;
+    display: flex;
+    max-width: calc(100% - 200px);
+    margin: 0 auto;
+    height: 66px;
+    justify-content: space-between;
+    align-items: center;
+}
+nav .content_nav{
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+.content_nav label {
+    display: none;
+}
+.content_nav a i{
+    display: none;
+}
+.log-out,
+.log-in{
+    display: none;
+}
+.logo a{
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 30px;
+    font-weight: 600;
+}
+.profile_nav a{
+    color: #00000080;
+    font-weight: 800;
+}
+.content_nav a{
+    font-size: 16px;
+    font-weight: 700;
+    padding: 7px 10px;
+}
+.content_nav a:hover{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+header nav .menu_icon{
+    display: none;
+}
+header nav .menu_icon i{
+    color: #888;
+    cursor: pointer;
+    line-height: 70px;
+    width: 1px;
+    text-align: center;
+    font-size: 15px;
+}
+header nav #menu_list:checked ~ .menu_icon i::before{
+    content: "\f00d";
+}
+.profile_nav{
+    display: flex;
+    align-items: center;
+}
+header nav #menu_list{
+    display: none;
+}
+nav input[type="checkbox"]{
+    display: none;
+}
+
+
+
+
+/* RESPONSIVE NAVBAR */
+
+@media (max-width: 900px)
+{
+    header nav 
+    {
+        max-width: calc(100% - 50px);
+    }
+}
+
+@media (max-width: 768px)
+{
+    /* header nav #menu_list
+    {
+        display: none;
+    } */
+    header nav .menu_icon{
+        display: block;
+    }
+    .profile_nav .content_nav{
+        display: block;
+        position: fixed;
+        height: 100%;
+        background: #fff;
+        border: 1px solid #f8f6f6;
+        width: 80%;
+        left: -100%;
+        margin-left: 0;
+        top: 66px;
+        transition: all 0.3s ease;
+    }
+    .content_nav label {
+        display: block;
+        margin-top: 10px;
+        margin-left: 15px;
+        font-size: 15px;
+        color: #00000080;
+        border-bottom: 1px solid #f1f0f0;
+    }
+    .log-out,
+    .log-in{
+        display: block;
+    }
+    .content_nav a i{
+        display: inline;
+        margin-right: 5px;
+    }
+    header #menu_list:checked ~ .profile_nav .content_nav{
+        left: 0%;
+    }
+    .profile_nav .content_nav a{
+        line-height: 30px;
+        padding: 8px 35px;
+    }
+    .profile_nav .content_nav a:hover{
+        background: #888;
+    }
+    nav .logo a h3{
+        margin-left: 50%;
+    }
+}
+
+@media (max-width: 570px)
+{
+    .profile span{
+        display: none;
+    }
+    nav .logo a h3{
+        margin-left: 25%;
+    }
+}
+
+@media (max-width: 556px)
+{
+    nav .logo a h3{
+        margin-left: 16%;
+    }
+    .hiden span{
+        display: none;
+    }
+}
+
+@media (max-width: 370px)
+{
+    header nav {
+        max-width: calc(100% - 40px);
+    }
+    .profile_nav button{
+        display: none;
+    }
+    nav .logo a h3 {
+        margin-left: 10%;
+    }
+}
