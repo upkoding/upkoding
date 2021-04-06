@@ -4,86 +4,101 @@
 {% load base %}
 
 <head>
-    {% block meta %}{% meta %}{% endblock %}
-    <!-- Bootstrap core CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+  {% block meta %}{% meta %}{% endblock %}
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'base/img/favicon/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'base/img/favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'base/img/favicon/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'base/img/favicon/site.webmanifest' %}">
-    <link rel="mask-icon" href="{% static 'base/img/favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'base/img/favicon/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'base/img/favicon/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'base/img/favicon/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static 'base/img/favicon/site.webmanifest' %}">
+  <link rel="mask-icon" href="{% static 'base/img/favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
 
-    <!-- Custom styles for this template -->
-    <link href="{% static 'base/css/global.css' %}" rel="stylesheet">
-    {% block headscripts %}{% endblock %}
+  <!-- Custom styles for this template -->
+  <link href="{% static 'base/css/global.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'base/css/style_navbar.css' %}">
+  {% block headscripts %}{% endblock %}
 
-    {% if ga_tracking_id %}
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_tracking_id }}"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', '{{ ga_tracking_id }}');
-    </script>
-    {% endif %}
+  {% if ga_tracking_id %}
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_tracking_id }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', '{{ ga_tracking_id }}');
+  </script>
+  {% endif %}
 </head>
 
 <body class="d-flex h-100">
-    <div class="custom-container w-100 h-100 p-3 mx-auto flex-column d-flex">
-        <header class="{% block header_mb %}mb-auto{% endblock%}">
-            <div>
-                <a href="{% url 'base:index' %}" class="logo">
-                    <h3 class="float-md-start mb-0" style="position: relative;">upkoding
-                        <span class="badge bg-primary"
-                            style="font-size: 12px; position: absolute; top: 10px; right: -50px">BETA</span>
-                    </h3>
-                </a>
-                <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}">Proyek</a>
-                    <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Coders</a>
-                    <a class="nav-link {% active_class 'base:forum' %}" href="{% url 'base:forum' %}">Diskusi</a>
-                    <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
-                    {% if user.is_authenticated %}
-                    <div class="btn-group ms-4" style="margin-top: -1px">
-                        <a href="{% url 'account:index' %}" class="btn btn-outline-default nav-link">
-                            {{ user|avatar_img:25 }} <span class="ms-1">{{ user.username }}</span>
-                        </a>
-                        <button type="button" class="btn btn-outline-default dropdown-toggle dropdown-toggle-split"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="{% url 'account:profile' %}"><i class="bi bi-person"></i>
-                                    Edit Profil</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i>
-                                    Pengaturan</a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{% url 'account:logout' %}"><i
-                                        class="bi bi-box-arrow-right"></i> Logout</a></li>
-                        </ul>
-                    </div>
-                    {% else %}
-                    <a class="nav-link ms-4" href="{% url 'account:login' %}"><i class="bi bi-person-circle me-1"></i>
-                        Login</a>
-                    {% endif %}
-                </nav>
-            </div>
-        </header>
+  <div class="custom-container w-100 h-100 p-3 mx-auto flex-column d-flex" style="margin-top: 15px;">
+    <header>
+      <nav>
+        <input type="checkbox" id="menu_list">
+        <label for="menu_list" class="menu_icon"><i class="fas fa-bars"></i></label>
+        <div class="logo">
+          <a href="{% url 'base:index' %}">
+            <h3>Upkoding<span style="font-size: 12px; font-weight: 700; margin: 5px; background: #0d6efd; color: white; padding:4.2px 7.8px; border-radius: 4px;">BETA</span></h3>        
+          </a>
+        </div>
+        
+        {% if user.is_authenticated %}
+        <div class="profile_nav">
+          <div class="content_nav">
+            <label>Menu</label>
+            <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}"><i class="fas fa-clipboard-list"></i>Proyek</a>
+            <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}"><i class="fas fa-users"></i>Coders</a>
+            <a class="nav-link {% active_class 'base:forum' %}" href="{% url 'base:forum' %}"><i class="far fa-comments"></i>Diskusi</a>
+            <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}"><i class="fas fa-info-circle"></i>Tentang</a>
+            <label>Account</label>
+            <a class="log-out" href="{% url 'account:profile' %}"><i class="bi bi-person"></i>Edit Profil</a>
+            <a class="log-out" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i>Pengaturan</a>
+            <a class="log-out" href="{% url 'account:logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+          </div>
+          <a href="{% url 'account:index' %}" class="profile">
+            {{ user|avatar_img:25 }} <span class="ms-1">{{ user.username }}</span>
+          </a>
+          <button type="button" class="btn btn-outline-default dropdown-toggle dropdown-toggle-split"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+          <li>
+            <a class="dropdown-item" href="{% url 'account:profile' %}"><i class="bi bi-person"></i>Edit Profil</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i>Pengaturan</a>
+          </li>
+          <li>
+          <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item" href="{% url 'account:logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+        </ul>
+        </div>
+        {% else %}
+        <div class="profile_nav">
+          <div class="content_nav">
+            <label>Menu</label>
+            <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}"><i class="fas fa-clipboard-list"></i>Proyek</a>
+            <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}"><i class="fas fa-users"></i>Coders</a>
+            <a class="nav-link {% active_class 'base:forum' %}" href="{% url 'base:forum' %}"><i class="far fa-comments"></i>Diskusi</a>
+            <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}"><i class="fas fa-info-circle"></i>Tentang</a>
+            <label>Account</label>
+            <a class="log-in" href="{% url 'account:login' %}"><i class="fas fa-sign-out-alt"></i>Login</a>
+          </div>
+          <a class="hiden" href="{% url 'account:login' %}"><i class="fas fa-sign-out-alt"></i><span class="ms-1">Login</span></a>
+        </div>
+        {% endif %}
+      </nav>
+    </header>
 
-        <main>
+        <main style="padding: 5em 1em;">
             {% block content %}{% endblock %}
             {% block announcement %}
             <div class="card text-dark bg-light mb-5 mt-5 shadow-lg">
@@ -120,7 +135,7 @@
             </p>
             <p class="mt-4">
                 <a href="https://m.do.co/c/71f884aaaabb" target="_blank" title="Powered by Digital Ocean">
-                    <img src="{% static 'base/img/do-black.svg' %}" height="30" style="opacity: 0.5;" />
+                    <img src="{% static 'base/img/do-black.svg' %}" height="30" style="opacity: 0.5;" alt="Digital Ocean Logo" />
                 </a>
             </p>
         </footer>
@@ -130,6 +145,7 @@
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.0/dist/alpine.min.js" defer></script>
+    <script src="https://kit.fontawesome.com/de7beafb5d.js" crossorigin="anonymous"></script>
     {% block footscripts %}{% endblock %}
 </body>
 
