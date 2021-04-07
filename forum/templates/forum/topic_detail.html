@@ -19,14 +19,32 @@
         </div>
     </div>
     <div>
-        <div class="row content mb-5 g-5">
+        <div class="row content mb-5">
             <div class="col col-12 col-lg-8">
-                {% include 'forum/_thread_form.html' with topic=topic %}
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header text-end p-3" x-show="!showForm">
+                        <button class="btn btn-primary" @click="showForm=true"><i class="bi bi-pencil me-1"></i>
+                            Buat Pertanyaan
+                        </button>
+                    </div>
 
-                <div class="threads" x-ref="threads">
-                    {% for thread in latest_threads %}
-                    {% include 'forum/_thread_item.html' with show_topic=False %}
-                    {% endfor %}
+                    <div class="card-header" x-show="showForm">
+                        <strong>Buat Pertanyaan</strong>
+                    </div>
+                    <div class="card-body" x-show.transition="showForm">
+                        <div class="alert alert-warning clearfix" role="alert">
+                            Berilah konteks yang cukup sehingga teman yang lain bisa memahami
+                            maksud pertanyaan dengan jelas.
+                        </div>
+
+                        {% include 'forum/_thread_form.html' with topic=topic %}
+                    </div>
+
+                    <div class="list-group list-group-flush" x-ref="threads">
+                        {% for thread in latest_threads %}
+                        {% include 'forum/_thread_item_card.html' with full=True show_topic=False %}
+                        {% endfor %}
+                    </div>
                 </div>
 
                 <small class="d-block text-end mt-3">
@@ -35,9 +53,8 @@
             </div>
 
             <div class="col col-12 col-lg-4">
-                <h6 class="mb-3">Populer</h6>
                 {% for thread in top_threads %}
-                {% include 'forum/_thread_item.html' with show_topic=False %}
+                {% include 'forum/_thread_item_card.html' with show_topic=False %}
                 {% endfor %}
             </div>
         </div>

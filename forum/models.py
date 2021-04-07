@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 from django.template.defaultfilters import slugify
-from sorl.thumbnail import ImageField
+from sorl.thumbnail import ImageField, get_thumbnail
 from django.urls import reverse
 
 from account.models import User
@@ -61,7 +61,7 @@ class Topic(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-pk']
+        ordering = ['-thread_count']
 
     def __str__(self):
         return self.title
@@ -75,6 +75,14 @@ class Topic(models.Model):
 
     def get_absolute_url(self):
         return reverse('forum:topic_detail', args=[self.slug, ])
+
+    def image_url(self, size=64):
+        """
+        If topic have image, use it. Otherwise generate from default Gravatar image.
+        """
+        if self.image:
+            return get_thumbnail(self.image, '{}x{}'.format(size, size), crop='center', quality=99).url
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&f=y&s={}'.format(self.id, size)
 
 
 class Thread(models.Model):

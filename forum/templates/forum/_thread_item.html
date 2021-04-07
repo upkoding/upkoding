@@ -1,30 +1,34 @@
 {% load base %}
+{% load humanize %}
 {% with u=thread.user %}
-<div class="d-flex pt-3 {% if is_new%}is-new{% endif %}">
+<div class="d-flex pt-3 position-relative {% if is_new%}is-new{% endif %}">
     <a href="{{ u.get_absolute_url }}" class="avatar flex-shrink-0 me-2" title="{{ u.get_display_name }}">
-        <img src="{{ u|avatar_url:64}}" height="32" width="32" class="rounded" alt="avatar" />
+        <img src="{{ u|avatar_url:64}}" height="32" width="32" class="bd-placeholder-img rounded-circle" alt="avatar" />
     </a>
 
-    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+    <div class="pb-3 mb-0 small lh-sm w-100">
         <div class="d-flex justify-content-between">
-            <a href="{{ thread.get_absolute_url }}">
-                <strong class="text-gray-dark mb-1" style="font-size: 1rem; font-weight: 500; margin-top: -3px;">
+            <a href="{{ thread.get_absolute_url }}" class="link-dark"
+                style="font-size: 1rem; font-weight: 500; margin-top: -3px; margin-bottom: 2px;"
+                title="{{ thread.title }}">
+                <strong style="font-size: 1rem; font-weight: 500;">
                     {{ thread.title }}
                 </strong>
             </a>
         </div>
-        <span class="text-muted" style="color: #aaa !important;">
+        <span>
             {% if show_topic %}
-            <a href="{{ u.get_absolute_url }}"><strong>{{ u.username }}</strong></a> di
-            <a href="{{ thread.topic.get_absolute_url }}">
-                <strong>{{ thread.topic.title }}</strong>
+            <a href="{{ u.get_absolute_url }}" class="link-primary" title="{{ u.username }}">
+                {{ u.username}}
+            </a> di
+            <a href="{{ thread.topic.get_absolute_url }}" class="link-primary" title="Topik: {{ thread.topic.title }}">
+                {{ thread.topic.title|truncatechars:30 }}
             </a>
             {% else %}
-            Oleh <a href="{{ u.get_absolute_url }}"><strong>{{ u.username }}</strong></a>
+            <a href="{{ u.get_absolute_url }}" class="link-primary" title="{{ u.username }}">
+                {{u.username }}
+            </a>
             {% endif %}
-        </span>
-        <span class="text-muted" style="color: #aaa !important; float: right; font-size: 13px;">
-            {{ thread.created }}
         </span>
     </div>
 </div>

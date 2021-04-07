@@ -1,6 +1,7 @@
 function topic() {
   return {
     errors: {},
+    showForm: false,
     createThread(e) {
       fetch(e.target.action, {
         method: "POST",

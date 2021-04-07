@@ -66,7 +66,7 @@ class ApiThreads(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
             instance = form.instance
-            return render(request, 'forum/_thread_item.html', {'thread': instance, 'topic': instance.topic})
+            return render(request, 'forum/_thread_item_card.html', {'thread': instance, 'topic': instance.topic, 'full': True})
         return HttpResponseBadRequest(form.errors.as_json(), content_type='application/json; charset=utf-8')
 
 

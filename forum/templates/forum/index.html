@@ -11,16 +11,17 @@
 <div class="container">
     <div class="row justify-content-md-center text-center">
         <div class="col col-lg-8">
-            <h1 class="display-6">Diskusi</h1>
+            <h1 class="display-6">Forum Diskusi</h1>
             <p class="lead" style="margin-top: 1rem; margin-bottom: 4rem">
-                Forum Diskusi Pemrograman
+                Forum diskusi pemrograman UpKoding merupakan tempat bertanya, berdiskusi dan berbagi dengan siapa saja
+                yang tertarik dengan dunia IT dan pemrograman.
             </p>
         </div>
     </div>
     <div>
         <div class="row content mb-5 g-5">
             <div class="col col-12 col-lg-6">
-                <h5 class="section-title mb-3">Topic populer</h5>
+                <h5 class="section-title mb-3">Topik populer</h5>
                 {% for topic in top_topics %}
                 {% include 'forum/_topic_item.html' %}
                 {% endfor %}
@@ -34,45 +35,30 @@
             </div>
         </div>
 
-        <div class="">
-            <h6 class="border-bottom pb-2 mb-0">Diskusi Umum</h6>
+        <div class="mb-5 mt-4">
+            <h5 class="d-block border-bottom pb-2 mb-1 text-muted">
+                Diskusi Umum
+                <small class="d-inline-block float-end fs-6">
+                    <a href="#">Lihat semua <i class="bi bi-arrow-right"></i></a>
+                </small>
+            </h5>
             {% for thread in latest_threads %}
             {% include 'forum/_thread_item.html' with show_topic=False %}
             {% endfor %}
-            <small class="d-block text-end mt-3">
-                <a href="#">Lihat semua</a>
-            </small>
         </div>
 
-        <div class="">
-            <h6 class="border-bottom pb-2 mb-0">Bahasa Pemrograman Python</h6>
+        <div class="mb-5 mt-4">
+            <h5 class="d-block border-bottom pb-2 mb-1 text-muted">
+                Diskusi Umum
+                <small class="d-inline-block float-end fs-6">
+                    <a href="#">Lihat semua <i class="bi bi-arrow-right"></i></a>
+                </small>
+            </h5>
             {% for thread in latest_threads %}
             {% include 'forum/_thread_item.html' with show_topic=False %}
             {% endfor %}
-            <small class="d-block text-end mt-3">
-                <a href="#">Lihat semua</a>
-            </small>
         </div>
 
-        <div class="">
-            <h6 class="border-bottom pb-2 mb-0">PHP Lovers</h6>
-            {% for thread in latest_threads %}
-            {% include 'forum/_thread_item.html' with show_topic=False %}
-            {% endfor %}
-            <small class="d-block text-end mt-3">
-                <a href="#">Lihat semua</a>
-            </small>
-        </div>
-
-        <div class="">
-            <h6 class="border-bottom pb-2 mb-0">AI dan Machine Learning</h6>
-            {% for thread in latest_threads %}
-            {% include 'forum/_thread_item.html' with show_topic=False %}
-            {% endfor %}
-            <small class="d-block text-end mt-3">
-                <a href="#">Lihat semua</a>
-            </small>
-        </div>
     </div>
 </div>
 {% endblock %}

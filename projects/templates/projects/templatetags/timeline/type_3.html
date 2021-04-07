@@ -3,7 +3,7 @@
 <div class="card border-warning bg-light shadow-sm">
     <div class="card-body pt-2 pb-2 ps-3 pe-3">
         <span class="float-end d-inline-block ps-2 created">
-            {{ event.obj.created|naturaltime }}
+            {{ event.obj.created|naturalday }}
         </span>
         <div class="title">
             <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">

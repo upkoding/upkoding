@@ -16,7 +16,9 @@
                     {{ u.username }}
                     {% endwith %}
                 </h6>
-                <small class="text-muted" style="font-size: 0.8rem; color: #999 !important;">{{ event.updated|naturaltime}}</small>
+                <small class="text-muted" style="font-size: 0.8rem; color: #999 !important;">
+                    {{event.updated|naturalday}}
+                </small>
             </div>
             <p class="mt-2 mb-1 text-muted" style="font-size: 0.9rem">{{ event.message|truncatechars:120 }}</p>
         </a>
