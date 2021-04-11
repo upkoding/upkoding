@@ -10,17 +10,25 @@
 
 {% block header_mb %}mb-5{% endblock %}
 
+{% block headscripts %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/default.min.css">
+{% endblock %}
+
 {% block content %}
 <div class="container" x-data="thread()">
     <div class="row content mb-5 g-5">
         <div class="col col-12 col-lg-8">
             <div id="thread">
-                {% if thread.pk == edit_thread %}
-                {% include 'forum/_thread_form.html' with thread=thread %}
-                {% else %}
-                <h1 class="display-6 mb-4">{{ thread.title }}</h1>
-                {{ thread.description|markdownify }}
-                {% endif %}
+                <div class="card">
+                    <div class="card-body p-4">
+                        {% if thread.pk == edit_thread %}
+                        {% include 'forum/_thread_form.html' with thread=thread %}
+                        {% else %}
+                        <h1 class="display-6 mb-4"style="font-weight: 500; font-size: 1.8rem">{{ thread.title }}</h1>
+                        {{ thread.description|markdownify }}
+                        {% endif %}
+                    </div>
+                </div>
 
                 <!-- hide answer footer on edit mode -->
                 <div class="pb-3 mb-3">
@@ -89,5 +97,10 @@
 {% endblock %}
 
 {% block footscripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js"></script>
 <script src="{% static 'forum/js/thread.js' %}"></script>
+<script>
+    // syntax highlighting
+    hljs.highlightAll();
+</script>
 {% endblock %}
