@@ -1,12 +1,11 @@
+from django.conf import settings
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
-from django.db.models import Q
 from django.db.models.deletion import CASCADE
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-from django.conf import settings
 from django.utils.timezone import now
-from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVectorField
 from sorl.thumbnail import ImageField
 
 from account.models import User
@@ -161,7 +160,7 @@ class Project(models.Model):
                 user_project=obj, user=user)
             # inc taken count
             self.inc_taken_count()
-        return (obj, created)
+        return obj, created
 
 
 class ProjectImage(models.Model):
@@ -274,19 +273,16 @@ class UserProject(models.Model):
             return True
         return False
 
-    @ staticmethod
+    @staticmethod
     def requirements_to_progress(requirements):
         """
         Returns progress in percent.
         """
-        reqs_progress_percent = 0.0
-        reqs_progress = sum(
-            map(lambda r: 1 if 'complete' in r else 0, requirements))
-        reqs_progress_percent = (
-            reqs_progress/len(requirements)) * 100.0
+        reqs_progress = sum(map(lambda r: 1 if 'complete' in r else 0, requirements))
+        reqs_progress_percent = (reqs_progress / len(requirements)) * 100.0
         return float(format(reqs_progress_percent, '.2f'))
 
-    @ staticmethod
+    @staticmethod
     def requirements_diff(before, after):
         """
         Return the differences between before and after requirements
@@ -302,7 +298,7 @@ class UserProject(models.Model):
                 become_complete.append(req_before.get('title'))
             if req_before.get('complete') and not req_after.get('complete'):
                 become_incomplete.append(req_before.get('title'))
-        return (progress_before, progress_after, become_complete, become_incomplete)
+        return progress_before, progress_after, become_complete, become_incomplete
 
     def calculate_progress(self):
         """

@@ -1,8 +1,9 @@
 import json
-from django.http.response import HttpResponseForbidden, JsonResponse
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView
 from django.db import transaction
+from django.http.response import HttpResponseForbidden, JsonResponse
+from django.views.generic import DetailView
 
 from projects.models import UserProject, UserProjectEvent
 

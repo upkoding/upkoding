@@ -1,12 +1,11 @@
 from django.db import models
-from django.utils.timezone import now
 from django.template.defaultfilters import slugify
-from sorl.thumbnail import ImageField, get_thumbnail
 from django.urls import reverse
+from django.utils.timezone import now
+from sorl.thumbnail import ImageField, get_thumbnail
 
 from account.models import User
 from projects.models import Project
-
 from .managers import ThreadAnswerManager
 
 
@@ -82,7 +81,11 @@ class Topic(models.Model):
         """
         if self.image:
             return get_thumbnail(self.image, '{}x{}'.format(size, size), crop='center', quality=99).url
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&f=y&s={}'.format(self.id, size)
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&f=y&s={}'.format(self.pk, size)
+
+    def inc_thread_count(self):
+        self.thread_count = models.F('thread_count') + 1
+        self.save()
 
 
 class Thread(models.Model):
@@ -130,10 +133,10 @@ class Thread(models.Model):
 
 class ThreadStat(models.Model):
     TYPE_VIEW_COUNT = 0
-    TYPE_MESSAGE_COUNT = 1
+    TYPE_ANSWER_COUNT = 1
     TYPES = (
         (TYPE_VIEW_COUNT, 'View Count'),
-        (TYPE_MESSAGE_COUNT, 'Message Count'),
+        (TYPE_ANSWER_COUNT, 'Answer Count'),
     )
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     type = models.SmallIntegerField(
@@ -150,6 +153,12 @@ class ThreadStat(models.Model):
                 fields=['thread', 'type'],
                 name='forum_thread_stat_unique_thread_type')
         ]
+
+    @classmethod
+    def inc_value(cls, thread: Thread, stat_type: TYPES):
+        val, _ = cls.objects.get_or_create(thread=thread, type=stat_type)
+        val.value = models.F('value') + 1
+        val.save()
 
 
 class ThreadParticipant(models.Model):
@@ -205,7 +214,7 @@ class ThreadAnswer(models.Model):
 
 class ThreadAnswerStat(models.Model):
     TYPE_REPLY_COUNT = 0
-    TYPE_LIKE_COUNT = 0
+    TYPE_LIKE_COUNT = 1
     TYPES = (
         (TYPE_REPLY_COUNT, 'Reply Count'),
         (TYPE_LIKE_COUNT, 'Like Count'),
@@ -225,6 +234,12 @@ class ThreadAnswerStat(models.Model):
                 fields=['thread_answer', 'type'],
                 name='forum_thread_answer_stat_unique_thread_answer_type')
         ]
+
+    @classmethod
+    def inc_value(cls, thread_answer: ThreadAnswer, stat_type: TYPES):
+        val, _ = cls.objects.get_or_create(thread_answer=thread_answer, type=stat_type)
+        val.value = models.F('value') + 1
+        val.save()
 
 
 class ThreadAnswerParticipant(models.Model):

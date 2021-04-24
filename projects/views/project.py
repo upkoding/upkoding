@@ -1,15 +1,16 @@
 import copy
-from django.http import HttpResponseRedirect
-from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
-from django.urls import reverse
-from django.views.generic import ListView, DetailView
-from django.shortcuts import get_object_or_404
+
 from django.contrib import messages
 from django.db import transaction
+from django.http import HttpResponseRedirect
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.views.generic import ListView, DetailView
 
 from account.models import User
-from projects.models import Project, UserProject, UserProjectEvent
 from projects.forms import UserProjectReviewRequestForm
+from projects.models import Project, UserProject, UserProjectEvent
 
 
 class ProjectList(ListView):
@@ -27,6 +28,7 @@ class ProjectList(ListView):
 
         data = super().get_context_data(**kwargs)
         data['search_query'] = search_query
+
         # only show featured project on page 1 AND not in search page
         if not search_query and (not page or page == '1'):
             data['featured_projects'] = Project.objects.featured()
@@ -58,9 +60,8 @@ class ProjectDetail(DetailView):
             project = self.get_object()
             user_project = None
             try:
-                user_project = get_object_or_404(
-                    UserProject, user=request.user, project=project)
-            except Exception:
+                user_project = get_object_or_404(UserProject, user=request.user, project=project)
+            except Http404:
                 pass
             return JsonResponse({
                 'status': user_project.status if user_project else -1,
@@ -89,11 +90,9 @@ class ProjectDetail(DetailView):
             if created:
                 user_project.add_event(UserProjectEvent.TYPE_PROJECT_START)
                 messages.info(request,
-                              "Selamat mengerjakan `{}`!".format(
-                                  project.title),
+                              "Selamat mengerjakan `{}`!".format(project.title),
                               extra_tags='success')
-            success_url = reverse('projects:detail_user', args=[
-                slug, pk, user.username])
+            success_url = reverse('projects:detail_user', args=[slug, pk, user.username])
             return HttpResponseRedirect(success_url)
 
 
@@ -113,8 +112,7 @@ class ProjectDetailUser(DetailView):
 
     def get_context_data(self, **kwargs):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
-        user_project = get_object_or_404(
-            UserProject, user=user, project=self.object)
+        user_project = get_object_or_404(UserProject, user=user, project=self.object)
 
         data = super().get_context_data(**kwargs)
         data['user_project'] = user_project
@@ -124,9 +122,7 @@ class ProjectDetailUser(DetailView):
         # - url has `?form=1`
         # - current user is the owner
         rev_request = self.request.GET.get('form') == '1'
-        show_rr_form = user_project.is_requirements_complete() \
-            and rev_request \
-            and (user == self.request.user)
+        show_rr_form = user_project.is_requirements_complete() and rev_request and (user == self.request.user)
 
         if show_rr_form:
             data['rr_form'] = UserProjectReviewRequestForm(
@@ -137,8 +133,7 @@ class ProjectDetailUser(DetailView):
         """
         Handle requirements status changes.
         """
-        redirect_url = reverse('projects:detail_user', args=[
-            project.slug, project.pk, request.user.username])
+        redirect_url = reverse('projects:detail_user', args=[project.slug, project.pk, request.user.username])
 
         # deepcopy to preserve the original state
         requirements = copy.deepcopy(user_project.requirements)
@@ -172,10 +167,9 @@ class ProjectDetailUser(DetailView):
             # only create progress update event when progress_after > progress_before
             if progress_after > float(max_progress):
                 for msg in become_complete:
-                    user_project.add_event(
-                        UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg)
+                    user_project.add_event(UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg)
 
-           # if all requirements completed, ready for review
+            # if all requirements completed, ready for review
             if user_project.is_requirements_complete():
                 # user_project.add_event(UserProjectEvent.TYPE_PROGRESS_COMPLETE)
                 messages.info(request,
@@ -185,8 +179,7 @@ class ProjectDetailUser(DetailView):
         return HttpResponseRedirect(redirect_url)
 
     def __handle_review_request(self, request, project, user_project):
-        form = UserProjectReviewRequestForm(
-            request.POST, instance=user_project)
+        form = UserProjectReviewRequestForm(request.POST, instance=user_project)
 
         if form.is_valid():
             review_requested = form.submit_review()
@@ -207,13 +200,12 @@ class ProjectDetailUser(DetailView):
         request_kind = request.POST.get('kind')
         project_url = reverse('projects:detail', args=[slug, pk])
 
-        # not loggedin?
-        if (not user.is_authenticated):
+        # not logged-in?
+        if not user.is_authenticated:
             return HttpResponseRedirect(project_url)
 
         project = self.get_object()
-        user_project = get_object_or_404(
-            UserProject, user=user, project=project)
+        user_project = get_object_or_404(UserProject, user=user, project=project)
 
         if request_kind == 'update':
             return self.__handle_update(request, project, user_project)
@@ -221,8 +213,7 @@ class ProjectDetailUser(DetailView):
         if request_kind == 'delete':
             user_project.delete()
             messages.info(request,
-                          "Proyek `{}` telah dibatalkan :(".format(
-                              project.title),
+                          "Proyek `{}` telah dibatalkan :(".format(project.title),
                           extra_tags='warning')
             return HttpResponse()
 

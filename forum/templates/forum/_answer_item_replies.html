@@ -8,7 +8,7 @@
     {% include 'forum/_answer_item_replies_item.html' with answer=reply %}
     {% endfor %}
 
-    {% if edit_thread == 0 and edit_answer == 0 %}
+    {% if user.is_authenticated and edit_thread == 0 and edit_answer == 0 %}
     <!-- reply form -->
     <div class="list-group-item list-group-item-warning p-3" x-ref="reply_form_{{ answer.pk }}"
         x-show="reply == {{ answer.pk }}">
