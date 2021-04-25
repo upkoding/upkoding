@@ -5,7 +5,7 @@
         {% include 'forum/_answer_item_header.html' %}
         {% include 'forum/_answer_item_body.html' %}
         {% include 'forum/_answer_item_footer.html' %}
-        {% include 'forum/_answer_item_replies.html' %}
+        {% include 'forum/_answer_item_replies.html' with answer=answer thread=thread %}
     </div>
     {% endwith %}
 </li>

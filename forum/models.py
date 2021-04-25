@@ -130,6 +130,12 @@ class Thread(models.Model):
     def get_absolute_url(self):
         return reverse('forum:thread_detail', args=[self.topic.slug, self.slug, self.pk])
 
+    def add_participant(self, user: User):
+        return ThreadParticipant.objects.get_or_create(thread=self, user=user)
+
+    def inc_stat(self, stat_type: int):
+        ThreadStat.inc_value(self, stat_type)
+
 
 class ThreadStat(models.Model):
     TYPE_VIEW_COUNT = 0
@@ -155,7 +161,7 @@ class ThreadStat(models.Model):
         ]
 
     @classmethod
-    def inc_value(cls, thread: Thread, stat_type: TYPES):
+    def inc_value(cls, thread: Thread, stat_type: int):
         val, _ = cls.objects.get_or_create(thread=thread, type=stat_type)
         val.value = models.F('value') + 1
         val.save()
@@ -210,6 +216,12 @@ class ThreadAnswer(models.Model):
 
     def owned_by(self, user):
         return self.user == user
+
+    def add_participant(self, user: User):
+        return ThreadAnswerParticipant.objects.get_or_create(thread_answer=self, user=user)
+
+    def inc_stat(self, stat_type: int):
+        ThreadAnswerStat.inc_value(self, stat_type)
 
 
 class ThreadAnswerStat(models.Model):

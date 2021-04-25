@@ -24,7 +24,7 @@
                         {% if thread.pk == edit_thread %}
                         {% include 'forum/_thread_form.html' with thread=thread %}
                         {% else %}
-                        <h1 class="display-6 mb-4"style="font-weight: 500; font-size: 1.8rem">{{ thread.title }}</h1>
+                        <h1 class="display-6 mb-4" style="font-weight: 500; font-size: 1.8rem">{{ thread.title }}</h1>
                         {{ thread.description|markdownify }}
                         {% endif %}
                     </div>
@@ -35,8 +35,8 @@
                     {% with u=thread.user %}
                     <div class="d-flex pt-3 {% if is_new%}is-new{% endif %}">
                         <a href="{{ u.get_absolute_url }}" class="avatar flex-shrink-0 me-2"
-                            title="{{ u.get_display_name }}">
-                            <img src="{{ u|avatar_url:64}}" height="40" width="40" class="rounded" alt="avatar" />
+                           title="{{ u.get_display_name }}">
+                            <img src="{{ u|avatar_url:64}}" height="32" width="32" class="rounded-circle" alt="avatar"/>
                         </a>
 
                         <div class="small lh-sm w-100 ms-1">
@@ -45,7 +45,7 @@
                                 <!-- {% if u.point > 0 %}
                                 <span class="badge bg-secondary mt-1">{{ u.get_point_display }}</span>
                                 {% endif %} -->
-                                <br />
+                                <br/>
                                 <span class="text-muted" style="color: #aaa !important; font-size: 13px;">
                                     {{ thread.created|naturalday }}
                                 </span>
@@ -54,13 +54,13 @@
                             {% if user == thread.user and edit_thread == 0 %}
                             <span class="dropdown float-end">
                                 <a href="#" id="dropdownMenuLink_{{ thread.pk }}" data-bs-toggle="dropdown"
-                                    aria-expanded="false"><i class="bi bi-three-dots"></i></a>
+                                   aria-expanded="false"><i class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink_{{ thread.pk }}">
                                     <li><a class="dropdown-item" href="?edit_thread={{ thread.pk }}#thread">Edit</a>
                                     </li>
                                     <li><a class="dropdown-item" href="javascript:;" style="color: red;"
-                                            @click.prevent="deleteThread" data-id="{{ thread.pk }}"
-                                            data-redirect="{{ thread.topic.get_absolute_url }}">Hapus</a>
+                                           @click.prevent="deleteThread" data-id="{{ thread.pk }}"
+                                           data-redirect="{{ thread.topic.get_absolute_url }}">Hapus</a>
                                     </li>
                                 </ul>
                             </span>
@@ -75,7 +75,7 @@
             <div class="mt-5">
                 <ul class="timeline mt-4" x-ref="answers">
                     {% for answer in answers %}
-                    {% include 'forum/_answer_item.html' with answer=answer %}
+                    {% include 'forum/_answer_item.html' with answer=answer thread=thread %}
                     {% endfor %}
                     <!-- hide new answer form edit mode -->
                     {% if user.is_authenticated and edit_thread == 0 and edit_answer == 0 %}
@@ -102,5 +102,8 @@
 <script>
     // syntax highlighting
     hljs.highlightAll();
+
+
+
 </script>
 {% endblock %}

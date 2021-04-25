@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import Thread, ThreadParticipant, ThreadStat, ThreadAnswer, ThreadAnswerParticipant, ThreadAnswerStat
+from .models import Thread, ThreadStat, ThreadAnswer, ThreadAnswerStat
 
 
 @receiver(post_save, sender=Thread, dispatch_uid='Thread:post_save')
@@ -9,7 +9,7 @@ def thread_post_save(sender, instance, created, **kwargs):
     """Set thread participant (to be used for notification)"""
     if created:
         # add creator as thread participant
-        ThreadParticipant.objects.create(thread=instance, user=instance.user)
+        instance.add_participant(instance.user)
 
         # increment thread_count for instance's topic - TODO: bg-task
         instance.topic.inc_thread_count()
@@ -21,23 +21,25 @@ def thread_post_save(sender, instance, created, **kwargs):
 def thread_answer_post_save(sender, instance, created, **kwargs):
     """Set thread or thread answer participant (to be used for notification)"""
     if created:
-        if instance.parent:
+        user = instance.user
+        parent = instance.parent
+
+        if parent:
             # if thread answer reply: add creator as ThreadAnswerParticipant
-            ThreadAnswerParticipant.objects.get_or_create(
-                thread_answer=instance.parent, user=instance.user)
+            parent.add_participant(user)
 
             # update ThreadAnswerStat - TODO: bg-task
-            ThreadAnswerStat.inc_value(instance.parent, ThreadAnswerStat.TYPE_REPLY_COUNT)
+            parent.inc_stat(ThreadAnswerStat.TYPE_REPLY_COUNT)
 
             # TODO: send notifications to answer participants
         else:
+            thread = instance.thread
+
             # if thread answer: add creator as thread participant as well as answer participants
-            ThreadParticipant.objects.get_or_create(
-                thread=instance.thread, user=instance.user)
-            ThreadAnswerParticipant.objects.get_or_create(
-                thread_answer=instance, user=instance.user)
+            thread.add_participant(user)
+            instance.add_participant(user)
 
             # update ThreadStat - TODO: bg-task
-            ThreadStat.inc_value(instance.thread, ThreadStat.TYPE_ANSWER_COUNT)
+            thread.inc_stat(ThreadStat.TYPE_ANSWER_COUNT)
 
             # TODO: send notifications to thread participants
