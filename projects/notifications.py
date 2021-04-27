@@ -1,6 +1,6 @@
+from django.conf import settings
 from django.core.mail import send_mail, send_mass_mail
 from django.template.loader import render_to_string
-from django.conf import settings
 
 from account.models import UserSetting
 from .models import UserProjectEvent, UserProjectParticipant

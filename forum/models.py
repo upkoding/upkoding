@@ -184,6 +184,13 @@ class ThreadParticipant(models.Model):
     def __str__(self):
         return '{} @ {}'.format(self.user.username, self.thread.title)
 
+    @classmethod
+    def subscribed_to(cls, thread: Thread, exclude: User = None):
+        """Returns subscribed participants."""
+        if exclude:
+            return cls.objects.filter(thread=thread, subscribed=True).exclude(user=exclude)
+        return cls.objects.filter(thread=thread, subscribed=True)
+
 
 class ThreadAnswer(models.Model):
     STATUS_INACTIVE = 0
@@ -270,3 +277,10 @@ class ThreadAnswerParticipant(models.Model):
 
     def __str__(self):
         return '{} @ {}'.format(self.user.username, self.thread_answer.pk)
+
+    @classmethod
+    def subscribed_to(cls, thread_answer: ThreadAnswer, exclude: User = None):
+        """Returns subscribed participants."""
+        if exclude:
+            return cls.objects.filter(thread_answer=thread_answer, subscribed=True).exclude(user=exclude)
+        return cls.objects.filter(thread_answer=thread_answer, subscribed=True)
