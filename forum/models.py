@@ -188,8 +188,13 @@ class ThreadParticipant(models.Model):
     def subscribed_to(cls, thread: Thread, exclude: User = None):
         """Returns subscribed participants."""
         if exclude:
-            return cls.objects.filter(thread=thread, subscribed=True).exclude(user=exclude)
-        return cls.objects.filter(thread=thread, subscribed=True)
+            return cls.objects \
+                .select_related('user') \
+                .filter(thread=thread, subscribed=True) \
+                .exclude(user=exclude)
+        return cls.objects \
+            .select_related('user') \
+            .filter(thread=thread, subscribed=True)
 
 
 class ThreadAnswer(models.Model):
@@ -282,5 +287,10 @@ class ThreadAnswerParticipant(models.Model):
     def subscribed_to(cls, thread_answer: ThreadAnswer, exclude: User = None):
         """Returns subscribed participants."""
         if exclude:
-            return cls.objects.filter(thread_answer=thread_answer, subscribed=True).exclude(user=exclude)
-        return cls.objects.filter(thread_answer=thread_answer, subscribed=True)
+            return cls.objects \
+                .select_related('user') \
+                .filter(thread_answer=thread_answer, subscribed=True) \
+                .exclude(user=exclude)
+        return cls.objects \
+            .select_related('user') \
+            .filter(thread_answer=thread_answer, subscribed=True)

@@ -145,7 +145,7 @@ USE_L10N = True
 USE_TZ = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_EMAIL_FROM = os.getenv('DEFAULT_EMAIL_FROM', 'upkoding@example.com')
+DEFAULT_EMAIL_FROM = os.getenv('DEFAULT_EMAIL_FROM', 'UpKoding <upkoding@example.com>')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'upkoding@example.com')
 ANYMAIL = {
     'MAILGUN_API_KEY': os.getenv('MAILGUN_API_KEY'),

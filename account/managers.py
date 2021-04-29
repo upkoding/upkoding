@@ -88,3 +88,9 @@ class UserSettingManager(models.Manager):
         if value is None:
             return self.__get_setting(user, key, True)
         self.__set_bool(user, key, value)
+
+    def email_notify_forum_activity(self, user, value: bool = None):
+        key = 'email_notify_forum_activity'
+        if value is None:
+            return self.__get_setting(user, key, True)
+        self.__set_bool(user, key, value)
