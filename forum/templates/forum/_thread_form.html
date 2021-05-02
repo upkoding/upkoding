@@ -21,9 +21,11 @@
     <div class="position-relative">
         {% if thread %}
         <a href="?#thread" class="btn btn-outline-secondary" x-ref="cancel_edit_thread">Batal</a>
-        <input type="submit" class="btn btn-success float-end" value="Perbarui" />
+        <button type="submit" class="btn btn-success float-end"
+            x-text="updatingThread ? 'Memperbarui...': 'Perbarui'"></button>
         {% else %}
-        <input type="submit" class="btn btn-primary float-end" value="Kirim Pertanyaan" />
+        <button type="submit" class="btn btn-success float-end"
+            x-text="creatingThread ? 'Mengirim...': 'Kirim Pertanyaan'"></button>
         {% endif %}
     </div>
 </form>

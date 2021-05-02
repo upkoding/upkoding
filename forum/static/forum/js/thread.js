@@ -3,7 +3,14 @@ function thread() {
     errors: {},
     replyErrors: {},
     reply: null,
+    updatingThread: false,
+    deletingThread: false,
     updateThread(e) {
+      if (this.updatingThread) return;
+
+      this.updatingThread = true;
+      this.errors = {};
+
       fetch(e.target.action, {
         method: "POST",
         body: new FormData(e.target),
@@ -15,7 +22,9 @@ function thread() {
             this.errors = await resp.json();
           }
         })
-        .finally(() => {});
+        .finally(() => {
+          this.updatingThread = false;
+        });
     },
     deleteThread(e) {
       const threadId = e.target.getAttribute("data-id");

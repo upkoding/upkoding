@@ -2,7 +2,12 @@ function topic() {
   return {
     errors: {},
     showForm: false,
+    creatingThread: false,
     createThread(e) {
+      if (this.loding) return;
+      this.creatingThread = true;
+      this.errors = {};
+
       fetch(e.target.action, {
         method: "POST",
         body: new FormData(e.target),
@@ -19,7 +24,9 @@ function topic() {
             this.errors = await resp.json();
           }
         })
-        .finally(() => {});
+        .finally(() => {
+          this.creatingThread = false;
+        });
     },
   };
 }
