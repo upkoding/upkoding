@@ -8,7 +8,7 @@ from .models import User, Link, UserSetting
 
 USERNAME_VALIDATORS = [
     RegexValidator(
-        regex='^[a-zA-Z0-9_]*$',
+        regex='^[a-zA-Z0-9_]{3,}$',
         message='Format username tidak valid'),
 ]
 
@@ -23,7 +23,7 @@ class ProfileForm(forms.ModelForm):
     username = UsernameField(required=True,
                              label='Username *',
                              validators=USERNAME_VALIDATORS,
-                             help_text="Karakter yang diperbolehkan: huruf, angka dan _ (underscore)")
+                             help_text="Minimum 3 karakter (huruf, angka dan _ diperbolehkan)")
     email = forms.EmailField(required=True,
                              label='Alamat Email *')
     first_name = forms.CharField(required=True,
