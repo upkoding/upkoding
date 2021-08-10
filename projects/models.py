@@ -10,6 +10,7 @@ from django.contrib.postgres.search import SearchVectorField
 from sorl.thumbnail import ImageField
 
 from account.models import User
+from codeblocks.models import CodeBlock
 from .managers import ProjectManager, PROJECT_SEARCH_VECTORS
 
 
@@ -55,6 +56,11 @@ class Project(models.Model):
     description_short = models.CharField(
         'Deskripsi Pendek', max_length=100, default='')
     description = models.TextField('Deskripsi')
+    codeblock = models.OneToOneField(
+        CodeBlock,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True)
     requirements = models.JSONField('Requirements', blank=True, null=True)
     cover = ImageField(
         upload_to=project_cover_path,
@@ -202,6 +208,11 @@ class UserProject(models.Model):
         Project,
         on_delete=models.CASCADE,
         related_name='user_projects')
+    codeblock = models.OneToOneField(
+        CodeBlock,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True)
     requirements = models.JSONField('Requirements', blank=True, null=True)
     requirements_completed_percent = models.DecimalField(
         default=0.0, decimal_places=2, max_digits=5)  # max value: 100.00
