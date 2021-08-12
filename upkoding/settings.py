@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'markdownify.apps.MarkdownifyConfig',
     'mdeditor',
     'anymail',
+    'django_ace',
 
     # django contribs
     'django.contrib.postgres',

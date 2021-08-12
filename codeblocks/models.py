@@ -41,7 +41,7 @@ class CodeBlock(models.Model):
     block_1_title = models.CharField(
         '#1 Title', max_length=100, blank=True, default='')
     block_1_desc = models.TextField(
-        '#1 Description', blank=True, default='')
+        '#1 Description', blank=True, default='', help_text='Markdown')
     block_1_hint = models.CharField(
         '#1 Hint', max_length=250, blank=True, default='')
     block_1_code = models.TextField(
@@ -52,7 +52,7 @@ class CodeBlock(models.Model):
     block_2_title = models.CharField(
         '#2 Title', max_length=100, blank=True, default='')
     block_2_desc = models.TextField(
-        '#2 Description', blank=True, default='')
+        '#2 Description', blank=True, default='', help_text='Markdown')
     block_2_hint = models.CharField(
         '#2 Hint', max_length=250, blank=True, default='')
     block_2_code = models.TextField(
@@ -63,7 +63,7 @@ class CodeBlock(models.Model):
     block_3_title = models.CharField(
         '#3 Title', max_length=100, blank=True, default='')
     block_3_desc = models.TextField(
-        '#3 Description', blank=True, default='')
+        '#3 Description', blank=True, default='', help_text='Markdown')
     block_3_hint = models.CharField(
         '#3 Hint', max_length=250, blank=True, default='')
     block_3_code = models.TextField(
@@ -74,7 +74,7 @@ class CodeBlock(models.Model):
     block_4_title = models.CharField(
         '#4 Title', max_length=100, blank=True, default='')
     block_4_desc = models.TextField(
-        '#4 Description', blank=True, default='')
+        '#4 Description', blank=True, default='', help_text='Markdown')
     block_4_hint = models.CharField(
         '#4 Hint', max_length=250, blank=True, default='')
     block_4_code = models.TextField(
@@ -85,7 +85,7 @@ class CodeBlock(models.Model):
     block_5_title = models.CharField(
         '#5 Title', max_length=100, blank=True, default='')
     block_5_desc = models.TextField(
-        '#5 Description', blank=True, default='')
+        '#5 Description', blank=True, default='', help_text='Markdown')
     block_5_hint = models.CharField(
         '#5 Hint', max_length=250, blank=True, default='')
     block_5_code = models.TextField(
