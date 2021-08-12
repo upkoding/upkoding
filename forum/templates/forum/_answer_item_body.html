@@ -1,0 +1,23 @@
+{% load markdownify %}
+<div class="card-body pt-3 pb-1 ps-3 pe-3">
+    {% if answer.pk == edit_answer %}
+    <!-- edit mode -->
+    <form method="POST" @submit.prevent="updateAnswer" action="{% url 'forum:api_answer_detail' answer.pk %}"
+        data-success="?#answer-{{ answer.pk }}">
+        {% csrf_token %}
+        <textarea required class="form-control" name="message" rows="10" placeholder="Tulis respon disini..."
+            :class="{ 'is-invalid': errors.message }">{{ answer.message }}</textarea>
+        <div class="invalid-feedback" x-text="errors.message && errors.message[0].message"></div>
+        <div class="row mt-3 mb-2">
+            <div class="col col-12">
+                <a href="?#answer-{{ answer.pk }}" class="btn btn-outline-secondary"
+                    x-ref="cancel_edit_answer">Batal</a>
+                <input type="submit" class="btn btn-success float-end" value="Perbarui" />
+            </div>
+        </div>
+    </form>
+    {% else %}
+    <!-- display mode -->
+    {{ answer.message|markdownify }}
+    {% endif %}
+</div>

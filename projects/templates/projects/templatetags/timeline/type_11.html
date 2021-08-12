@@ -9,7 +9,7 @@
         <span class="badge bg-success ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
         <span class="text-success">menyetujui proyek ini</span>
         <span class="float-end d-inline-block ps-2 created">
-            {{ object.created|naturaltime }}
+            {{ object.created|naturalday }}
         </span>
     </div>
     <div class="card-body pt-3 pb-1 ps-3 pe-3">
@@ -18,7 +18,7 @@
     {% else %}
     <div class="card-body pt-2 pb-2 ps-3 pe-3">
         <span class="float-end d-inline-block ps-2 created">
-            {{ event.obj.created|naturaltime }}
+            {{ event.obj.created|naturalday }}
         </span>
         <div class="title">
             <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">

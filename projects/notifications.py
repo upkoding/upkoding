@@ -1,6 +1,6 @@
+from django.conf import settings
 from django.core.mail import send_mail, send_mass_mail
 from django.template.loader import render_to_string
-from django.conf import settings
 
 from account.models import UserSetting
 from .models import UserProjectEvent, UserProjectParticipant
@@ -46,8 +46,8 @@ class UserProjectEventNotification:
             if UserSetting.objects.email_notify_project_review_request(to_user):
                 self.__context.update({'to_user': to_user})
                 msg = render_to_string(tpl, self.__context)
-                emails.append(('[UpKoding] Permintaan review dari @{}'.format(self.__event_user.username),
-                               msg, FROM, [to_user.email]))
+                subject = f'[Proyek] Permintaan review dari @{self.__event_user.username}'
+                emails.append((subject, msg, FROM, [to_user.email]))
         if emails:
             send_mass_mail(emails, fail_silently=True)
 
@@ -69,8 +69,8 @@ class UserProjectEventNotification:
             if UserSetting.objects.email_notify_project_message(to_user):
                 self.__context.update({'to_user': to_user})
                 msg = render_to_string(tpl, self.__context)
-                emails.append(('[UpKoding] Pesan dari @{}'.format(self.__event_user.username),
-                               msg, FROM, [to_user.email]))
+                subject = f'[Proyek] Pesan dari @{self.__event_user.username}'
+                emails.append((subject, msg, FROM, [to_user.email]))
         if emails:
             send_mass_mail(emails, fail_silently=True)
 
@@ -85,8 +85,8 @@ class UserProjectEventNotification:
         if UserSetting.objects.email_notify_project_approved(user_project_owner):
             self.__context.update({'to_user': user_project_owner})
             msg = render_to_string(tpl, self.__context)
-            send_mail('[UpKoding] Proyek kamu telah disetujui!',
-                      msg, FROM, [user_project_owner.email], fail_silently=True)
+            subject = '[Proyek] Proyek kamu telah disetujui!'
+            send_mail(subject, msg, FROM, [user_project_owner.email], fail_silently=True)
 
     def __notify_project_disapproved(self):
         """
@@ -99,5 +99,5 @@ class UserProjectEventNotification:
         if UserSetting.objects.email_notify_project_disapproved(user_project_owner):
             self.__context.update({'to_user': user_project_owner})
             msg = render_to_string(tpl, self.__context)
-            send_mail('[UpKoding] Status proyek kamu diralat',
-                      msg, FROM, [user_project_owner.email], fail_silently=True)
+            subject = '[Proyek] Status proyek kamu diralat'
+            send_mail(subject, msg, FROM, [user_project_owner.email], fail_silently=True)

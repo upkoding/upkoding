@@ -1,0 +1,29 @@
+{% load sorl_thumbnail %}
+{% load base %}
+{% load humanize %}
+<a href="{{ thread.get_absolute_url }}" class="list-group-item list-group-item-action p-3">
+    {% if full %}
+    <h5 class="mb-2 text-dark" style="font-size: 1.1rem;">
+        {{ thread.title }}
+    </h5>
+    <p class="text-secondary mb-4" style="font-size: 0.95rem;">{{ thread.description|truncatewords:35 }}</p>
+    {% else %}
+    <h5 class="mb-1" style="font-size: 1rem;">
+        {{ thread.title }}
+    </h5>
+    {% endif %}
+
+    <div class="d-flex w-100 justify-content-between">
+        {% if full %}
+        <h6 class="text-secondary" style="font-weight: 400;">
+            {% with u=thread.user %}
+            <img src="{{ u|avatar_url:40 }}" height="20" width="20" class="rounded-circle me-1" alt="avatar" />
+            {{ u.username }}
+            {% endwith %}
+        </h6>
+        {% endif %}
+        <small class="text-muted" style="font-size: 0.8rem; color: #999 !important;">
+            23 balasan • {{thread.created|naturalday}}
+        </small>
+    </div>
+</a>

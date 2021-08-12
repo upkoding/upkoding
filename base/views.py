@@ -16,12 +16,12 @@ class Index(TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['projects'] = Project.objects.active()[:3]
-        data['user_projects_inprogress'] = UserProject.objects.filter(
+        data['user_projects_inprogress'] = UserProject.objects.select_related('user', 'project').filter(
             status__in=(UserProject.STATUS_IN_PROGRESS,
                         UserProject.STATUS_PENDING_REVIEW,
                         UserProject.STATUS_INCOMPLETE)
         ).order_by('-updated')[:5]
-        data['user_projects_completed'] = UserProject.objects.filter(
+        data['user_projects_completed'] = UserProject.objects.select_related('user', 'project').filter(
             status=UserProject.STATUS_COMPLETE
         ).order_by('-updated')[:5]
         return data

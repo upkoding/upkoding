@@ -20,7 +20,7 @@
                     <h6 class="mt-0 mb-1">{{ p.title|title }}</h6>
                     <small class="text-muted">
                         <span class="badge me-2 bg-{{ item.get_color_class }}">{{ item.get_status_display }}</span>
-                        {{ item.updated|naturaltime }}
+                        {{ item.updated|naturalday }}
                     </small>
                     <div class="progress mt-2" style="height: 3px;">
                         <div class="progress-bar progress-bar-striped bg-{{ item.get_color_class }}" role="progressbar"

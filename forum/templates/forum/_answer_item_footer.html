@@ -1,0 +1,22 @@
+<!-- hide answer footer on edit mode -->
+{% if edit_thread == 0 and edit_answer == 0 %}
+<div class="card-footer bg-light" style="border-top: 1px solid #eee;">
+    <span class="card-action">
+        <!-- <a href="javascript:;"><i class="bi bi-hand-thumbs-up"></i></a> -->
+        <a href="javascript:;" @click="showReply({{ answer.pk }})">Balas</a>
+    </span>
+
+    <!-- show if owner -->
+    {% if user == answer_user %}
+    <span class="dropdown float-end">
+        <a href="#" id="dropdownMenuLink_{{ answer.pk }}" data-bs-toggle="dropdown" aria-expanded="false"><i
+                class="bi bi-three-dots"></i></a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink_{{ answer.pk }}">
+            <li><a class="dropdown-item" href="?edit_answer={{ answer.pk }}#answer-{{ answer.pk}}">Edit</a></li>
+            <li><a class="dropdown-item" href="javascript:;" style="color: red;" @click="deleteAnswer"
+                    data-id="{{ answer.pk }}">Hapus</a></li>
+        </ul>
+    </span>
+    {% endif %}
+</div>
+{% endif %}

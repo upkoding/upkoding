@@ -1,10 +1,8 @@
 from django import forms
-from django.core.validators import RegexValidator
-from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UsernameField
+from django.core.validators import RegexValidator
 
 from .models import User, Link, UserSetting
-
 
 USERNAME_VALIDATORS = [
     RegexValidator(
@@ -83,6 +81,9 @@ class EmailNotificationSettings(forms.Form):
         required=False)
     email_notify_project_disapproved = forms.BooleanField(
         label='Proyek saya tidak disetujui',
+        required=False)
+    email_notify_forum_activity = forms.BooleanField(
+        label='Aktivitas di forum',
         required=False)
 
     def __init__(self, user, *args, **kwargs):

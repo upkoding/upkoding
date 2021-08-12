@@ -1,0 +1,11 @@
+<li id="answer-{{ answer.pk }}" x-ref="answer_{{ answer.pk }}">
+    {% with answer_user=answer.user %}
+    {% include 'forum/_answer_avatar.html' with u=answer_user %}
+    <div class="card shadow-sm">
+        {% include 'forum/_answer_item_header.html' %}
+        {% include 'forum/_answer_item_body.html' %}
+        {% include 'forum/_answer_item_footer.html' %}
+        {% include 'forum/_answer_item_replies.html' with answer=answer thread=thread %}
+    </div>
+    {% endwith %}
+</li>
