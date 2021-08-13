@@ -1,0 +1,36 @@
+{% if blocks %}
+{% load markdownify %}
+<div class="card mt-5 mb-5" x-data="codeEditor()">
+    <div>
+        {% for block in blocks %}
+
+        {% if block.title or block.desc or block.hint %}
+        <div style="padding: 30px 50px 10px">
+            {% if block.title %}<h6 class="card-title">{{ block.title }}</h6>{% endif %}
+            {% if block.desc %}<div>{{ block.desc|markdownify }}</div>{% endif %}
+            {% if block.hint %}<p>{{ block.hint }}</p>{% endif %}
+        </div>
+        {% endif %}
+
+        {% if block.code %}
+        {% if block.readonly %}
+        <pre
+            style="margin: 0 !important;"><code class="language-{{codeblock.get_language_display}}" style="padding: 30px; padding-left: 50px;">{{ block.code }}</code></pre>
+        {% else %}
+        <div style="position: relative; height: 320px;">
+            <div id="editor">{{ block.code }}</div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="text-end">
+        <div class="card-body">
+            <button class="btn btn-primary" @click="submit">
+                <i class="bi bi-caret-right-fill"></i> Jalankan kode!
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}

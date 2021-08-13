@@ -120,6 +120,9 @@ class Project(models.Model):
     def is_active(self):
         return self.status == self.STATUS_ACTIVE
 
+    def has_codeblock(self):
+        return self.codeblock_id is not None
+
     def get_absolute_url(self):
         return reverse('projects:detail', args=[self.slug, str(self.pk)])
 
@@ -144,9 +147,16 @@ class Project(models.Model):
         - If user already pick this project, return that one instead of creating new one
           since user can only work on the same project once.
         - If user never pick this project, create new `UserProject`.
+        - If project have CodeBlock, copy the codeblock and assign to `UserProject`
         - Add project creator to the UserProjectParticipant so we can notify them for event in this project.
         - Last, we increment the taken count.
         """
+        user_codeblock = None
+        if self.codeblock:
+            user_codeblock = self.codeblock
+            user_codeblock.pk = None
+            user_codeblock.save()
+
         obj, created = UserProject.objects.get_or_create(
             user=user,
             project=self,
@@ -155,7 +165,9 @@ class Project(models.Model):
                 'point': self.point,
                 'require_demo_url': self.require_demo_url,
                 'require_sourcecode_url': self.require_sourcecode_url,
+                'codeblock': user_codeblock,
             })
+
         if created:
             # add project creator as participant
             UserProjectParticipant.objects.get_or_create(
@@ -289,7 +301,8 @@ class UserProject(models.Model):
         """
         Returns progress in percent.
         """
-        reqs_progress = sum(map(lambda r: 1 if 'complete' in r else 0, requirements))
+        reqs_progress = sum(
+            map(lambda r: 1 if 'complete' in r else 0, requirements))
         reqs_progress_percent = (reqs_progress / len(requirements)) * 100.0
         return float(format(reqs_progress_percent, '.2f'))
 
@@ -338,6 +351,9 @@ class UserProject(models.Model):
 
     def has_details(self):
         return self.demo_url or self.sourcecode_url or self.note
+
+    def has_codeblock(self):
+        return self.codeblock_id is not None
 
     def add_event(self, event_type, **kwargs):
         UserProjectEvent(

@@ -21,8 +21,8 @@ class CodeBlock(models.Model):
     LANG_NODEJS = Judge0.LANG_NODE12
     LANG_PYTHON = Judge0.LANG_PYTHON3
     LANGS = [
-        (LANG_NODEJS, 'NodeJS'),
-        (LANG_PYTHON, 'Python'),
+        (LANG_NODEJS, 'javascript'),
+        (LANG_PYTHON, 'python'),
     ]
 
     STATUS_ACTIVE = 0
@@ -101,6 +101,26 @@ class CodeBlock(models.Model):
 
     def __str__(self) -> str:
         return f'#{self.pk} {self.get_language_display()}'
+
+    def get_blocks(self) -> list:
+        blocks = []
+        for i in range(1, CodeBlock.NUM_BLOCKS+1):
+            title = getattr(self, f'block_{i}_title', None)
+            desc = getattr(self, f'block_{i}_desc', None)
+            hint = getattr(self, f'block_{i}_hint', None)
+            code = getattr(self, f'block_{i}_code', None)
+            readonly = getattr(self, f'block_{i}_ro', True)
+            if title or desc or hint or code:
+                blocks.append({
+                    'block': i,
+                    'title': title,
+                    'desc': desc,
+                    'hint': hint,
+                    'code': code,
+                    'code_md': f'```\n{code}\n```',
+                    'readonly': readonly,
+                })
+        return blocks
 
     @property
     def source_code(self) -> str:

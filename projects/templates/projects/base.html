@@ -4,7 +4,7 @@
 {% block header_mb %}mb-4{% endblock %}
 
 {% block headscripts %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/default.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/default.min.css">
 <link href="{% static 'base/vendor/simpleLightbox/simpleLightbox.min.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -32,6 +32,6 @@
     a2a_config.prioritize = ['facebook', 'twitter', 'whatsapp', 'telegram', 'email', 'facebook_messenger']
 
     // syntax highlighting
-    hljs.highlightAll();
+    hljs.highlightAll({ style: 'base16/dracula' });
 </script>
 {% endblock %}

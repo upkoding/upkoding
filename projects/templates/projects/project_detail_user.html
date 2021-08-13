@@ -1,5 +1,6 @@
 {% extends 'projects/base.html' %}
 
+{% load static %}
 {% load markdownify %}
 {% load base %}
 {% load projects %}
@@ -16,7 +17,26 @@
     <div class="row mt-3 content">
         {% include 'base/_messages.html' with closable=True %}
 
+
         <div class="col col-lg-8 left">
+            {% if user_project.has_codeblock %}
+            <div class="description">
+                {% include 'projects/_project_images.html' with images=object.images.all %}
+
+                <p class="lead ps-3 mb-4"
+                    style="font-size: 18px; color: rgba(0, 0, 0, 0.7); font-weight: 300; font-style: italic; border-left: 2px solid #ccc;">
+                    {{ object.description_short }}
+                </p>
+                {{ object.description|markdownify }}
+            </div>
+            {% if not user.is_authenticated %}
+            {% render_codeblock_readonly user_project.codeblock %}
+            {% else %}
+            {% render_codeblock user_project.codeblock %}
+            {% endif %}
+
+            {% else %}
+            <!-- legacy challange -->
             {% if rr_form %}
             <!-- form available: show review request form -->
             {% render_review_request_form user_project rr_form %}
@@ -48,37 +68,41 @@
                 </div>
             </div>
             <!--
-            <h3 class="section-title mt-5 mb-3"><i class="bi bi-chat-square-quote-fill me-2"></i>
-                Diskusi tentang proyek ini
-            </h3>
-            <div class="list-group requirements">
-                <div class="list-group-item list-group-item-action" aria-current="true">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1"><i class="bi bi-person-square me-2"></i>
+                <h3 class="section-title mt-5 mb-3"><i class="bi bi-chat-square-quote-fill me-2"></i>
+                    Diskusi tentang proyek ini
+                </h3>
+                <div class="list-group requirements">
+                    <div class="list-group-item list-group-item-action" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1"><i class="bi bi-person-square me-2"></i>
 
-                            Tolong! saya lupa password github</h6>
+                                Tolong! saya lupa password github</h6>
+                        </div>
+                        <small class="help ms-4">Just writing this will help you reacquaint yourself with the person you are
+                            at
+                            your core</small>
                     </div>
-                    <small class="help ms-4">Just writing this will help you reacquaint yourself with the person you are
-                        at
-                        your core</small>
-                </div>
-                <div class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1"><i class="bi bi-person-square me-2"></i>
-                            Ada yang bisa benerin laptop?</h6>
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1"><i class="bi bi-person-square me-2"></i>
+                                Ada yang bisa benerin laptop?</h6>
+                        </div>
+                    </div>
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1"><i class="bi bi-person-square me-2"></i>
+                                Ada yang jual invite ClubHouse ndak?</h6>
+                        </div>
+                        <small class="help ms-4">And some small print.</small>
                     </div>
                 </div>
-                <div class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1"><i class="bi bi-person-square me-2"></i>
-                            Ada yang jual invite ClubHouse ndak?</h6>
-                    </div>
-                    <small class="help ms-4">And some small print.</small>
-                </div>
-            </div>
-            -->
+                -->
+            {% endif %}
+            <!-- end legacy challange -->
+
             {% endif %}
         </div>
+
         <div class="col col-12 col-lg-4 right ps-lg-4">
             <h3 class="section-title mb-3">Sedang Mengerjakan</h3>
             {% render_inprogress_projects object %}
@@ -90,3 +114,42 @@
     </div>
 </div>
 {% endblock %}
+
+{% if user_project.has_codeblock %}
+
+{% block headscripts %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/default.min.css">
+<style type="text/css" media="screen">
+    #editor {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+{% endblock %}
+
+{% block footscripts %}
+{{ block.super }}
+{% if user.is_authenticated %}
+<script src="{% static 'base/vendor/ace/src-min-noconflict/ace.js' %}"></script>
+<script>
+    var editor = ace.edit('editor');
+    editor.setTheme('ace/theme/monokai');
+    editor.setFontSize(14);
+    editor.session.setMode('ace/mode/{{user_project.codeblock.get_language_display}}');
+
+    window.codeEditor = function () {
+        return {
+            submit() {
+                alert(editor.getValue());
+            }
+        }
+    }
+</script>
+{% endif %}
+{% endblock %}
+
+{% endif %}

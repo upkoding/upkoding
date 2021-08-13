@@ -48,7 +48,6 @@
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}">Proyek</a>
                     <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Coders</a>
-                    <a class="nav-link {% active_class '/forum/*' %}" href="{% url 'forum:index' %}">Forum</a>
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
                     <div class="btn-group ms-4" style="margin-top: -1px">
@@ -86,7 +85,7 @@
         <main>
             {% block content %}{% endblock %}
             {% block announcement %}
-            <div class="card text-dark bg-light mb-5 mt-5 shadow-lg">
+            <!-- <div class="card text-dark bg-light mb-5 mt-5 shadow-lg">
                 <div class="card-body">
                     <h5 class="card-title">Under Development!</h5>
                     <p class="card-text">Terima kasih sudah berkunjung, namun saat ini platform ini belum
@@ -97,7 +96,7 @@
                             rel="noreferrer noopener">Any feedback are welcome!</a></p>
                     <p class="card-text">Happy Coding!</p>
                 </div>
-            </div>
+            </div> -->
             {% endblock %}
         </main>
 
@@ -105,7 +104,6 @@
             <nav class="nav nav-masthead justify-content-center">
                 <a class="nav-link" href="{% url 'projects:list' %}">Proyek</a>
                 <a class="nav-link" href="{% url 'coders:list' %}">Coders</a>
-                <a class="nav-link" href="{% url 'forum:index' %}">Forum</a>
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
             </nav>
 

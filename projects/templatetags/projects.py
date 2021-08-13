@@ -1,7 +1,33 @@
 from django import template
+from django.template.base import linebreak_iter
 from projects.models import UserProject, UserProjectEvent
+from codeblocks.models import CodeBlock
 
 register = template.Library()
+
+
+@register.inclusion_tag('projects/templatetags/render_codeblock_readonly.html')
+def render_codeblock_readonly(codeblock):
+    """
+    Render project's codeblock.
+    """
+    return {
+        'codeblock': codeblock,
+        'blocks': codeblock.get_blocks(),
+        'source_code': codeblock.source_code,
+    }
+
+
+@register.inclusion_tag('projects/templatetags/render_codeblock.html')
+def render_codeblock(codeblock):
+    """
+    Render project's codeblock.
+    """
+    return {
+        'codeblock': codeblock,
+        'blocks': codeblock.get_blocks(),
+        'source_code': codeblock.source_code,
+    }
 
 
 @register.inclusion_tag('projects/templatetags/render_requirements.html')
