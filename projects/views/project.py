@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView
 
 from account.models import User
-from projects.forms import UserProjectReviewRequestForm
+from projects.forms import UserProjectReviewRequestForm, UserProjectCodeSubmissionForm
 from projects.models import Project, UserProject, UserProjectEvent
 
 
@@ -60,7 +60,8 @@ class ProjectDetail(DetailView):
             project = self.get_object()
             user_project = None
             try:
-                user_project = get_object_or_404(UserProject, user=request.user, project=project)
+                user_project = get_object_or_404(
+                    UserProject, user=request.user, project=project)
             except Http404:
                 pass
             return JsonResponse({
@@ -90,9 +91,11 @@ class ProjectDetail(DetailView):
             if created:
                 user_project.add_event(UserProjectEvent.TYPE_PROJECT_START)
                 messages.info(request,
-                              "Selamat mengerjakan `{}`!".format(project.title),
+                              "Selamat mengerjakan `{}`!".format(
+                                  project.title),
                               extra_tags='success')
-            success_url = reverse('projects:detail_user', args=[slug, pk, user.username])
+            success_url = reverse('projects:detail_user', args=[
+                                  slug, pk, user.username])
             return HttpResponseRedirect(success_url)
 
 
@@ -112,7 +115,8 @@ class ProjectDetailUser(DetailView):
 
     def get_context_data(self, **kwargs):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
-        user_project = get_object_or_404(UserProject, user=user, project=self.object)
+        user_project = get_object_or_404(
+            UserProject, user=user, project=self.object)
 
         data = super().get_context_data(**kwargs)
         data['user_project'] = user_project
@@ -122,18 +126,31 @@ class ProjectDetailUser(DetailView):
         # - url has `?form=1`
         # - current user is the owner
         rev_request = self.request.GET.get('form') == '1'
-        show_rr_form = user_project.is_requirements_complete() and rev_request and (user == self.request.user)
+        show_rr_form = user_project.is_requirements_complete(
+        ) and rev_request and (user == self.request.user)
 
         if show_rr_form:
             data['rr_form'] = UserProjectReviewRequestForm(
                 instance=user_project)
         return data
 
+    def __handle_code_submission(self, request, project, user_project):
+        codeblock = user_project.codeblock
+        if not codeblock:
+            return HttpResponseBadRequest()
+
+        submission = UserProjectCodeSubmissionForm(codeblock, request.POST)
+        if submission.is_valid():
+            result = submission.run()
+            return JsonResponse(result)
+        return HttpResponseBadRequest()
+
     def __handle_update(self, request, project, user_project):
         """
         Handle requirements status changes.
         """
-        redirect_url = reverse('projects:detail_user', args=[project.slug, project.pk, request.user.username])
+        redirect_url = reverse('projects:detail_user', args=[
+                               project.slug, project.pk, request.user.username])
 
         # deepcopy to preserve the original state
         requirements = copy.deepcopy(user_project.requirements)
@@ -167,7 +184,8 @@ class ProjectDetailUser(DetailView):
             # only create progress update event when progress_after > progress_before
             if progress_after > float(max_progress):
                 for msg in become_complete:
-                    user_project.add_event(UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg)
+                    user_project.add_event(
+                        UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg)
 
             # if all requirements completed, ready for review
             if user_project.is_requirements_complete():
@@ -179,7 +197,8 @@ class ProjectDetailUser(DetailView):
         return HttpResponseRedirect(redirect_url)
 
     def __handle_review_request(self, request, project, user_project):
-        form = UserProjectReviewRequestForm(request.POST, instance=user_project)
+        form = UserProjectReviewRequestForm(
+            request.POST, instance=user_project)
 
         if form.is_valid():
             review_requested = form.submit_review()
@@ -205,7 +224,11 @@ class ProjectDetailUser(DetailView):
             return HttpResponseRedirect(project_url)
 
         project = self.get_object()
-        user_project = get_object_or_404(UserProject, user=user, project=project)
+        user_project = get_object_or_404(
+            UserProject, user=user, project=project)
+
+        if request_kind == 'code_submission':
+            return self.__handle_code_submission(request, project, user_project)
 
         if request_kind == 'update':
             return self.__handle_update(request, project, user_project)
@@ -213,7 +236,8 @@ class ProjectDetailUser(DetailView):
         if request_kind == 'delete':
             user_project.delete()
             messages.info(request,
-                          "Proyek `{}` telah dibatalkan :(".format(project.title),
+                          "Proyek `{}` telah dibatalkan :(".format(
+                              project.title),
                           extra_tags='warning')
             return HttpResponse()
 

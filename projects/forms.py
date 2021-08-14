@@ -1,7 +1,35 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from codeblocks.models import CodeBlock
 from .models import UserProject
+
+
+class UserProjectCodeSubmissionForm(forms.Form):
+    code_block_id = forms.IntegerField()
+    code_block = forms.CharField()
+
+    def __init__(self, codeblock: CodeBlock, *args, **kwargs):
+        self.codeblock = codeblock
+        super().__init__(*args, **kwargs)
+
+    def clean_code_block_id(self):
+        block_id = self.cleaned_data['code_block_id']
+        if (block_id < 1) or (block_id > CodeBlock.NUM_BLOCKS):
+            raise ValidationError('Blok kode tidak sesuai')
+        is_readonly = getattr(self.codeblock, f'block_{block_id}_ro')
+        if is_readonly:
+            raise ValidationError('Blok kode tidak sesuai')
+        return block_id
+
+    def run(self):
+        # save code block
+        code_block_id = self.cleaned_data['code_block_id']
+        code_block = self.cleaned_data['code_block']
+        setattr(self.codeblock, f'block_{code_block_id}_code', code_block)
+        self.codeblock.save()
+        self.codeblock.run_source_code()
+        return self.codeblock.run_result_summary()
 
 
 class UserProjectReviewRequestForm(forms.ModelForm):

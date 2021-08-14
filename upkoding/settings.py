@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'coders.apps.CodersConfig',
     'codeblocks.apps.CodeblocksConfig',
-    'api.apps.ApiConfig',
     # 'forum.apps.ForumConfig',
 
     # 3rd party apps
@@ -51,7 +50,6 @@ INSTALLED_APPS = [
     'mdeditor',
     'anymail',
     'django_ace',
-    'rest_framework',
 
     # django contribs
     'django.contrib.postgres',

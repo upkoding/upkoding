@@ -112,7 +112,7 @@ class CodeBlock(models.Model):
             readonly = getattr(self, f'block_{i}_ro', True)
             if title or desc or hint or code:
                 blocks.append({
-                    'block': i,
+                    'block_id': i,
                     'title': title,
                     'desc': desc,
                     'hint': hint,
@@ -157,6 +157,14 @@ class CodeBlock(models.Model):
         if self.run_result_stderr or self.run_result_stdout != self.expected_output:
             return False
         return True
+
+    def run_result_summary(self):
+        return {
+            'stdout': self.run_result_stdout,
+            'stderr': self.run_result_stderr,
+            'expected_output': self.expected_output,
+            'output_match': self.output_match
+        }
 
     def run_source_code(self, stdin: str = None):
         result, err = judge0_client.submit(

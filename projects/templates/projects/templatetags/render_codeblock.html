@@ -1,6 +1,9 @@
 {% if blocks %}
 {% load markdownify %}
 <div class="card mt-5 mb-5" x-data="codeEditor()">
+    <div class="card-header">
+        Lengkapi kode di bawah ini
+    </div>
     <div>
         {% for block in blocks %}
 
@@ -18,7 +21,7 @@
             style="margin: 0 !important;"><code class="language-{{codeblock.get_language_display}}" style="padding: 30px; padding-left: 50px;">{{ block.code }}</code></pre>
         {% else %}
         <div style="position: relative; height: 320px;">
-            <div id="editor">{{ block.code }}</div>
+            <div id="editor" x-init="setBlockId({{ block.block_id }})">{{ block.code }}</div>
         </div>
         {% endif %}
         {% endif %}
@@ -27,9 +30,14 @@
 
     <div class="text-end">
         <div class="card-body">
-            <button class="btn btn-primary" @click="submit">
-                <i class="bi bi-caret-right-fill"></i> Jalankan kode!
-            </button>
+            <form method="POST" @submit.prevent="submit">
+                {% csrf_token %}
+                <input type="hidden" name="kind" value="code_submission" />
+                <button type="submit" class="btn btn-primary">
+                    <i x-bind:class="loading ? 'spinner-grow spinner-grow-sm' : 'bi bi-caret-right-fill'"></i>
+                    <span x-text="loading ? 'Menjalankan' : 'Jalankan kode!'"></span>
+                </button>
+            </form>
         </div>
     </div>
 </div>

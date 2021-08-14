@@ -143,11 +143,38 @@
 
     window.codeEditor = function () {
         return {
-            submit() {
-                alert(editor.getValue());
+            loading: false,
+            error: null,
+            blockId: null,
+            setBlockId(id) {
+                this.blockId = id
+            },
+            submit(e) {
+                if (this.loading) return
+
+                this.loading = true
+                const data = new FormData(e.target)
+                data.append('code_block_id', this.blockId)
+                data.append('code_block', editor.getValue())
+
+                console.log(data)
+                fetch('', {
+                    method: 'POST',
+                    body: data
+                }).then((resp) => {
+                    if (resp.ok) {
+                        console.log(resp)
+                        // window.location.href = '{{ user_project.get_project_url }}'
+                    } else {
+                        this.error = resp.statusText
+                    }
+                }).finally(() => {
+                    this.loading = false
+                })
             }
         }
     }
+
 </script>
 {% endif %}
 {% endblock %}
