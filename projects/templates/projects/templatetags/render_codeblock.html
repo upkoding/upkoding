@@ -1,9 +1,19 @@
 {% if blocks %}
 {% load markdownify %}
-<div class="card mt-5 mb-5" x-data="codeEditor()">
+<div class="card mt-4 mb-5 shadow" {% if not completed %}x-data="codeEditor()" {% endif %}>
     <div class="card-header">
         Lengkapi kode di bawah ini
     </div>
+    {% if completed %}
+    <pre
+        style="margin: 0 !important;"><code class="language-{{codeblock.get_language_display}}" style="padding: 30px;">{{ source_code }}</code></pre>
+
+    <div class="alert alert-success d-flex rounded-0 border-0 mb-0" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <div>Tugas berhasil diselesaikan!</div>
+    </div>
+    {% else %}
+
     <div>
         {% for block in blocks %}
 
@@ -28,9 +38,17 @@
         {% endfor %}
     </div>
 
-    <div class="text-end">
+    <div class="alert alert-info rounded-0 border-0 mb-0" role="alert" x-show="run_output">
+        <h6 class="alert-heading">Output:</h6>
+        <pre class="rounded-1"><code x-text="run_output"></code></pre>
+    </div>
+    <div class="alert alert-danger rounded-0 border-0 mb-0" role="alert" x-show="run_error">
+        <h6 class="alert-heading">Error:</h6>
+        <pre class="rounded-1"><code x-text="run_error"></code></pre>
+    </div>
+    <div>
         <div class="card-body">
-            <form method="POST" @submit.prevent="submit">
+            <form method="POST" @submit.prevent="submit" class="text-end">
                 {% csrf_token %}
                 <input type="hidden" name="kind" value="code_submission" />
                 <button type="submit" class="btn btn-primary">
@@ -38,7 +56,10 @@
                     <span x-text="loading ? 'Menjalankan' : 'Jalankan kode!'"></span>
                 </button>
             </form>
+
         </div>
     </div>
+    {% endif %}
+
 </div>
 {% endif %}

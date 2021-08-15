@@ -355,6 +355,20 @@ class UserProject(models.Model):
     def has_codeblock(self):
         return self.codeblock_id is not None
 
+    def set_complete(self):
+        self.status = UserProject.STATUS_COMPLETE
+        # backward compat with legacy project
+        self.requirements_completed_percent = 100.0
+        # backward compat with legacy project
+        self.requirements_completed_percent_max = 100.0
+        self.save()
+
+        # add point to user
+        self.user.add_point(self.point)
+
+        # increment completed count on project
+        self.project.inc_completed_count()
+
     def add_event(self, event_type, **kwargs):
         UserProjectEvent(
             user_project=self,

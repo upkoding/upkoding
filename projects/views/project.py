@@ -1,6 +1,8 @@
 import copy
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
@@ -142,7 +144,19 @@ class ProjectDetailUser(DetailView):
         submission = UserProjectCodeSubmissionForm(codeblock, request.POST)
         if submission.is_valid():
             result = submission.run()
-            return JsonResponse(result)
+            data = {
+                'result': result,
+            }
+
+            if result.get('expected_output') and result.get('output_match'):
+                with transaction.atomic():
+                    user_project.set_complete()
+
+            if not result.get('expected_output') and result.get('stderr') is None:
+                with transaction.atomic():
+                    user_project.set_complete()
+
+            return JsonResponse(data)
         return HttpResponseBadRequest()
 
     def __handle_update(self, request, project, user_project):
@@ -214,14 +228,11 @@ class ProjectDetailUser(DetailView):
             return HttpResponse()
         return HttpResponseBadRequest(form.errors.as_json(), content_type='application/json; charset=utf-8')
 
+    @method_decorator(login_required)
     def post(self, request, slug, pk, username):
         user = request.user
         request_kind = request.POST.get('kind')
         project_url = reverse('projects:detail', args=[slug, pk])
-
-        # not logged-in?
-        if not user.is_authenticated:
-            return HttpResponseRedirect(project_url)
 
         project = self.get_object()
         user_project = get_object_or_404(

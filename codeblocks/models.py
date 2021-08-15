@@ -129,7 +129,7 @@ class CodeBlock(models.Model):
             block = getattr(self, f'block_{i}_code')
             if block:
                 blocks.append(block)
-        return '\n'.join(blocks)
+        return '\n\n'.join(blocks)
 
     @property
     def run_result_stderr(self) -> str:

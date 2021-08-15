@@ -6,11 +6,12 @@ from codeblocks.models import CodeBlock
 register = template.Library()
 
 
-@register.inclusion_tag('projects/templatetags/render_codeblock_readonly.html')
-def render_codeblock_readonly(codeblock):
+@register.inclusion_tag('projects/templatetags/render_codeblock_readonly.html', takes_context=True)
+def render_codeblock_readonly(context, project):
     """
     Render project's codeblock.
     """
+    codeblock = project.codeblock
     return {
         'codeblock': codeblock,
         'blocks': codeblock.get_blocks(),
@@ -18,15 +19,18 @@ def render_codeblock_readonly(codeblock):
     }
 
 
-@register.inclusion_tag('projects/templatetags/render_codeblock.html')
-def render_codeblock(codeblock):
+@register.inclusion_tag('projects/templatetags/render_codeblock.html', takes_context=True)
+def render_codeblock(context, user_project):
     """
     Render project's codeblock.
     """
+    codeblock = user_project.codeblock
     return {
+        'user_project': user_project,
         'codeblock': codeblock,
         'blocks': codeblock.get_blocks(),
         'source_code': codeblock.source_code,
+        'completed': user_project.is_complete(),
     }
 
 

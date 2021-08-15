@@ -1,25 +1,12 @@
 {% if blocks %}
 {% load markdownify %}
-<div class="card mt-5 mb-5">
+<div class="card mt-4 mb-5 shadow">
     <div class="card-header">
         Lengkapi kode di bawah ini
     </div>
     <div>
-        {% for block in blocks %}
-
-        {% if block.title or block.desc or block.hint %}
-        <div style="padding: 20px 20px 10px">
-            {% if block.title %}<h6 class="card-title">{{ block.title }}</h6>{% endif %}
-            {% if block.desc %}<div>{{ block.desc|markdownify }}</div>{% endif %}
-            {% if block.hint %}<p>{{ block.hint }}</p>{% endif %}
-        </div>
-        {% endif %}
-
-        {% if block.code %}
         <pre
-            style="margin: 0 !important;"><code class="language-{{codeblock.get_language_display}}" style="padding: 20px;">{{ block.code }}</code></pre>
-        {% endif %}
-        {% endfor %}
+            style="margin: 0 !important;"><code class="language-{{codeblock.get_language_display}}" style="padding: 30px;">{{ source_code }}</code></pre>
     </div>
 </div>
 {% endif %}

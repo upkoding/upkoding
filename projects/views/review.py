@@ -33,16 +33,7 @@ class ProjectReview(LoginRequiredMixin, DetailView):
         # staff can approve projects, but staff project need to be approved by admin :)
         if action == 'approve' and user_project.approvable_by(current_user):
             with transaction.atomic():
-                user_project.status = UserProject.STATUS_COMPLETE
-                user_project.save()
-
-                # add point to user
-                owner.add_point(user_project.point)
-
-                # increment completed count on project
-                project = user_project.project
-                project.inc_completed_count()
-
+                user_project.set_complete()
                 user_project.add_event(
                     UserProjectEvent.TYPE_PROJECT_COMPLETE,
                     user=current_user,
