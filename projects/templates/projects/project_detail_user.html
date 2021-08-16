@@ -117,11 +117,13 @@
         return {
             run_error: null,
             run_output: null,
-            run_success: false,
             loading: false,
             blockId: null,
             setBlockId(id) {
                 this.blockId = id
+            },
+            reload() {
+                window.location.reload();
             },
             submit(e) {
                 if (this.loading) return
@@ -140,6 +142,15 @@
                         const result = json.result
                         this.run_error = result.stderr
                         this.run_output = result.stdout
+
+                        if (json.completed) {
+                            const modal = new bootstrap.Modal(this.$refs.completedModal)
+                            modal.show()
+                        } else {
+                            if (result.expecting_output) {
+                                this.run_error = 'Output program tidak sesuai dengan yang diharapkan!'
+                            }
+                        }
                     } else {
                         this.run_error = resp.statusText
                     }

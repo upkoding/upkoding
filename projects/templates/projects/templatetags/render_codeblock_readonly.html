@@ -8,5 +8,11 @@
         <pre
             style="margin: 0 !important;"><code class="language-{{codeblock.get_language_display}}" style="padding: 30px;">{{ source_code }}</code></pre>
     </div>
+    {% if codeblock.expected_output %}
+    <div class="alert alert-light rounded-0 border-0 mb-0" role="alert" x-show="run_error">
+        <h6 class="alert-heading">Output yang diharapkan:</h6>
+        <pre class="rounded-1"><code>{{ codeblock.expected_output }}</code></pre>
+    </div>
+    {% endif %}
 </div>
 {% endif %}

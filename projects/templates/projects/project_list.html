@@ -4,7 +4,7 @@
 {% load sorl_thumbnail %}
 
 {% block meta %}
-{% meta title='Semua Proyek' desc='Tantang dirimu dengan membuat ide-ide proyek berikut menjadi kenyataan dan raih poin berdasarkan tingkat kesulitannya.'%}
+{% meta title='Semua Tantangan' desc='Tantang dirimu untuk menyelesaikan persoalan-persoalan berikut dan raih poin berdasarkan tingkat kesulitannya.'%}
 {% endblock %}
 {% block header_mb %}mb-5{% endblock %}
 
@@ -12,16 +12,13 @@
 <div class="container">
     <div class="row justify-content-md-center text-center mb-5">
         <div class="col col-lg-8">
-            <h1 class="display-6">Proyek</h1>
-            <p class="lead mt-3 mb-4">Tantang dirimu dengan membuat ide-ide proyek
-                berikut menjadi kenyataan dan raih poin
-                berdasarkan
-                tingkat kesulitannya.</p>
+            <h1 class="display-6">Tantangan</h1>
+            <p class="lead mt-3 mb-4">Tantang dirimu untuk menyelesaikan persoalan-persoalan berikut dan raih poin berdasarkan tingkat kesulitannya.</p>
 
             <form method="GET" action="{% url 'projects:list' %}">
                 <input name="s" {% if search_query %}value="{{ search_query }}" {% endif %}
-                    class="form-control form-control-lg" type="text" placeholder="Cari proyek..."
-                    aria-label="Cari proyek">
+                    class="form-control form-control-lg" type="text" placeholder="Cari Tantangan..."
+                    aria-label="Cari Tantangan">
             </form>
         </div>
     </div>
@@ -40,11 +37,11 @@
         {% if page_obj %}
         HASIL PENCARIAN `{{ search_query|upper }}`
         {% else %}
-        PROYEK TIDAK DITEMUKAN!
+        TANTANGAN TIDAK DITEMUKAN!
         {% endif %}
     </h6>
     {% else %}
-    <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">SEMUA PROYEK</h6>
+    <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">SEMUA TANTANGAN</h6>
     {% endif %}
 
     <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">

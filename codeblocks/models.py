@@ -162,6 +162,7 @@ class CodeBlock(models.Model):
         return {
             'stdout': self.run_result_stdout,
             'stderr': self.run_result_stderr,
+            'expecting_output': self.expected_output.strip() != '',
             'expected_output': self.expected_output,
             'output_match': self.output_match
         }

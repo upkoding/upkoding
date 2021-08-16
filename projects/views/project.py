@@ -146,15 +146,18 @@ class ProjectDetailUser(DetailView):
             result = submission.run()
             data = {
                 'result': result,
+                'completed': False
             }
 
             if result.get('expected_output') and result.get('output_match'):
                 with transaction.atomic():
                     user_project.set_complete()
+                    data['completed'] = True
 
             if not result.get('expected_output') and result.get('stderr') is None:
                 with transaction.atomic():
                     user_project.set_complete()
+                    data['completed'] = True
 
             return JsonResponse(data)
         return HttpResponseBadRequest()

@@ -46,8 +46,8 @@
                     </h3>
                 </a>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}">Tugas & Proyek</a>
-                    <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Coders</a>
+                    <a class="nav-link {% active_class '/challenges/*' %}" href="{% url 'projects:list' %}">Tantangan</a>
+                    <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Top Coders</a>
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
                     <div class="btn-group ms-4" style="margin-top: -1px">
@@ -102,8 +102,8 @@
 
         <footer class="mt-auto text-center" style="padding-top: 50px; padding-bottom: 20px;">
             <nav class="nav nav-masthead justify-content-center">
-                <a class="nav-link" href="{% url 'projects:list' %}">Proyek</a>
-                <a class="nav-link" href="{% url 'coders:list' %}">Coders</a>
+                <a class="nav-link" href="{% url 'projects:list' %}">Tantangan</a>
+                <a class="nav-link" href="{% url 'coders:list' %}">Top Coders</a>
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
             </nav>
 

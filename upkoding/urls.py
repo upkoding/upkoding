@@ -29,7 +29,7 @@ else:
     urlpatterns = [
         path('admin/', admin.site.urls),
         path('account/', include('account.urls', namespace='account')),
-        path('proyek/', include('projects.urls', namespace='projects')),
+        path('challenges/', include('projects.urls', namespace='projects')),
         path('coders/', include('coders.urls', namespace='coders')),
         # path('forum/', include('forum.urls', namespace='forum')),
         path('mdeditor/', include('mdeditor.urls')),
