@@ -6,9 +6,8 @@ from .forms import CodeBlockAdminForm
 
 class CodeBlockAdmin(admin.ModelAdmin):
     model = CodeBlock
-    list_filter = ('status', 'language',)
+    list_filter = ('language',)
     fields = (
-        'status',
         'language',
         'block_1_code',
         'block_1_ro',
@@ -18,6 +17,8 @@ class CodeBlockAdmin(admin.ModelAdmin):
         'block_3_ro',
         'expected_output',
         'run_result',
+        'run_count',
+        'last_run',
     )
     form = CodeBlockAdminForm
 

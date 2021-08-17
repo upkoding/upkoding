@@ -29,6 +29,9 @@ class UserProjectCodeSubmissionForm(forms.Form):
         setattr(self.codeblock, f'block_{code_block_id}_code', code_block)
         self.codeblock.save()
         self.codeblock.run_source_code()
+
+        # make sure it returns the latest state
+        self.codeblock.refresh_from_db()
         return self.codeblock.run_result_summary()
 
 

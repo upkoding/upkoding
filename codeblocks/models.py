@@ -1,6 +1,7 @@
 import base64
 from django.db import models
 from django.conf import settings
+from django.utils.timezone import now
 
 from .services import Judge0
 judge0_client = Judge0(api_key=settings.JUDGE0_API_KEY)
@@ -32,8 +33,6 @@ class CodeBlock(models.Model):
         (STATUS_INACTIVE, 'Inactive'),
     ]
 
-    status = models.SmallIntegerField(
-        'Status', choices=STATUSES, default=STATUS_INACTIVE)
     language = models.SmallIntegerField(
         'Language', choices=LANGS, default=LANG_NODEJS)
 
@@ -92,10 +91,12 @@ class CodeBlock(models.Model):
         '#5 code', blank=True, default='')
     block_5_ro = models.BooleanField('#5 Readonly', default=True)
 
+    run_count = models.IntegerField(default=0)
     run_result = models.JSONField('Result', blank=True, null=True)
     expected_output = models.CharField(
         'Expected output', max_length=250, blank=True, default='')
 
+    last_run = models.DateTimeField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -164,7 +165,9 @@ class CodeBlock(models.Model):
             'stderr': self.run_result_stderr,
             'expecting_output': self.expected_output.strip() != '',
             'expected_output': self.expected_output,
-            'output_match': self.output_match
+            'output_match': self.output_match,
+            'run_count': self.run_count,
+            'last_run': self.last_run.timestamp(),
         }
 
     def run_source_code(self, stdin: str = None):
@@ -177,4 +180,6 @@ class CodeBlock(models.Model):
             'result': result,
             'error': str(err) if err else None
         }
+        self.run_count = models.F('run_count') + 1
+        self.last_run = now()
         self.save()

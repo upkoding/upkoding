@@ -26,7 +26,7 @@ class ProjectManager(models.Manager):
         Which is equivalent to:
             `Project.objects.all(status=2)`
         """
-        return self.filter(status=2)
+        return self.select_related('codeblock').filter(status=2)
 
     def featured(self):
         """
@@ -36,7 +36,7 @@ class ProjectManager(models.Manager):
         Which is equivalent to:
             `Project.objects.all(status=2, is_featured=True)`
         """
-        return self.filter(status=2, is_featured=True)
+        return self.select_related('codeblock').filter(status=2, is_featured=True)
 
     def search(self, text):
         """
@@ -51,6 +51,7 @@ class ProjectManager(models.Manager):
             TrigramSimilarity('description_short', text)
         return self.get_queryset() \
             .annotate(rank=search_rank, similarity=trigram_similarity) \
+            .select_related('codeblock') \
             .filter(status=2) \
             .filter(Q(rank__gte=0.2) | Q(similarity__gt=0.1)) \
             .order_by('-rank')

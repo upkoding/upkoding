@@ -147,7 +147,7 @@
                             const modal = new bootstrap.Modal(this.$refs.completedModal)
                             modal.show()
                         } else {
-                            if (result.expecting_output) {
+                            if (result.expecting_output && this.run_error === null) {
                                 this.run_error = 'Output program tidak sesuai dengan yang diharapkan!'
                             }
                         }
