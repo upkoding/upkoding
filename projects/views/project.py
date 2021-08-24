@@ -137,11 +137,9 @@ class ProjectDetailUser(DetailView):
         return data
 
     def __handle_code_submission(self, request, project, user_project):
-        codeblock = user_project.codeblock
-        if not codeblock:
-            return HttpResponseBadRequest()
-
-        submission = UserProjectCodeSubmissionForm(codeblock, request.POST)
+        submission = UserProjectCodeSubmissionForm(
+            user_project, request.POST
+        )
         if submission.is_valid():
             result = submission.run()
             data = {
@@ -160,7 +158,7 @@ class ProjectDetailUser(DetailView):
                     data['completed'] = True
 
             return JsonResponse(data)
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest(submission.errors.as_json())
 
     def __handle_update(self, request, project, user_project):
         """

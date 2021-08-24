@@ -355,6 +355,26 @@ class UserProject(models.Model):
     def has_codeblock(self):
         return self.codeblock_id is not None
 
+    def can_run_codeblock(self):
+        if not self.has_codeblock():
+            return False
+
+        codeblock = self.codeblock
+
+        # If never run OR not the first-or-last run of 3 OR pro-user(TODO) -> allow!
+        mod = codeblock.run_count % 3
+        if (not codeblock.last_run) or (mod != 0):
+            return True
+
+        # free user can only run the code 3 times in 24hr
+        if codeblock.last_run:
+            breaktime = 60 * 60 * 24  # 24hr
+            sec_since_last_run = (
+                now() - self.codeblock.last_run).total_seconds()
+            if sec_since_last_run >= breaktime:
+                return True
+        return False
+
     def set_complete(self):
         self.status = UserProject.STATUS_COMPLETE
         # backward compat with legacy project

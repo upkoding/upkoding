@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -9,18 +10,28 @@ class UserProjectCodeSubmissionForm(forms.Form):
     code_block_id = forms.IntegerField()
     code_block = forms.CharField()
 
-    def __init__(self, codeblock: CodeBlock, *args, **kwargs):
-        self.codeblock = codeblock
+    def __init__(self, user_project: UserProject, *args, **kwargs):
+        self.user_project = user_project
+        self.codeblock = user_project.codeblock
         super().__init__(*args, **kwargs)
 
-    def clean_code_block_id(self):
-        block_id = self.cleaned_data['code_block_id']
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if not self.user_project.can_run_codeblock():
+            raise ValidationError('Batas menjalankan kode tercapai, tunggu 24 jam atau upgrade ke PRO.',
+                                  code='error_limit')
+
+        block_id = cleaned_data['code_block_id']
         if (block_id < 1) or (block_id > CodeBlock.NUM_BLOCKS):
-            raise ValidationError('Blok kode tidak sesuai')
+            raise ValidationError('Blok kode tidak sesuai',
+                                  code='error_validation')
+
         is_readonly = getattr(self.codeblock, f'block_{block_id}_ro')
         if is_readonly:
-            raise ValidationError('Blok kode tidak sesuai')
-        return block_id
+            raise ValidationError('Blok kode readonly',
+                                  code='error_validation')
+        return cleaned_data
 
     def run(self):
         # save code block
