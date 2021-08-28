@@ -38,20 +38,22 @@ a.link-card p {
   border-bottom: 0.25rem solid transparent;
 }
 
-.nav-masthead .nav-link:hover,
-.nav-masthead .nav-link:focus {
+.nav-masthead .nav-link:hover, .nav-masthead .nav-link:focus {
   border-bottom-color: rgba(0, 0, 0, 0.25);
+  color: rgba(0, 0, 0, 0.5)!important;
 }
 
-.nav-masthead .nav-link + .nav-link {
+.nav-masthead .nav-link+.nav-link {
   margin-left: 1rem;
 }
 
 .nav-masthead .active {
   border-bottom-color: rgba(0, 0, 0, 0.25);
+  color: rgba(0, 0, 0, 0.5)!important;
 }
 
 /* File Input */
+
 .file-input {
   margin-top: 10px;
   border: 1px solid #ddd;
@@ -61,6 +63,7 @@ a.link-card p {
 }
 
 /* project detail */
+
 .project-detail .header {
   padding-top: 2em;
   padding-bottom: 2em;
@@ -108,8 +111,7 @@ a.link-card p {
   color: white;
 }
 
-.project-detail .content .left,
-.project-detail .content .right {
+.project-detail .content .left, .project-detail .content .right {
   padding-top: 30px;
 }
 
@@ -118,8 +120,7 @@ a.link-card p {
   padding-right: 30px;
 }
 
-.project-detail .content .left p,
-.project-detail .content .left li {
+.project-detail .content .left p, .project-detail .content .left li {
   font-size: 17px;
   font-weight: 300;
 }
@@ -127,6 +128,7 @@ a.link-card p {
 .project-detail .content .left li.list-group-item a {
   color: #212529;
 }
+
 .project-detail .content .left li.list-group-item a:hover {
   color: #0d6efd;
 }
@@ -183,12 +185,7 @@ a.link-card p {
   left: 0;
   width: 100%;
   height: 100px;
-  background-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 1)
-  );
+  background-image: linear-gradient( to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 1));
 }
 
 ul.timeline {
@@ -207,14 +204,15 @@ ul.timeline:before {
   height: 100%;
   z-index: 400;
 }
-ul.timeline > li {
+
+ul.timeline>li {
   margin: 20px 0;
   padding-top: 0px;
   padding-left: 25px;
   position: relative;
 }
 
-ul.timeline > li > .avatar {
+ul.timeline>li>.avatar {
   position: absolute;
   top: 5px;
   left: -15px;
@@ -226,12 +224,7 @@ ul.timeline li .card-header {
   font-size: 0.9rem;
 }
 
-ul.timeline li .list-group .list-group-item,
-ul.timeline li .list-group .list-group-item p,
-ul.timeline li .card-body label,
-ul.timeline li .card-body .alert,
-ul.timeline li .card-body .form-text,
-ul.timeline .card-header a {
+ul.timeline li .list-group .list-group-item, ul.timeline li .list-group .list-group-item p, ul.timeline li .card-body label, ul.timeline li .card-body .alert, ul.timeline li .card-body .form-text, ul.timeline .card-header a {
   font-size: 0.9rem;
   font-weight: 400;
 }
@@ -249,36 +242,36 @@ ul.timeline li .card-body .title {
   font-size: 0.9rem;
   color: #555;
 }
+
 ul.timeline li .card-body .title strong {
   font-weight: 500;
   color: #333;
 }
-ul.timeline .card .card-body .created,
-ul.timeline .card .card-header .created {
+
+ul.timeline .card .card-body .created, ul.timeline .card .card-header .created {
   font-size: 12px;
   color: #777;
   margin-top: 2px;
 }
+
 ul.timeline li .card .card-body * {
   font-size: 0.9rem;
   font-weight: 400;
 }
+
 ul.timeline li .card .card-body strong {
   font-weight: 500;
 }
 
-ul.timeline li .card .card-body h1,
-ul.timeline li .card .card-body h2,
-ul.timeline li .card .card-body h3,
-ul.timeline li .card .card-body h4,
-ul.timeline li .card .card-body h5,
-ul.timeline li .card .card-body h6 {
+ul.timeline li .card .card-body h1, ul.timeline li .card .card-body h2, ul.timeline li .card .card-body h3, ul.timeline li .card .card-body h4, ul.timeline li .card .card-body h5, ul.timeline li .card .card-body h6 {
   font-weight: 500;
   font-size: 1rem;
 }
+
 ul.timeline li .card .card-body img {
   width: 100%;
 }
+
 /* ul.timeline > li:before {
   content: " ";
   background: white;
