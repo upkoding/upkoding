@@ -38,49 +38,55 @@
 <body class="d-flex h-100">
     <div class="custom-container w-100 h-100 p-3 mx-auto flex-column d-flex">
         <header class="{% block header_mb %}mb-auto{% endblock%}">
-            <div>
-                <a href="{% url 'base:index' %}" class="logo">
-                    <h3 class="float-md-start mb-0" style="position: relative;">upkoding
-                        <span class="badge bg-primary"
-                            style="font-size: 12px; position: absolute; top: 10px; right: -50px">BETA</span>
-                    </h3>
-                </a>
-                <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}">Proyek</a>
-                    <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Coders</a>
-                    <a class="nav-link {% active_class 'base:forum' %}" href="{% url 'base:forum' %}">Diskusi</a>
-                    <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
-                    {% if user.is_authenticated %}
-                    <div class="btn-group ms-4" style="margin-top: -1px">
-                        <a href="{% url 'account:index' %}" class="btn btn-outline-default nav-link">
-                            {{ user|avatar_img:25 }} <span class="ms-1">{{ user.username }}</span>
-                        </a>
-                        <button type="button" class="btn btn-outline-default dropdown-toggle dropdown-toggle-split"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="{% url 'account:profile' %}"><i class="bi bi-person"></i>
-                                    Edit Profil</a>
+            <nav class="navbar navbar-expand-lg navbar-light nav-masthead">
+                <div class="container-fluid px-0">
+                    <a class="navbar-brand logo" href="{% url 'base:index' %}">
+                        <span class="text-muted h3">upkoding</span>
+                        <span class="badge bg-primary" style="font-size: 12px;">BETA</span>
+                    </a>
+                    <button style="outline: none; box-shadow: none!important;" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link {% active_class '/proyek/*' %}" href="{% url 'projects:list' %}">Proyek</a>
                             </li>
-                            <li>
-                                <a class="dropdown-item" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i>
-                                    Pengaturan</a>
+                            <li class="nav-item">
+                                <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Coders</a>
                             </li>
-                            <li>
-                                <hr class="dropdown-divider">
+                            <li class="nav-item">
+                                <a class="nav-link {% active_class 'base:forum' %}" href="{% url 'base:forum' %}">Diskusi</a>
                             </li>
-                            <li><a class="dropdown-item" href="{% url 'account:logout' %}"><i
-                                        class="bi bi-box-arrow-right"></i> Logout</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
+                            </li>
+                            {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    {{ user|avatar_img:20 }}<span class="ms-2">{{ user.username }}</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+                                    <li><a class="dropdown-item" href="{% url 'account:index' %}"><i class="bi bi-person"></i> Akun Saya</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'account:profile' %}"><i class="bi bi-pencil-square"></i> Edit Profil</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i> Pengaturan</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="{% url 'account:logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                                </ul>
+                            </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'account:login' %}"><i class="bi bi-person-circle me-1"></i> Login</a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
-                    {% else %}
-                    <a class="nav-link ms-4" href="{% url 'account:login' %}"><i class="bi bi-person-circle me-1"></i>
-                        Login</a>
-                    {% endif %}
-                </nav>
-            </div>
+                </div>
+            </nav>
         </header>
 
         <main>
