@@ -1,0 +1,116 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='UpKoding Pro Access' desc='UpKoding Pro Access'%}
+{% endblock %}
+
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center text-center mb-3">
+    <div class="col col-lg-8">
+        <h1 class="display-6">Pro Access</h1>
+        <p class="lead" style="margin-top: 1rem;">
+            Akses semua Kelas dan Challenges premium sesuai durasi
+            yang kamu inginkan, perpanjang akses atau berhenti kapan saja kamu mau.
+        </p>
+    </div>
+</div>
+
+<div class="table-responsive mb-5">
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th style="width: 34%;"></th>
+                <th style="width: 22%;">FREE</th>
+                <th style="width: 22%;">PRO</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row" class="text-start">Kelas gratis</th>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Kelas premium</th>
+                <td><i class="bi bi-x-circle-fill text-danger"></td>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Challenges gratis</th>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Challenges premium</th>
+                <td><i class="bi bi-x-circle-fill text-danger"></td>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Unlimited code submission</th>
+                <td><small class="text-muted">3x per challenge per 24 jam</small></td>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Lihat solusi dari PRO member</th>
+                <td><i class="bi bi-x-circle-fill text-danger"></td>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-start">Diskusi via Discord</th>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">PRO 1 Bulan</h4>
+            </div>
+            <div class="card-body">
+                <h1 class="card-title pricing-card-title">49rb<small class="text-muted fw-light"></small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>30 hari</li>
+                </ul>
+                <a href="{% url 'account:pro' %}?day=30" class="w-100 btn btn-lg btn-outline-primary">Mulai Sekarang</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+            <div class="card-header py-3 text-white bg-primary border-primary">
+                <h4 class="my-0 fw-normal">PRO 3 Bulan</h4>
+            </div>
+            <div class="card-body">
+                <h1 class="card-title pricing-card-title">135rb<small class="text-muted fw-light"></small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>90 hari</li>
+                </ul>
+                <a href="{% url 'account:pro' %}?day=90" class="w-100 btn btn-lg btn-outline-primary">Mulai Sekarang</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">PRO 1 Tahun</h4>
+            </div>
+            <div class="card-body">
+                <h1 class="card-title pricing-card-title">450rb<small class="text-muted fw-light"></small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>365 hari</li>
+                </ul>
+                <a href="{% url 'account:pro' %}?day=365" class="w-100 btn btn-lg btn-outline-primary">Mulai
+                    Sekarang</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

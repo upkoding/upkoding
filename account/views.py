@@ -109,3 +109,8 @@ class SettingsView(LoginRequiredMixin, View):
                               extra_tags='success')
 
         return HttpResponseRedirect(reverse('account:settings'))
+
+
+class ProStatusView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'account/pro.html')

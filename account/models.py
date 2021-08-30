@@ -158,10 +158,6 @@ class ProAccessPurchase(models.Model):
         (DAYS_365, '1 tahun (365 hari)'),
     ]
 
-    STATUS_PENDING = 0
-    STATUS_PAID = 1
-    STATUS_CANCELED = 2
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='purchases')
@@ -196,10 +192,10 @@ class MidtransPaymentNotification(models.Model):
         null=True)
     # original raw JSON payload from notification
     payload = models.JSONField(blank=True, null=True)
-    payment_type = models.CharField()
-    transaction_id = models.CharField()
-    transaction_status = models.CharField()
-    fraud_status = models.CharField(blank=True, null=True)
+    payment_type = models.CharField(max_length=50)
+    transaction_id = models.CharField(max_length=200)
+    transaction_status = models.CharField(max_length=50)
+    fraud_status = models.CharField(max_length=50, blank=True, null=True)
     gross_amount = models.FloatField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -216,7 +212,7 @@ class MidtransPaymentNotification(models.Model):
         gross_amount = float(payload.get('gross_amount', '0'))
 
         order_id = payload.get('order_id')
-        purchase = ProAccessPurchase.get_by_id_safe(order_id)
+        purchase = ProAccessPurchase.safe_get(order_id)
 
         payment_notification = MidtransPaymentNotification(
             purchase=purchase,

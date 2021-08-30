@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='UpKoding Pro Access' desc='UpKoding Pro Access'%}
+{% endblock %}
+
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+    <div class="card-header">
+        <i class="bi bi-speedometer me-2"></i> PRO ACCESS
+    </div>
+    <div class="card-body p-5">
+        <h5 class="card-title text-primary">Mantap! kamu memiliki Pro Access.</h5>
+        <p class="card-text">Perpanjang kapan saja dengan tombol Perpanjang di bawah.</p>
+    </div>
+    <div class="card-footer text-muted">
+        <strong>Berlaku sampai: 22 November 2021</strong>
+    </div>
+</div>
+
+<div class="row justify-content-end mb-3 mt-3">
+    <div class="col col-lg-4">
+        <div class="input-group">
+            <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                <option value="30">1 Bulan (Rp. 49rb)</option>
+                <option value="90">3 Bulan (Rp. 135rb)</option>
+                <option value="365">1 Tahun (Rp. 450rb)</option>
+            </select>
+            <button class="btn btn-primary" type="button">Perpanjang</button>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-5">
+    <div class="card-header">
+        <i class="bi bi-clock-history me-2"></i>Riwayat Pembelian
+    </div>
+    <ol class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="">
+                <div class="fw-bold">Pembelian PRO 1 Bulan</div>
+                Rp. 49rb - 22 Agustus 2021
+            </div>
+            <span class="badge bg-warning rounded-pill">pending</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class=" text-muted">
+                <div class="fw-bold">Pembelian PRO 3 Bulan</div>
+                Rp. 49rb - 22 Agustus 2021
+            </div>
+            <span class="badge bg-success rounded-pill">paid</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class=" text-muted">
+                <div class="fw-bold">Pembelian PRO 1 Bulan</div>
+                Rp. 49rb - 22 Agustus 2021
+            </div>
+            <span class="badge bg-secondary rounded-pill">canceled</span>
+        </li>
+    </ol>
+</div>
+{% endblock %}
