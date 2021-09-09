@@ -1,13 +1,30 @@
+import logging
+import json
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import views
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import View, TemplateView
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from projects.models import UserProject, UserProjectEvent
-from .forms import ProfileForm, LinkForm, EmailNotificationSettings, StaffEmailNotificationSettings
+from .midtrans import is_payment_notification_valid
+from .models import ProAccessPurchase, MidtransPaymentNotification
+from .forms import (
+    get_form_error,
+    ProfileForm,
+    LinkForm,
+    EmailNotificationSettings,
+    StaffEmailNotificationSettings,
+    ProAccessPurchaseForm,
+    ProAccessPurchaseActionForm,
+)
+
+log = logging.getLogger(__file__)
 
 
 class LoginView(views.LoginView):
@@ -112,5 +129,92 @@ class SettingsView(LoginRequiredMixin, View):
 
 
 class ProStatusView(LoginRequiredMixin, View):
+
+    def _render(self, request, **kwargs):
+        selected_plan = request.GET.get('plan')
+
+        # get pro access for user, if end-date never set
+        # consider it doesn't exist.
+        try:
+            pro_access = request.user.pro_access
+            if pro_access and not pro_access.end:
+                pro_access = None
+        except Exception:
+            pro_access = None
+
+        purchases = ProAccessPurchase.objects \
+            .filter(user=request.user)
+
+        return render(request, 'account/pro.html', {
+            'selected_plan': selected_plan,
+            'pro_access': pro_access,
+            'purchases': purchases,
+            **kwargs
+        })
+
     def get(self, request):
-        return render(request, 'account/pro.html')
+        return self._render(request)
+
+    def post(self, request):
+        user = request.user
+        form = ProAccessPurchaseForm(user, request.POST)
+        if form.is_valid():
+            form.purchase_access()
+            messages.info(self.request, 'Order telah dibuat, silahkan lanjutkan dengan pembayaran.',
+                          extra_tags='success')
+            return HttpResponseRedirect(reverse('account:pro'))
+
+        error_message = get_form_error(form)
+        if error_message:
+            messages.info(self.request, error_message, extra_tags='warning')
+        return self._render(request, form=form)
+
+
+@login_required
+def purchase_cancel(request):
+    form = ProAccessPurchaseActionForm(request.user, request.POST)
+    if form.is_valid():
+        purchase_id = form.cleaned_data.get('purchase_id')
+        try:
+            form.cancel_purchase()
+            messages.info(request, f'Order Pro Access dengan ID={purchase_id} telah dibatalkan.',
+                          extra_tags='success')
+        except Exception:
+            messages.info(request, f'Maaf terjadi error ketika membatalkan order Pro Access dengan ID={purchase_id}.',
+                          extra_tags='danger')
+    else:
+        error_message = get_form_error(form)
+        if error_message:
+            messages.info(request, error_message, extra_tags='warning')
+    return HttpResponseRedirect(reverse('account:pro'))
+
+
+@login_required
+def purchase_payment(request):
+    form = ProAccessPurchaseActionForm(request.user, request.POST)
+    if form.is_valid():
+        try:
+            payment_url = form.get_midtrans_redirect_url()
+            return HttpResponseRedirect(payment_url)
+        except Exception as e:
+            log.error(str(e))
+            messages.info(request, f'Maaf terjadi error ketika membuat link pembayaran Midtrans.',
+                          extra_tags='danger')
+    else:
+        error_message = get_form_error(form)
+        if error_message:
+            messages.info(request, error_message, extra_tags='warning')
+    return HttpResponseRedirect(reverse('account:pro'))
+
+
+@csrf_exempt
+def midtrans_payment_notification(request):
+    if request.method == 'POST':
+        payload = json.loads(request.body)
+        is_valid = is_payment_notification_valid(payload)
+        if is_valid:
+            MidtransPaymentNotification.create_from_payload(payload)
+            return HttpResponse()
+        return HttpResponseBadRequest('Notification payload invalid')
+
+    return HttpResponseRedirect(reverse('account:pro'))

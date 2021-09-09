@@ -2,6 +2,7 @@
 {% load base %}
 {% load sorl_thumbnail %}
 {% load humanize %}
+{% load static %}
 
 {% block header_mb %}mb-5{% endblock %}
 
@@ -10,15 +11,13 @@
     <div class="col col-lg-10">
         <div class="text-center" style="padding: 0 3em">
             <h1>Belajar coding menyenangkan!</h1>
-            <p class="lead" style="margin-top: 1rem; margin-bottom: 2rem;">Cara belajar pemrograman yang paling efektif
-                adalah
-                dengan <strong>membuat proyek</strong>.
-                Tantang diri kamu untuk mengerjakan ide-ide proyek yang sudah disediakan dan dapatkan poin untuk setiap
-                proyek
-                yang terselesaikan.
+            <p class="lead" style="margin-top: 1rem; margin-bottom: 2rem;">
+                UpKoding adalah platform belajar pemrograman dengan format <strong>bite-sized
+                    learning</strong>, belajar
+                materi secukupnya, langsung uji dan praktekkan.
             </p>
             <p class="lead">
-                <a href="{% url 'projects:list' %}" class="btn btn-lg btn-primary">Lihat semua proyek <i
+                <a href="{% url 'projects:list' %}" class="btn btn-lg btn-primary">Ingin tantangan? <i
                         class="bi bi-arrow-right"></i></a>
             </p>
         </div>
@@ -92,73 +91,45 @@
     </div>
 
     <div class="row justify-content-md-center mt-5">
-        <div class="col col-lg-10">
+        <div class="col col-lg-10 mt-5">
             <div class="text-center" style="padding: 0 3em">
-                <h2><i class="bi bi-speedometer me-2"></i> Pro Access</h2>
-                <p class="lead" style="margin-top: 1rem; margin-bottom: 2rem;">Manfaatkan platfrom UpKoding sepuasnya
-                    dengan Pro Access. Akses semua Kelas, Challenges dan semua fitur premium. Maksimalkan manfaat
-                    yang bisa didapatkan dengan belajar di UpKoding.
+                <h2><i class="bi bi-lightning me-2"></i> Pro Access</h2>
+                <p class="lead" style="margin-top: 1rem; margin-bottom: 2rem;">Maksimalkan manfaat platfrom UpKoding
+                    dengan Pro Access. Akses semua Kelas, Challenges dan semua fitur premium tanpa batasan.
                 </p>
+                <img src="{% static 'base/img/undraw_superhero.svg' %}" width="300" />
             </div>
         </div>
     </div>
 
-    <div class="container py-5" id="icon-grid">
+    <div class="container mt-3" id="icon-grid">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-3">
             <div class="col d-flex align-items-start">
                 <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
                 <div>
-                    <h5 class="mb-0">Featured title</h5>
-                    <p class="text-muted">Paragraph of text beneath the heading to explain the heading.</p>
+                    <h5 class="mb-0">Semua Ruang Kelas</h5>
+                    <p class="text-muted">Ikuti semua Ruang Kelas baik yang gratis atau premium.</p>
                 </div>
             </div>
             <div class="col d-flex align-items-start">
                 <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
                 <div>
-                    <h5 class="mb-0">Featured title</h5>
-                    <p class="text-muted">Paragraph of text beneath the heading to explain the heading.</p>
+                    <h5 class="mb-0">Semua Tantangan</h5>
+                    <p class="text-muted">Libas semua Tantangan baik yang gratis atau premium.</p>
                 </div>
             </div>
             <div class="col d-flex align-items-start">
                 <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
                 <div>
-                    <h5 class="mb-0">Featured title</h5>
-                    <p class="text-muted">Paragraph of text beneath the heading to explain the heading.</p>
+                    <h5 class="mb-0">Tanpa Batasan</h5>
+                    <p class="text-muted">Submit code tanpa mikirin quota, mau lihat code peserta lain? bisa!</p>
                 </div>
             </div>
             <div class="col d-flex align-items-start">
                 <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
                 <div>
-                    <h5 class="mb-0">Featured title</h5>
-                    <p class="text-muted">Paragraph of text beneath the heading to explain the heading.</p>
-                </div>
-            </div>
-            <div class="col d-flex align-items-start">
-                <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-                <div>
-                    <h5 class="mb-0">Featured title</h5>
-                    <p class="text-muted">Paragraph of text beneath the heading to explain the heading.</p>
-                </div>
-            </div>
-            <div class="col d-flex align-items-start">
-                <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-                <div>
-                    <h5 class="mb-0">Featured title</h5>
-                    <p class="text-muted">Paragraph of text beneath the heading to explain the heading.</p>
-                </div>
-            </div>
-            <div class="col d-flex align-items-start">
-                <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-                <div>
-                    <h5 class="mb-0">Featured title</h5>
-                    <p class="text-muted">Paragraph of text beneath the heading to explain the heading.</p>
-                </div>
-            </div>
-            <div class="col d-flex align-items-start">
-                <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-                <div>
-                    <h5 class="mb-0">Featured title</h5>
-                    <p class="text-muted">Paragraph of text beneath the heading to explain the heading.</p>
+                    <h5 class="mb-0">Belajar Sepuasnya</h5>
+                    <p class="text-muted">UpKoding ingin kamu belajar sepuasnya from zero to hero.</p>
                 </div>
             </div>
         </div>
@@ -168,7 +139,7 @@
 <div class="row justify-content-md-center">
     <div class="col col-lg-10">
         <div class="text-center">
-            <a href="{% url 'base:pro' %}" class="btn btn-lg btn-primary">
+            <a href="{% url 'base:pro' %}" class="btn btn-lg btn-warning">
                 Dapatkan Pro Access
                 <i class="bi bi-arrow-right"></i>
             </a>

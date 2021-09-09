@@ -78,6 +78,7 @@ class ProjectDetail(DetailView):
         project = self.get_object()
 
         next_url = reverse('projects:detail', args=[slug, pk])
+
         # not authenticated, ask for login
         if not user.is_authenticated:
             messages.warning(
@@ -86,6 +87,10 @@ class ProjectDetail(DetailView):
                 extra_tags='warning'
             )
             return HttpResponseRedirect(reverse('account:login') + '?next={}'.format(next_url))
+
+        # premium challenge and not a pro user? redirect to pro page
+        if project.is_premium and not user.is_pro_user():
+            return HttpResponseRedirect(reverse('base:pro'))
 
         # assign user to the project
         with transaction.atomic():
@@ -232,6 +237,9 @@ class ProjectDetailUser(DetailView):
     @method_decorator(login_required)
     def post(self, request, slug, pk, username):
         user = request.user
+        if user.username != username:
+            return HttpResponseForbidden()
+
         request_kind = request.POST.get('kind')
         project_url = reverse('projects:detail', args=[slug, pk])
 

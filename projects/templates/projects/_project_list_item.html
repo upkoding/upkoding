@@ -6,11 +6,11 @@
         <span class="badge bg-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99; font-weight: 400;">
             <i class="bi bi-person-fill"></i> {{ project.taken_count|intcomma }}
         </span>
-        <span class="badge bg-success" style="position: absolute; top: 10px; right: 10px; z-index: 99;">
+        <span class="badge {% if project.is_premium %}bg-warning{% else %}bg-success{% endif %}" style="position: absolute; top: 10px; right: 10px; z-index: 99;">
             {{ project.get_point_display|upper }}
         </span>
 
-        <a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}">
+        <a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}{% if project.is_premium %} (PRO){% endif %}">
             {% thumbnail project.cover "640x360" crop="center" as im %}
             <img src="{{ im.url }}" class="card-img-top ratio ratio-16x9">
             {% endthumbnail %}

@@ -1,14 +1,26 @@
 from django import forms
 from django.contrib.auth.forms import UsernameField
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django.db import transaction
 
-from .models import User, Link, UserSetting
+from upkoding import pricing
+from .models import User, Link, UserSetting, ProAccess, ProAccessPurchase
+from .midtrans import get_redirect_url
 
 USERNAME_VALIDATORS = [
     RegexValidator(
         regex='^[a-zA-Z0-9_]{3,}$',
         message='Format username tidak valid'),
 ]
+
+
+def get_form_error(form, field='__all__'):
+    message = None
+    all_errors = form.errors.as_data().get(field)
+    if all_errors:
+        message = all_errors[0].message
+    return message
 
 
 class ProfileForm(forms.ModelForm):
@@ -109,3 +121,88 @@ class EmailNotificationSettings(forms.Form):
 class StaffEmailNotificationSettings(EmailNotificationSettings):
     email_notify_project_review_request = forms.BooleanField(
         label='Permintaan review proyek', help_text='Hanya untuk proyek yang saya buat (staff).', required=False)
+
+
+class ProAccessPurchaseForm(forms.Form):
+    plan_id = forms.CharField()
+
+    def __init__(self, user: User, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        plan_id = cleaned_data.get('plan_id')
+
+        # make sure plan ID is valid
+        if not pricing.plan_id_is_valid(plan_id):
+            raise forms.ValidationError(
+                'Maaf, paket yang dipilih tidak valid!')
+
+        # make sure user doesn't have PENDING purchase
+        if not ProAccessPurchase.can_create(self.user):
+            raise forms.ValidationError(
+                'Terdapat order yang masih pending, '
+                'batalkan atau lanjutkan ke pembayaran sebelum membuat yang baru.')
+
+        return cleaned_data
+
+    def purchase_access(self):
+        with transaction.atomic():
+            pro_access, _ = ProAccess.objects.get_or_create(user=self.user)
+            plan = pricing.get_plan(self.cleaned_data.get('plan_id'))
+            pro_access_purchase = ProAccessPurchase(
+                user=self.user,
+                pro_access=pro_access,
+                plan_name=plan.name,
+                days=plan.access_days,
+                price=plan.price,
+            )
+            pro_access_purchase.save()
+
+
+class ProAccessPurchaseActionForm(forms.Form):
+    ACTION_CANCEL = 'cancel'
+    ACTION_PAY = 'pay'
+    ACTIONS = [
+        (ACTION_CANCEL, ACTION_CANCEL),
+        (ACTION_PAY, ACTION_PAY),
+    ]
+
+    purchase_id = forms.UUIDField()
+    purchase_action = forms.ChoiceField(choices=ACTIONS)
+
+    def __init__(self, user: User, *args, **kwargs):
+        self.user = user
+        self.purchase = None
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # make sure it belongs to current user
+        try:
+            self.purchase = ProAccessPurchase.objects.get(
+                pk=cleaned_data.get('purchase_id'),
+                user=self.user
+            )
+        except ProAccessPurchase.DoesNotExist:
+            raise ValidationError('Order ID tidak valid!')
+
+        # make sure it payable and cancelable
+        if not self.purchase.can_pay():
+            raise ValidationError('Order sudah kadaluarsa!')
+
+        return cleaned_data
+
+    def cancel_purchase(self):
+        self.purchase.set_canceled()
+
+    def get_midtrans_redirect_url(self):
+        return get_redirect_url(
+            order_id=str(self.purchase.pk),
+            order_name=self.purchase.plan_name,
+            gross_amount=self.purchase.price,
+            customer_first_name=self.user.first_name,
+            customer_last_name=self.user.last_name,
+            customer_email=self.user.email
+        )

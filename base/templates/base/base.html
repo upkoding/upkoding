@@ -46,9 +46,9 @@
                     </h3>
                 </a>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link {% active_class '/challenges/*' %}" href="{% url 'projects:list' %}">Belajar</a>
-                    <a class="nav-link {% active_class '/challenges/*' %}" href="{% url 'projects:list' %}">Bermain</a>
-                    <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">UpKoders</a>
+                    <a class="nav-link {% active_class '/classrooms/*' %}" href="{% url 'base:classrooms' %}">Ruang Kelas</a>
+                    <a class="nav-link {% active_class '/challenges/*' %}" href="{% url 'projects:list' %}">Tantangan</a>
+                    <a class="nav-link {% active_class '/coders/*' %}" href="{% url 'coders:list' %}">Koders</a>
                     <a class="nav-link {% active_class '/pro/*' %}" href="{% url 'base:pro' %}">PRO</a>
                     <a class="nav-link {% active_class 'base:tentang' %}" href="{% url 'base:tentang' %}">Tentang</a>
                     {% if user.is_authenticated %}
@@ -64,6 +64,10 @@
                             <li>
                                 <a class="dropdown-item" href="{% url 'account:profile' %}"><i class="bi bi-person"></i>
                                     Edit Profil</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'account:pro' %}"><i class="bi bi-lightning"></i>
+                                    Pro Access</a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{% url 'account:settings' %}"><i class="bi bi-gear"></i>
@@ -104,9 +108,9 @@
 
         <footer class="mt-auto text-center" style="padding-top: 50px; padding-bottom: 20px;">
             <nav class="nav nav-masthead justify-content-center">
-                <a class="nav-link" href="{% url 'projects:list' %}">Belajar</a>
-                <a class="nav-link" href="{% url 'projects:list' %}">Bermain</a>
-                <a class="nav-link" href="{% url 'coders:list' %}">UpKoders</a>
+                <a class="nav-link" href="{% url 'base:classrooms' %}">Ruang Kelas</a>
+                <a class="nav-link" href="{% url 'projects:list' %}">Tantangan</a>
+                <a class="nav-link" href="{% url 'coders:list' %}">Koders</a>
                 <a class="nav-link" href="{% url 'base:pro' %}">PRO</a>
                 <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
             </nav>

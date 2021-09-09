@@ -1,0 +1,29 @@
+<div class="card mt-4 mb-5 shadow">
+    <div class="card-header">
+        Upgrade ke PRO untuk melihat solusi dari @{{user_project.user}}
+    </div>
+    <div style="position: relative;">
+        <pre style="margin: 0 !important;"><code style="padding: 100px 30px;"></code></pre>
+        <a href="{% url 'base:pro'%}"
+            class="btn btn-lg btn-outline-warning position-absolute top-50 start-50 translate-middle">Upgrade ke PRO</a>
+        <small class="position-absolute top-50 start-50 translate-middle text-muted text-center"
+            style="margin-top: 40px; width: 100%;">
+            Akses semua kelas, tantangan dan lihat solusi dari peserta lainnya.
+        </small>
+    </div>
+
+    {% if codeblock.expected_output %}
+    <div class="alert alert-light rounded-0 border-0 mb-0" role="alert">
+        <h6 class="alert-heading">Output yang diharapkan:</h6>
+        <pre class="rounded-1"><code>{{ codeblock.expected_output }}</code></pre>
+    </div>
+    {% endif %}
+
+    {% if completed %}
+    <div class="alert alert-success d-flex rounded-0 border-0 mb-0" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <div>Tantangan ini berhasil diselesaikan!</div>
+    </div>
+    {% endif %}
+
+</div>

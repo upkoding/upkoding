@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+import json
 from pathlib import Path
 import dj_database_url
 import sentry_sdk
@@ -245,8 +246,7 @@ POINT_UNIT = 'UP'
 DEFAULT_METADATA = {
     'title': 'UpKoding',
     'image': 'base/img/logo.png',
-    'description': 'Belajar Coding paling efektif adalah dengan membuat proyek.'
-    + ' UpKoding menyediakan ratusan ide-ide proyek yang kamu bisa buat sebagai latihan mengasah keahlian programming dan dapatkan point untuk setiap proyek yang kamu selesaikan.',
+    'description': 'UpKoding adalah platform belajar pemrograman dengan format bite-sized learning, belajar materi secukupnya, langsung uji dan praktekkan.',
 }
 
 GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
@@ -320,6 +320,14 @@ MARKDOWNIFY = {
         ]
     }
 }
+
+PRICING_VERSION = 'v1'
+with open(BASE_DIR / f'upkoding/pricing/{PRICING_VERSION}.json') as pf:
+    PRICING = json.load(pf)
+
+MIDTRANS_IS_PRODUCTION = os.getenv('MIDTRANS_IS_PRODUCTION', 'False') == 'True'
+MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
+MIDTRANS_CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
 
 try:
     from upkoding.local_settings import *

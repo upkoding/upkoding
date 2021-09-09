@@ -18,7 +18,7 @@ class ProjectImageAdmin(admin.TabularInline):
 
 class ProjectAdmin(admin.ModelAdmin):
     model = Project
-    list_display = ('id', 'title', 'user', 'status', 'point',
+    list_display = ('id', 'title', 'user', 'status', 'is_premium', 'point',
                     'taken_count', 'completed_count', 'created', 'updated',)
     list_display_links = ('id', 'title',)
     search_fields = ('title', 'user__username',)

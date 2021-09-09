@@ -54,6 +54,10 @@ style="background-image: url({{ im.url }});"
                 {% csrf_token %}
                 {% if not object.is_active %}
                 <button class="btn btn-lg btn-danger" disabled>Proyek Belum Aktif</button>
+                {% elif user.is_authenticated and object.is_premium and not user.is_pro_user %}
+                <a href="{% url 'base:pro' %}" class="btn btn-lg btn-warning text-dark">Upgrade ke PRO <i class="bi bi-arrow-right"></i></a>
+                {% elif not user.is_authenticated and object.is_premium %}
+                <a href="{% url 'base:pro' %}" class="btn btn-lg btn-warning text-dark">Upgrade ke PRO <i class="bi bi-arrow-right"></i></a>
                 {% elif user.is_authenticated %}
                 <button type="submit" class="btn btn-lg" x-data="checkProject()" x-init="init" :class="getBtnClass()"
                     x-html="getBtnContent()"></button>
@@ -116,7 +120,7 @@ style="background-image: url({{ im.url }});"
                 </div>
             </div>
             <div class="col col-6">
-                <a href=""><i class="bi bi-bookmark-plus-fill me-1"></i> Simpan</a>
+                <a href="javascript: alert('Maaf! fitur ini masih dikembangkan.')"><i class="bi bi-bookmark-plus-fill me-1"></i> Simpan</a>
             </div>
         </div>
         {% endif %}

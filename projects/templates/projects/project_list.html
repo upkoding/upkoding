@@ -4,7 +4,7 @@
 {% load sorl_thumbnail %}
 
 {% block meta %}
-{% meta title='Semua Tantangan' desc='Tantang dirimu untuk menyelesaikan persoalan-persoalan berikut dan raih poin berdasarkan tingkat kesulitannya.'%}
+{% meta title='Tantangan Pemrograman' desc='Latih keahlian kamu memecahkan masalah pemrograman dengan menyelesaikan setiap tantangan-tantangan berikut ini.'%}
 {% endblock %}
 {% block header_mb %}mb-5{% endblock %}
 
@@ -13,7 +13,9 @@
     <div class="row justify-content-md-center text-center mb-5">
         <div class="col col-lg-8">
             <h1 class="display-6">Tantangan</h1>
-            <p class="lead mt-3 mb-4">Tantang dirimu untuk menyelesaikan persoalan-persoalan berikut dan raih poin berdasarkan tingkat kesulitannya.</p>
+            <p class="lead mt-3 mb-4">Practice makes perfect! Latih
+                keahlian kamu memecahkan masalah pemrograman dengan menyelesaikan setiap tantangan-tantangan berikut
+                ini.</p>
 
             <form method="GET" action="{% url 'projects:list' %}">
                 <input name="s" {% if search_query %}value="{{ search_query }}" {% endif %}

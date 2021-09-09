@@ -32,9 +32,20 @@
                 </div>
             </div>
             {% if not user.is_authenticated %}
+            {% render_codeblock_pro_only user_project %}
+            {% else %}
+
+            {% if user == user_project.user %}
+            {% render_codeblock user_project %}
+            {% else %}
+
+            {% if user.is_pro_user %}
             {% render_codeblock_readonly user_project %}
             {% else %}
-            {% render_codeblock user_project %}
+            {% render_codeblock_pro_only user_project %}
+            {% endif %}
+
+            {% endif %}
             {% endif %}
 
             {% else %}
@@ -152,7 +163,11 @@
                             }
                         }
                     } else {
-                        this.run_error = resp.statusText
+                        const errors = JSON.parse(await resp.text())
+                        for (key in errors) {
+                            const err = errors[key][0]
+                            this.run_error = err.message
+                        }
                     }
                 }).finally(() => {
                     this.loading = false

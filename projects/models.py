@@ -69,6 +69,7 @@ class Project(models.Model):
     point = models.IntegerField(default=0)
     tags = models.CharField('Tags', max_length=50, blank=True, default='')
     is_featured = models.BooleanField(default=False)
+    is_premium = models.BooleanField(default=False)
     status = models.PositiveSmallIntegerField(
         'Status', choices=STATUSES, default=STATUS_DRAFT)
 
@@ -92,6 +93,7 @@ class Project(models.Model):
         indexes = [
             models.Index(fields=['slug'], name='project_slug_idx'),
             models.Index(fields=['status'], name='project_status_idx'),
+            models.Index(fields=['is_premium'], name='project_is_premium_idx'),
             GinIndex(fields=['search_vector'],
                      name='project_search_vector_idx'),
         ]
@@ -361,7 +363,11 @@ class UserProject(models.Model):
 
         codeblock = self.codeblock
 
-        # If never run OR not the first-or-last run of 3 OR pro-user(TODO) -> allow!
+        # PRO user always can run codes
+        if self.user.is_pro_user():
+            return True
+
+        # If never run OR not the first-or-last run of 3 -> allow!
         mod = codeblock.run_count % 3
         if (not codeblock.last_run) or (mod != 0):
             return True
@@ -369,8 +375,7 @@ class UserProject(models.Model):
         # free user can only run the code 3 times in 24hr
         if codeblock.last_run:
             breaktime = 60 * 60 * 24  # 24hr
-            sec_since_last_run = (
-                now() - self.codeblock.last_run).total_seconds()
+            sec_since_last_run = (now() - codeblock.last_run).total_seconds()
             if sec_since_last_run >= breaktime:
                 return True
         return False

@@ -14,5 +14,13 @@
         <pre class="rounded-1"><code>{{ codeblock.expected_output }}</code></pre>
     </div>
     {% endif %}
+
+    {% if completed %}
+    <div class="alert alert-success d-flex rounded-0 border-0 mb-0" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <div>Tantangan ini berhasil diselesaikan!</div>
+    </div>
+    {% endif %}
+
 </div>
 {% endif %}
