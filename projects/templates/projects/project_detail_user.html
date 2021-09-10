@@ -32,17 +32,17 @@
                 </div>
             </div>
             {% if not user.is_authenticated %}
-            {% render_codeblock_pro_only user_project %}
+            {% render_codeblock_pro_only object user_project %}
             {% else %}
 
             {% if user == user_project.user %}
-            {% render_codeblock user_project %}
+            {% render_codeblock object user_project %}
             {% else %}
 
             {% if user.is_pro_user %}
-            {% render_codeblock_readonly user_project %}
+            {% render_codeblock_readonly object user_project %}
             {% else %}
-            {% render_codeblock_pro_only user_project %}
+            {% render_codeblock_pro_only object user_project %}
             {% endif %}
 
             {% endif %}
@@ -122,12 +122,14 @@
     var editor = ace.edit('editor');
     editor.setTheme('ace/theme/chrome');
     editor.setFontSize(14);
-    editor.session.setMode('ace/mode/{{user_project.codeblock.get_language_display}}');
+    editor.session.setMode('ace/mode/{{user_project.codeblock.get_custom_language_display}}');
 
     window.codeEditor = function () {
         return {
+            run_status: null,
             run_error: null,
             run_output: null,
+            compile_output: null,
             loading: false,
             blockId: null,
             setBlockId(id) {
@@ -135,6 +137,12 @@
             },
             reload() {
                 window.location.reload();
+            },
+            reset() {
+                this.run_status = { description: null }
+                this.run_error = null
+                this.run_output = null
+                this.compile_output = null
             },
             submit(e) {
                 if (this.loading) return
@@ -148,17 +156,21 @@
                     method: 'POST',
                     body: data
                 }).then(async (resp) => {
+                    this.reset()
                     if (resp.ok) {
                         const json = await resp.json()
                         const result = json.result
+                        this.run_status = result.status
                         this.run_error = result.stderr
                         this.run_output = result.stdout
+                        this.compile_output = result.compile_output
 
                         if (json.completed) {
                             const modal = new bootstrap.Modal(this.$refs.completedModal)
                             modal.show()
                         } else {
-                            if (result.expecting_output && this.run_error === null) {
+                            if (result.is_expecting_output && !result.is_output_match && result.stderr === null) {
+                                this.run_status = { description: null }
                                 this.run_error = 'Output program tidak sesuai dengan yang diharapkan!'
                             }
                         }

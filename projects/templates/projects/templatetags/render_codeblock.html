@@ -2,7 +2,7 @@
 {% load markdownify %}
 <div class="card mt-4 mb-5 shadow" {% if not completed %}x-data="codeEditor()" {% endif %}>
     <div class="card-header">
-        Lengkapi kode di bawah ini
+        <i class="devicon-{{codeblock.get_language_display}}-plain"></i> Lengkapi kode di bawah ini
     </div>
     {% if completed %}
     <pre
@@ -10,7 +10,7 @@
 
     {% if codeblock.expected_output %}
     <div class="alert alert-light rounded-0 border-0 mb-0" role="alert">
-        <h6 class="alert-heading">Output yang diharapkan:</h6>
+        <h6 class="alert-heading">Output yang diharapkan</h6>
         <pre class="rounded-1"><code>{{ codeblock.expected_output }}</code></pre>
     </div>
     {% endif %}
@@ -47,17 +47,20 @@
 
     {% if codeblock.expected_output %}
     <div class="alert alert-light rounded-0 border-0 mb-0" role="alert">
-        <h6 class="alert-heading">Output yang diharapkan:</h6>
+        <h6 class="alert-heading">Output yang diharapkan</h6>
         <pre class="rounded-1"><code>{{ codeblock.expected_output }}</code></pre>
     </div>
     {% endif %}
-
-    <div class="alert alert-info rounded-0 border-0 mb-0" role="alert" x-show="run_output">
-        <h6 class="alert-heading">Output:</h6>
+    <div role="alert" x-bind:class="run_output ? 'alert alert-info rounded-0 border-0 mb-0' : 'd-none'">
+        <h6 class="alert-heading">Output program</h6>
         <pre class="rounded-1"><code x-text="run_output"></code></pre>
     </div>
-    <div class="alert alert-danger rounded-0 border-0 mb-0" role="alert" x-show="run_error">
-        <h6 class="alert-heading">Error:</h6>
+    <div role="alert" x-bind:class="compile_output ? 'alert alert-danger rounded-0 border-0 mb-0' : 'd-none'">
+        <h6 class="alert-heading" x-text="run_status.description"></h6>
+        <pre class="rounded-1"><code x-text="compile_output"></code></pre>
+    </div>
+    <div role="alert" x-bind:class="(run_error && (compile_output == null)) ? 'alert alert-danger rounded-0 border-0 mb-0' : 'd-none'">
+        <h6 class="alert-heading" x-text="run_status.description"></h6>
         <pre class="rounded-1"><code x-text="run_error"></code></pre>
     </div>
     <div>
@@ -65,12 +68,14 @@
             <form method="POST" @submit.prevent="submit" class="text-end">
                 {% csrf_token %}
                 <input type="hidden" name="kind" value="code_submission" />
-                <button type="submit" class="btn btn-primary">
+                {% if not user.is_pro_user %}
+                <small class="text-muted" style="opacity: 0.6;">Batas menjalankan kode 3 kali dalam 24 jam, go <a href="{% url 'base:pro' %}">Pro Access</a>!</small>
+                {% endif %}
+                <button type="submit" class="btn btn-primary ms-3">
                     <i x-bind:class="loading ? 'spinner-grow spinner-grow-sm' : 'bi bi-caret-right-fill'"></i>
-                    <span x-text="loading ? 'Menjalankan' : 'Jalankan kode!'"></span>
+                    <span x-text="loading ? 'Menjalankan' : 'Jalankan'"></span>
                 </button>
             </form>
-
         </div>
     </div>
 

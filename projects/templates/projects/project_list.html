@@ -19,9 +19,19 @@
 
             <form method="GET" action="{% url 'projects:list' %}">
                 <input name="s" {% if search_query %}value="{{ search_query }}" {% endif %}
-                    class="form-control form-control-lg" type="text" placeholder="Cari Tantangan..."
+                    class="form-control form-control-lg" type="text" placeholder="Cari tantangan..."
                     aria-label="Cari Tantangan">
             </form>
+
+            <div class="mt-3">
+                <span class="text-muted">Topic populer:</span>
+                <a href="{% url 'projects:list' %}?s=javascript"><span class="badge bg-primary">javascript</span></a>
+                <a href="{% url 'projects:list' %}?s=python"><span class="badge bg-primary">python</span></a>
+                <a href="{% url 'projects:list' %}?s=golang"><span class="badge bg-primary">golang</span></a>
+                <a href="{% url 'projects:list' %}?s=ruby"><span class="badge bg-primary">ruby</span></a>
+                <a href="{% url 'projects:list' %}?s=algoritma"><span class="badge bg-primary">algoritma</span></a>
+                <a href="{% url 'projects:list' %}?s=proyek"><span class="badge bg-primary">proyek</span></a>
+            </div>
         </div>
     </div>
 

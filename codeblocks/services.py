@@ -4,8 +4,15 @@ import json
 
 
 class Judge0:
+    # languages
+    LANG_GO113 = 60
     LANG_NODE12 = 63
     LANG_PYTHON3 = 71
+    LANG_RUBY2 = 72
+
+    # statuses
+    STATUS_ACCEPTED = 3
+    STATUS_WRONG_ANSWER = 4
 
     def __init__(self,
                  api_protocol: str = 'https',
@@ -30,17 +37,19 @@ class Judge0:
         base64_bytes = base64.b64encode(input_bytes)
         return base64_bytes.decode('ascii')
 
-    def submit(self, language_id: int, source_code: str, stdin: str = None):
+    def submit(self, language_id: int, source_code: str, stdin: str = None, expected_output: str = None):
         """
         Return a tuple of JSON response and Exception object.
         """
         url = f'{self.api_protocol}://{self.api_host}/submissions'
         data = {
             'language_id': language_id,
-            'source_code': self._b64(source_code)
+            'source_code': self._b64(source_code),
         }
         if stdin:
             data['stdin'] = self._b64(stdin)
+        if expected_output:
+            data['expected_output'] = self._b64(expected_output)
         try:
             resp = requests.post(
                 url,

@@ -153,12 +153,6 @@ class Project(models.Model):
         - Add project creator to the UserProjectParticipant so we can notify them for event in this project.
         - Last, we increment the taken count.
         """
-        user_codeblock = None
-        if self.codeblock:
-            user_codeblock = self.codeblock
-            user_codeblock.pk = None
-            user_codeblock.save()
-
         obj, created = UserProject.objects.get_or_create(
             user=user,
             project=self,
@@ -167,10 +161,18 @@ class Project(models.Model):
                 'point': self.point,
                 'require_demo_url': self.require_demo_url,
                 'require_sourcecode_url': self.require_sourcecode_url,
-                'codeblock': user_codeblock,
             })
 
         if created:
+            # assign codeblock if any
+            user_codeblock = None
+            if self.codeblock:
+                user_codeblock = self.codeblock
+                user_codeblock.pk = None
+                user_codeblock.save()
+                obj.codeblock = user_codeblock
+                obj.save()
+
             # add project creator as participant
             UserProjectParticipant.objects.get_or_create(
                 user_project=obj, user=self.user
@@ -357,19 +359,26 @@ class UserProject(models.Model):
     def has_codeblock(self):
         return self.codeblock_id is not None
 
-    def can_run_codeblock(self):
+    def can_run_codeblock(self, user):
         if not self.has_codeblock():
+            return False
+        if self.user != user:
             return False
 
         codeblock = self.codeblock
+        is_pro_user = user.is_pro_user()
 
         # PRO user always can run codes
-        if self.user.is_pro_user():
+        if is_pro_user:
             return True
 
-        # If never run OR not the first-or-last run of 3 -> allow!
+        # if this is premium project, but user not PRO -> disallow!
+        if self.project.is_premium and not is_pro_user:
+            return False
+
+        # If never run 3 times OR not the first-or-last run of 3 -> allow!
         mod = codeblock.run_count % 3
-        if (not codeblock.last_run) or (mod != 0):
+        if (codeblock.run_count < 3) or (mod != 0):
             return True
 
         # free user can only run the code 3 times in 24hr

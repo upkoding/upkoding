@@ -9,19 +9,21 @@ class Plan:
     access_days: int
     price: int
     price_display: str
+    description: str
 
     @property
     def label(self):
         return f'{self.name} ({self.price_display})'
 
     @staticmethod
-    def from_json(price_json):
+    def from_json(plan_json):
         return Plan(
-            id=price_json.get('id'),
-            name=price_json.get('name'),
-            access_days=price_json.get('access_days'),
-            price=price_json.get('price'),
-            price_display=price_json.get('price_display'),
+            id=plan_json.get('id'),
+            name=plan_json.get('name'),
+            access_days=plan_json.get('access_days'),
+            price=plan_json.get('price'),
+            price_display=plan_json.get('price_display'),
+            description=plan_json.get('description')
         )
 
 

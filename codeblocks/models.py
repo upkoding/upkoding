@@ -21,9 +21,13 @@ class CodeBlock(models.Model):
 
     LANG_NODEJS = Judge0.LANG_NODE12
     LANG_PYTHON = Judge0.LANG_PYTHON3
+    LANG_GO = Judge0.LANG_GO113
+    LANG_RUBY = Judge0.LANG_RUBY2
     LANGS = [
         (LANG_NODEJS, 'javascript'),
         (LANG_PYTHON, 'python'),
+        (LANG_GO, 'go'),
+        (LANG_RUBY, 'ruby')
     ]
 
     STATUS_ACTIVE = 0
@@ -93,8 +97,7 @@ class CodeBlock(models.Model):
 
     run_count = models.IntegerField(default=0)
     run_result = models.JSONField('Result', blank=True, null=True)
-    expected_output = models.CharField(
-        'Expected output', max_length=250, blank=True, default='')
+    expected_output = models.TextField(blank=True, default='')
 
     last_run = models.DateTimeField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -102,6 +105,11 @@ class CodeBlock(models.Model):
 
     def __str__(self) -> str:
         return f'#{self.pk} {self.get_language_display()}'
+
+    def get_custom_language_display(self):
+        if self.language == self.LANG_GO:
+            return 'golang'
+        return self.get_language_display()
 
     def get_blocks(self) -> list:
         blocks = []
@@ -133,6 +141,19 @@ class CodeBlock(models.Model):
         return '\n\n'.join(blocks)
 
     @property
+    def run_status(self):
+        if not self.run_result:
+            return None
+        return self.run_result.get('result').get('status')
+
+    @property
+    def compile_output(self) -> str:
+        if not self.run_result:
+            return None
+        compile_output = self.run_result.get('result').get('compile_output')
+        return base64.b64decode(compile_output).decode().strip() if compile_output else None
+
+    @property
     def run_result_stderr(self) -> str:
         if not self.run_result:
             return None
@@ -147,25 +168,35 @@ class CodeBlock(models.Model):
         return base64.b64decode(stdout).decode().strip() if stdout else None
 
     @property
-    def output_match(self) -> bool:
+    def is_output_match(self) -> bool:
         # no run or nothing to compare with
         if not self.expected_output or not self.run_result:
             return False
-        # run/api error
-        if self.run_result and self.run_result.get('error'):
+        if self.expected_output and self.run_status.get('id') == Judge0.STATUS_ACCEPTED:
+            return True
+        return False
+
+    @property
+    def is_run_accepted(self) -> bool:
+        if not self.run_result:
             return False
-        # strerr or stdout not match
-        if self.run_result_stderr or self.run_result_stdout != self.expected_output:
-            return False
-        return True
+        if self.run_status.get('id') == Judge0.STATUS_ACCEPTED:
+            return True
+        return False
+
+    @property
+    def is_expecting_output(self) -> bool:
+        return self.expected_output.strip() != ''
 
     def run_result_summary(self):
         return {
+            'status': self.run_status,
             'stdout': self.run_result_stdout,
             'stderr': self.run_result_stderr,
-            'expecting_output': self.expected_output.strip() != '',
+            'compile_output': self.compile_output,
             'expected_output': self.expected_output,
-            'output_match': self.output_match,
+            'is_expecting_output': self.is_expecting_output,
+            'is_output_match': self.is_output_match,
             'run_count': self.run_count,
             'last_run': self.last_run.timestamp(),
         }
@@ -174,7 +205,8 @@ class CodeBlock(models.Model):
         result, err = judge0_client.submit(
             language_id=self.language,
             source_code=self.source_code,
-            stdin=stdin
+            stdin=stdin,
+            expected_output=self.expected_output.strip() if self.is_expecting_output else None
         )
         self.run_result = {
             'result': result,

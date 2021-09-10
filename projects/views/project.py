@@ -141,23 +141,18 @@ class ProjectDetailUser(DetailView):
                 instance=user_project)
         return data
 
-    def __handle_code_submission(self, request, project, user_project):
+    def __handle_code_submission(self, request, user, project, user_project):
         submission = UserProjectCodeSubmissionForm(
-            user_project, request.POST
+            user, project, user_project, request.POST
         )
         if submission.is_valid():
-            result = submission.run()
+            codeblock = submission.run()
             data = {
-                'result': result,
+                'result': codeblock.run_result_summary(),
                 'completed': False
             }
 
-            if result.get('expected_output') and result.get('output_match'):
-                with transaction.atomic():
-                    user_project.set_complete()
-                    data['completed'] = True
-
-            if not result.get('expected_output') and result.get('stderr') is None:
+            if (codeblock.is_expecting_output and codeblock.is_output_match) or (not codeblock.is_expecting_output and codeblock.is_run_accepted):
                 with transaction.atomic():
                     user_project.set_complete()
                     data['completed'] = True
@@ -248,7 +243,7 @@ class ProjectDetailUser(DetailView):
             UserProject, user=user, project=project)
 
         if request_kind == 'code_submission':
-            return self.__handle_code_submission(request, project, user_project)
+            return self.__handle_code_submission(request, user, project, user_project)
 
         if request_kind == 'update':
             return self.__handle_update(request, project, user_project)

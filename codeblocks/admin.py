@@ -4,9 +4,10 @@ from .models import CodeBlock
 from .forms import CodeBlockAdminForm
 
 
+@admin.register(CodeBlock)
 class CodeBlockAdmin(admin.ModelAdmin):
-    model = CodeBlock
     list_filter = ('language',)
+    list_display = ('id', 'language', 'run_count', 'last_run',)
     fields = (
         'language',
         'block_1_code',
@@ -26,6 +27,3 @@ class CodeBlockAdmin(admin.ModelAdmin):
         if 'run' in request.GET:
             obj.run_source_code()
         return super().response_change(request, obj)
-
-
-admin.site.register(CodeBlock, CodeBlockAdmin)

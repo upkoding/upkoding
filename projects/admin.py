@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db import models
 from mdeditor.widgets import MDEditorWidget
 
+from account.models import User
 from .models import (
     Project,
     ProjectImage,
@@ -12,24 +13,43 @@ from .models import (
 from .widgets import ProjectRequirementsWidget
 
 
-class ProjectImageAdmin(admin.TabularInline):
+class ProjectImageInlineAdmin(admin.TabularInline):
     model = ProjectImage
 
 
+@admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    model = Project
-    list_display = ('id', 'title', 'user', 'status', 'is_premium', 'point',
-                    'taken_count', 'completed_count', 'created', 'updated',)
-    list_display_links = ('id', 'title',)
+    list_display = ('id', 'title', 'user', 'status', 'is_premium', 'is_featured', 'codeblock', 'point',
+                    'taken_count', 'completed_count', 'created',)
+    list_display_links = ('id', 'title')
+    list_filter = ('status', 'is_premium', 'is_featured')
     search_fields = ('title', 'user__username',)
+
+    fieldsets = (
+        ('Common fields',
+         {'fields': ('status',  'is_featured', 'is_premium', 'user', 'title', 'slug', 'description_short', 'description', 'cover', 'point', 'tags',)}),
+        ('For Challenge', {
+         'fields': ('codeblock',)}),
+        ('For Project (legacy)',
+         {'fields': ('require_demo_url', 'require_sourcecode_url',)}),
+        ('Stats & others',
+         {'fields': ('taken_count', 'completed_count', 'search_vector',)}),
+    )
+
     readonly_fields = ('search_vector',)
     formfield_overrides = {
         models.JSONField: {'widget': ProjectRequirementsWidget},
         models.TextField: {'widget': MDEditorWidget},
     }
-    inlines = [ProjectImageAdmin]
+    inlines = [ProjectImageInlineAdmin]
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user':
+            kwargs['queryset'] = User.objects.filter(is_staff=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+@admin.register(UserProjectEvent)
 class UserProjectEventAdmin(admin.ModelAdmin):
     model = UserProjectEvent
     list_display = ('user', 'event_type')
@@ -43,8 +63,8 @@ class UserProjectParticipantAdmin(admin.TabularInline):
     model = UserProjectParticipant
 
 
+@admin.register(UserProject)
 class UserProjectAdmin(admin.ModelAdmin):
-    model = UserProject
     list_display = ('id', 'project', 'user', 'status',
                     'point', 'created', 'updated',)
     list_filter = ('status',)
@@ -54,8 +74,3 @@ class UserProjectAdmin(admin.ModelAdmin):
         models.JSONField: {'widget': ProjectRequirementsWidget},
     }
     inlines = [UserProjectParticipantAdmin, UserProjectEventAdminInline]
-
-
-admin.site.register(Project, ProjectAdmin)
-admin.site.register(UserProject, UserProjectAdmin)
-admin.site.register(UserProjectEvent, UserProjectEventAdmin)

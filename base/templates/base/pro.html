@@ -49,25 +49,25 @@
                 <td><i class="bi bi-check-circle-fill text-primary"></i></td>
             </tr>
             <tr>
-                <th scope="row" class="text-start">Unlimited code submissions</th>
+                <th scope="row" class="text-start">Submit kode solusi tantangan</th>
                 <td><small class="text-muted">3x submit per tantangan per 24 jam</small></td>
-                <td><i class="bi bi-check-circle-fill text-primary"></i></td>
+                <td><small class="text-muted">UNLIMITED</small></td>
             </tr>
             <tr>
                 <th scope="row" class="text-start">Lihat solusi dari peserta lainnya</th>
                 <td><i class="bi bi-x-circle-fill text-secondary"></td>
                 <td><i class="bi bi-check-circle-fill text-primary"></i></td>
             </tr>
-            <tr>
+            <!-- <tr>
                 <th scope="row" class="text-start">Diskusi via Discord</th>
                 <td><i class="bi bi-check-circle-fill text-primary"></i></td>
                 <td><i class="bi bi-check-circle-fill text-primary"></i></td>
-            </tr>
+            </tr> -->
         </tbody>
     </table>
 </div>
 
-<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+<div class="row row-cols-1 row-cols-md-2 mb-3 text-center">
     {% for plan in plans %}
     <div class="col">
         <div class="card mb-4 rounded-3 {% if plan.id == 'PRO90' %}border-primary{% endif %}">
@@ -77,7 +77,7 @@
             <div class="card-body">
                 <h1 class="card-title pricing-card-title">{{plan.price_display}}</h1>
                 <ul class="list-unstyled mt-3 mb-4">
-                    <li class="text-muted">Akses tidak terbatas selama {{plan.access_days}} hari</li>
+                    <li class="text-muted">{{ plan.description }}</li>
                 </ul>
                 <a href="{% url 'account:pro' %}?plan={{plan.id}}"
                     class="w-100 btn btn-lg {% if plan.id == 'PRO90' %}btn-primary{% else %}btn-outline-primary{% endif %}">Mulai

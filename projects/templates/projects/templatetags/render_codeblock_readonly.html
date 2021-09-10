@@ -2,7 +2,7 @@
 {% load markdownify %}
 <div class="card mt-4 mb-5 shadow">
     <div class="card-header">
-        Lengkapi kode di bawah ini
+        <i class="devicon-{{codeblock.get_language_display}}-plain"></i> Lengkapi kode di bawah ini
     </div>
     <div>
         <pre
@@ -10,7 +10,7 @@
     </div>
     {% if codeblock.expected_output %}
     <div class="alert alert-light rounded-0 border-0 mb-0" role="alert" x-show="run_error">
-        <h6 class="alert-heading">Output yang diharapkan:</h6>
+        <h6 class="alert-heading">Output yang diharapkan</h6>
         <pre class="rounded-1"><code>{{ codeblock.expected_output }}</code></pre>
     </div>
     {% endif %}

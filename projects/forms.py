@@ -2,24 +2,31 @@ from django.utils.timezone import now
 from django import forms
 from django.core.exceptions import ValidationError
 
+from account.models import User
 from codeblocks.models import CodeBlock
-from .models import UserProject
+from .models import Project, UserProject
 
 
 class UserProjectCodeSubmissionForm(forms.Form):
     code_block_id = forms.IntegerField()
     code_block = forms.CharField()
 
-    def __init__(self, user_project: UserProject, *args, **kwargs):
+    def __init__(self, user: User, project: Project, user_project: UserProject, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.project = project
         self.user_project = user_project
         self.codeblock = user_project.codeblock
-        super().__init__(*args, **kwargs)
 
     def clean(self):
         cleaned_data = super().clean()
 
-        if not self.user_project.can_run_codeblock():
-            raise ValidationError('Batas menjalankan kode tercapai, tunggu 24 jam atau upgrade ke PRO Access.',
+        if self.project.is_premium and not self.user.is_pro_user():
+            raise ValidationError('Maaf, ini adalah tantangan premium diperlukan Pro Access menjalankan.',
+                                  code='error_access')
+
+        if not self.user_project.can_run_codeblock(self.user):
+            raise ValidationError('Batas menjalankan kode tercapai, tunggu 24 jam atau gunakan PRO Access.',
                                   code='error_limit')
 
         block_id = cleaned_data['code_block_id']
@@ -43,7 +50,7 @@ class UserProjectCodeSubmissionForm(forms.Form):
 
         # make sure it returns the latest state
         self.codeblock.refresh_from_db()
-        return self.codeblock.run_result_summary()
+        return self.codeblock
 
 
 class UserProjectReviewRequestForm(forms.ModelForm):

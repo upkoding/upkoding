@@ -7,20 +7,23 @@ register = template.Library()
 
 
 @register.inclusion_tag('projects/templatetags/render_codeblock_readonly.html', takes_context=True)
-def render_codeblock_readonly(context, project):
-    codeblock = project.codeblock
+def render_codeblock_readonly(context, project, user_project=None):
+    codeblock = user_project.codeblock if user_project else project.codeblock
     return {
+        'user': context.request.user,
         'codeblock': codeblock,
         'blocks': codeblock.get_blocks(),
         'source_code': codeblock.source_code,
-        'completed': isinstance(project, UserProject) and project.is_complete(),
+        'completed': user_project.is_complete() if user_project else False,
     }
 
 
 @register.inclusion_tag('projects/templatetags/render_codeblock.html', takes_context=True)
-def render_codeblock(context, user_project):
+def render_codeblock(context, project, user_project):
     codeblock = user_project.codeblock
     return {
+        'user': context.request.user,
+        'project': project,
         'user_project': user_project,
         'codeblock': codeblock,
         'blocks': codeblock.get_blocks(),
@@ -30,9 +33,11 @@ def render_codeblock(context, user_project):
 
 
 @register.inclusion_tag('projects/templatetags/render_codeblock_pro_only.html', takes_context=True)
-def render_codeblock_pro_only(context, user_project):
+def render_codeblock_pro_only(context, project, user_project):
     codeblock = user_project.codeblock
     return {
+        'user': context.request.user,
+        'project': project,
         'user_project': user_project,
         'codeblock': codeblock,
         'completed': user_project.is_complete(),
