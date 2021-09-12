@@ -1,0 +1,63 @@
+// 
+// 
+// type.scss
+//
+//
+
+html{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@include media-breakpoint-down(sm) {
+  h1, .display-4, .h1{
+    font-size: $h2-font-size;
+  }
+  h3{
+    font-size: $h4-font-size;
+  }
+}
+
+@media all and (max-width: 1024px) {
+  html{
+    font-size: .875rem;
+  }
+}
+
+.text-small{
+  font-size: .875rem;
+  line-height: 1.3125rem;
+}
+
+p.lead{
+  margin-bottom: $spacer;
+}
+
+p:last-child{
+  margin-bottom: 0;
+}
+
+hr{
+  width: 100%;
+  border-color: $border-color;
+}
+
+.bg-dark{
+  hr{
+    border-color: rgba(255,255,255,.1);
+  }
+  .text-muted{
+    color: rgba(255,255,255,.5) !important;
+  }
+}
+
+a:focus{
+  outline: none;
+}
+
+i.material-icons{
+  &.h1,&.h2,&.h3,&.h4{
+    font-family: 'Material Icons';
+    margin-bottom: 0;
+  }
+}

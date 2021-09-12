@@ -1,0 +1,212 @@
+// 
+// 
+// forms.scss
+//
+//
+
+form:focus{
+  outline: none;
+}
+
+.form-group{
+  label{
+    color: $body-color;
+    font-size: .875rem;
+  }
+}
+
+.form-control{
+  font-size: .875rem;
+  font-weight: $headings-font-weight;
+  &:focus{
+    border-color: lighten(theme-color('primary'),30%);
+  }
+}
+
+.form-control-round{
+  border-radius: 10rem;
+}
+
+.custom-checkbox{
+  label{
+    color: $body-color;
+  }
+}
+
+label[class*='col']{
+  margin-bottom: 0;
+}
+
+/** Input Groups **/
+
+.input-group-prepend{
+  .input-group-text{
+    padding-right: 0;
+    .material-icons{
+      font-size: 1.125rem;
+    }
+  }
+  + .form-control{
+    border-left: none;
+    padding-left: .5rem;
+  }
+}
+
+.input-group-round{
+  .input-group-prepend{
+    .input-group-text{
+      border-radius: 10rem 0 0 10rem;
+    }
+    + .form-control{
+      border-radius: 0 10rem 10rem 0;
+    }
+  }
+}
+
+.input-group-text{
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
+.input-group{
+  &:focus-within{
+    .input-group-text, .form-control{
+      border-color: lighten(theme-color('primary'),30%);
+    } 
+  }
+}
+
+.input-group-dark{
+  .input-group-prepend{
+    margin-right: 0;
+  }
+  .input-group-text{
+    background: rgba(255,255,255,.1);
+    border-color: rgba(255,255,255,0);
+    color: rgba(255,255,255,.5);
+    border-right: none;
+  }
+}
+
+/** Dark Form Colour Scheme **/
+
+.form-control-dark{
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,0);
+  color: #fff;
+  &:focus{
+    background: rgba(255,255,255,.1);
+    border-color: rgba(255,255,255,0);
+    color: $white;
+  }
+  &::placeholder{
+    color: rgba(255,255,255,.5);
+  }
+}
+
+/** Custom File Browser buttons **/
+
+.custom-file-naked{
+  cursor: pointer;
+  width: auto;
+  height: auto;
+  .custom-file-input{
+    width: auto;
+    height: auto;
+    cursor: pointer;
+  }
+  .custom-file-label{
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    cursor: pointer;
+    &:after{
+      display: none;
+    }
+  }
+}
+
+/** Custom Checkbox Switch **/
+
+.custom-checkbox-switch{
+  padding-left: $spacer*2.25;
+  .custom-control-label{
+    &:before{
+      width: $spacer*1.75;
+      height: $spacer*.75;
+      border-radius: 100px;
+      top: 0.25rem;
+      pointer-events: all;
+      transition: background-color .35s ease;
+      left: -3.35rem;
+    }
+    &:after{
+      background-image: none !important;
+      width: $spacer/2;
+      height: $spacer/2;
+      border-radius: 50%;
+      background: $white;
+      top: .44rem;
+      left: -3.11rem;
+      transition: left .35s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  }
+  .custom-control-input{
+    &:checked{
+      ~ .custom-control-label{
+        &:after{
+          left: -1.68rem;
+        }
+        &:before{
+          background: theme-color('success');
+        }
+      }
+    }
+  }
+}
+
+.custom-radio, .custom-checkbox{
+  label{
+    display: block;
+  }
+}
+
+/** Manage Users Form Group **/
+
+.form-group-users{
+  margin-top: $spacer;
+  min-width: 280px;
+  max-height: 50vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar{
+    display: none;
+  }
+  .custom-control{
+    padding-right: $spacer;
+    padding-left: 0;
+    margin-bottom: $spacer/4;
+  }
+  .custom-control-label{
+    cursor: pointer;
+    &:before, &:after{
+      top: .625rem;
+      right: $spacer/6;
+      left: auto;
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .form-group-users{
+    min-width: 380px;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .form-group-users{
+    min-width: 450px;
+  }
+}

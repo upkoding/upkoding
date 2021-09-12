@@ -1,0 +1,14 @@
+<svg width="400" height="300" viewBox="0 0 400 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Canvas" fill="none">
+<g id="layout-nav-side" clip-path="url(#clip0)">
+<rect width="800" height="600" fill="white" transform="scale(0.5)"/>
+<rect id="Rectangle" width="154" height="520" rx="22" transform="translate(20 20) scale(0.5)" fill="#6C757D"/>
+<rect id="Rectangle_2" width="526" height="520" rx="22" transform="translate(117 20) scale(0.5)" fill="#CED4DA"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0">
+<rect width="800" height="600" fill="white" transform="scale(0.5)"/>
+</clipPath>
+</defs>
+</svg>

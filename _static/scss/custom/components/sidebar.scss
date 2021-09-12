@@ -1,0 +1,88 @@
+// 
+// 
+// sidebar.scss
+//
+// Formats the sidebar as seen in the "Nav Top with Sidebar" layouts
+
+
+@include media-breakpoint-up(lg) {
+  .sidebar{
+    height: 100%;
+    overflow: hidden;
+    width: 384px;
+    border-left: $border-width solid $border-color;
+    display: flex !important;
+    flex-direction: column;
+    background: $white;
+  }
+  .sidebar-toggler{
+    display: none;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .sidebar{
+    width: 384px;
+  }
+}
+
+.sidebar-content{
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.sidebar-floating{
+  position: fixed;
+  right: $spacer;
+  bottom: $spacer*4;
+  height: calc(100vh - 8rem) !important;
+  border-radius: $border-radius*2;
+  box-shadow: $box-shadow-lg;
+  border: $border-width solid $border-color;
+  background: $white;
+  z-index: $zindex-popover;
+  transition: opacity .35s ease, transform .35s ease !important;
+  width: calc(100vw - 3rem);
+  &.collapse:not(.show){
+    opacity: 0;
+    display: block;
+    pointer-events: none;
+    transform: translateY(50px);
+  }
+  .sidebar-content{
+    height: 100%;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .sidebar-floating{
+    width: 450px;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .btn-floating + .sidebar{
+    position: fixed;
+    right: $spacer;
+    bottom: $spacer*4;
+    height: calc(100vh - 8rem) !important;
+    border-radius: $border-radius*2;
+    box-shadow: $box-shadow-lg;
+    border: $border-width solid $border-color;
+    background: $white;
+    z-index: $zindex-popover;
+    transition: opacity .35s ease, transform .35s ease !important;
+    width: calc(100vw - 3rem);
+    &.collapse:not(.show){
+      opacity: 0;
+      display: block;
+      pointer-events: none;
+      transform: translateY(50px);
+    }
+    .sidebar-content{
+      height: 100%;
+    }
+  }
+}

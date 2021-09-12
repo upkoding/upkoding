@@ -1,0 +1,49 @@
+// 
+// 
+// components.scss
+//
+//
+
+
+// Required Components
+//
+// These partials are essential for theme styling
+
+@import "components/avatars";
+@import "components/article";
+@import "components/breadcrumb";
+@import "components/buttons";
+@import "components/cards";
+@import "components/chat";
+@import "components/checklist";
+@import "components/content-lists";
+@import "components/dropdowns";
+@import "components/dropzone";
+@import "components/filter-list";
+@import "components/flatpickr";
+@import "components/forms";
+@import "components/headers";
+@import "components/kanban";
+@import "components/layouts";
+@import "components/list-group";
+@import "components/media";
+@import "components/modals";
+@import "components/nav";
+@import "components/navbar";
+@import "components/progress";
+@import "components/sidebar";
+@import "components/tables";
+@import "components/thumbnails";
+@import "components/tooltips";
+@import "components/type";
+@import "components/utilities";
+
+
+// Optional Components
+//
+// These partials can be included and excluded as required
+
+@import "components/component-list";
+@import "CSS:components/plugins/prism";
+@import "CSS:components/plugins/inter-ui";
+@import "components/ie11";

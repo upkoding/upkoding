@@ -1,0 +1,58 @@
+-
+   files: "autosize.min.js"
+   from: "node_modules/autosize/dist"
+   to: "pages/assets/js"
+- 
+   files: "draggable.bundle.legacy.js"
+   from: "node_modules/@shopify/draggable/lib"
+   to: "pages/assets/js"
+- 
+   files: "dropzone.min.js"
+   from: "node_modules/dropzone/dist/min"
+   to: "pages/assets/js"
+- 
+   files: "flatpickr.min.js"
+   from: "node_modules/flatpickr/dist"
+   to: "pages/assets/js"
+- 
+   files: "flatpickr.min.css"
+   from: "node_modules/flatpickr/dist"
+   to: "scss/custom/components/plugins"
+-
+   files:
+     - "*.woff"
+     - "*.woff2"
+   from: "node_modules/inter-ui/Inter UI (web)"
+   to: "pages/assets/fonts"
+- 
+   files: "jquery.min.js"
+   from: "node_modules/jquery/dist"
+   to: "pages/assets/js"
+- 
+   files: "list.min.js"
+   from: "node_modules/list.js/dist"
+   to: "pages/assets/js"
+- 
+   files: "popper.min.js"
+   from: "node_modules/popper.js/dist/umd"
+   to: "pages/assets/js"
+- 
+   files: "popper.min.js.map"
+   from: "node_modules/popper.js/dist/umd"
+   to: "pages/assets/js"
+- 
+   files: "prism.js"
+   from: "node_modules/prismjs"
+   to: "pages/assets/js"
+- 
+   files: "prism.css"
+   from: "node_modules/prismjs/themes"
+   to: "scss/custom/components/plugins"
+- 
+   files: "prism-okaidia.css"
+   from: "node_modules/prismjs/themes"
+   to: "scss/custom/components/plugins"
+- 
+   files: "swap-animation.js"
+   from: "node_modules/@shopify/draggable/lib/plugins"
+   to: "pages/assets/js"

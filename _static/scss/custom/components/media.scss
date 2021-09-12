@@ -1,0 +1,31 @@
+// 
+// 
+// media.scss
+//
+//
+
+.media-attachment{
+  &:not(:first-child){
+    margin-top: $spacer/2;
+  }
+  padding-left: $spacer/2;
+  align-items: center;
+  border-left: 4px solid $border-color;
+  .media-body{
+    margin-left: $spacer/2;
+    > a{
+      display: block;
+    }
+  }
+  div.avatar{
+    border: none;
+  }
+}
+
+.media-member{
+  align-items: center;
+  margin-bottom: $spacer;
+  .media-body{
+    margin-left: $spacer/2;
+  }
+}

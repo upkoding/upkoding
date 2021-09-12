@@ -1,0 +1,30 @@
+// 
+// 
+// headers.scss
+//
+//
+
+.page-header{
+  padding-top: $spacer;
+  .progress{
+    margin-top: $spacer;
+    margin-bottom: $spacer/2;
+  }
+  .avatars{
+    display: inline-block;
+    + .btn-round{
+      margin-left: $spacer/4;
+    }
+  }
+  margin-bottom: $spacer;
+}
+
+@include media-breakpoint-up(lg) {
+  .page-header{
+    padding-top: $spacer*2;
+    .avatars .avatar{
+      width: $spacer*1.75;
+      height: $spacer*1.75;
+    }
+  }
+}

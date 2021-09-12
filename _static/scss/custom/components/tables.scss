@@ -1,0 +1,25 @@
+// 
+// 
+// tables.scss
+//
+//
+
+th{
+  font-weight: $headings-font-weight;
+  color: $headings-color;
+}
+
+.table{
+  thead{
+    th{
+      border-bottom-width: 1px;
+    }
+  }
+}
+
+.table.align-items-center{
+  td{
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+}

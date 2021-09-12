@@ -1,0 +1,87 @@
+// 
+// 
+// buttons.scss
+//
+//
+
+button{
+  &:focus{
+    outline: none;
+  }
+}
+
+.btn-lg{
+  font-size: 1.125rem;
+  max-height: $spacer*2;
+}
+
+.btn-round{
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  border-radius: 50%;
+  padding: 0;
+  background: $gray-300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &.btn-primary{
+    background: theme-color('primary');
+    i.material-icons{
+      color: $white;
+    }
+    &:hover{
+      background: darken(theme-color('primary'),10%);
+    }
+  }
+  i.material-icons{
+    font-size: 1rem;
+    color: $gray-600;
+  }
+  &:hover{
+    background: darken($gray-300,5%);
+  }
+  &.btn-lg{
+    width: 3rem;
+    height: 3rem;
+    i.material-icons{
+      font-size: 1.5rem;
+    }
+  }
+  &.close{
+    padding: 0;
+    background: $gray-300;
+    opacity: 1;
+  }
+}
+
+h3 + .btn-round, h5 + .btn-round{
+  margin-left: $spacer/2;
+}
+
+.btn-options{
+  color: $body-color;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.btn-floating{
+  position: fixed;
+  z-index: $zindex-fixed;
+  bottom: $spacer;
+  right: $spacer;
+  &[aria-expanded="false"]{
+    i:last-child{
+      display: none;
+    }
+  }
+  &[aria-expanded="true"]{
+    i:first-child{
+      display: none;
+    }
+  }
+}

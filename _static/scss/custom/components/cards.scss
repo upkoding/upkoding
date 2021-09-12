@@ -1,0 +1,214 @@
+// 
+// 
+// cards.scss
+//
+//
+
+
+.card{
+  box-shadow: $box-shadow-sm;
+}
+
+@include media-breakpoint-down(md) {
+  .card-body{
+    padding: $spacer*.75;
+  }
+}
+
+.card-title{
+  h6{
+    margin: 0;
+  }
+}
+
+.card-body{
+  p:last-child{
+    margin-bottom: 0;
+  }
+}
+
+.card{
+  .card{
+    background: $gray-100;
+  }
+}
+
+/** Card Options **/
+
+.card-body{
+  .card-options{
+    position: absolute;
+    top: $spacer;
+    right: $spacer/2;
+  }
+}
+
+/** Card Progress Bars **/
+
+.card{
+  > .progress{
+    height: 0.1875rem;
+    background: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    .progress-bar{
+      height: 1rem;
+      border-radius: .5rem 0 0 0;
+      &[style="width: 100%"]{
+        border-radius: .5rem .5rem 0 0;
+      }
+    }
+  }
+}
+
+/** Custom Cards **/
+
+.card{
+  // margin-bottom: $spacer/2;
+  .card-title{
+    max-width: 90%;
+  }
+}
+
+.card-note{
+  background: lighten($yellow,42%);
+  border-color: lighten($yellow,38%);
+  .card-header{
+    padding-top: 1rem;
+    padding-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border-bottom: none;
+    .avatar{
+      margin-right: $spacer/2;
+      border-color: lighten($yellow,40%);
+    }
+    + .card-body{
+      padding-top: 1rem;
+    }
+  }
+}
+
+.card-task{
+  .card-body{
+    padding: 1.25rem;
+  }
+  .card-meta{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    i{
+      margin-right: $spacer/6;
+    }
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .card-task{
+    .card-title{
+      margin: 0;
+    }
+    .card-body, .card-meta{
+      display: flex;
+      align-items: center;
+    }
+    .card-body{
+      justify-content: space-between;
+    }
+    .card-options{
+      margin-left: $spacer;
+      position: relative;
+      top: 0;
+      right: 0;
+    }
+    .avatars{
+      margin-right: $spacer;
+    }
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .card-project, .card-team, .card-file{
+    margin-bottom: $spacer;
+  }
+}
+
+.card-project, .card-kanban{
+  .card-title{
+    margin-bottom: $spacer/2;
+    &:last-child{
+      margin-bottom: 0;
+    }
+  }
+}
+
+.card-project{
+  .avatars{
+    margin-bottom: $spacer*1.5;
+  }
+}
+
+.card-team{
+  h5{
+    margin-bottom: $spacer/4;
+  }
+  .card-title{
+    margin-bottom: $spacer;
+  }
+}
+
+.card-kanban{
+  .card-body{
+    padding: 1rem;
+  }
+  .avatars{
+    margin-bottom: $spacer/2;
+    .avatar{
+      width: $spacer*1.25;
+      height: $spacer*1.25;
+    }
+  }
+  .card-options{
+    top: 1rem;
+  }
+  .card-meta{
+    font-size: .875rem;
+    i{
+      margin-right: $spacer/6;
+    }
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .card-kanban{
+    &:not(:hover){
+      .card-options{
+        opacity: 0;
+      }
+    }
+  }
+}
+
+/** Card List **/
+
+.card-list{
+  margin-bottom: $spacer/2;
+  border-radius: $border-radius*2;
+  padding: 1rem;
+  background: $gray-300;
+  .card{
+    border: none;
+  }
+  .card-list-head{
+    display: flex;
+    justify-content: space-between;
+  }
+  .card:last-child{
+    margin-bottom: 0;
+  }
+}

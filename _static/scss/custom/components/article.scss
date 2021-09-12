@@ -1,0 +1,62 @@
+// 
+// 
+// article.scss
+//
+//
+
+article{
+  p + p, p + ul, ul + p{
+    margin-top: $spacer;
+  }
+  h4,h5{
+    margin-bottom: $spacer;
+    &:not(:first-child){
+      margin-top: $spacer*2;
+    }
+  }
+  .blockquote{
+    margin: $spacer*2 0;
+    .h4{
+      margin-bottom: $spacer/1.5;
+    }
+    &:first-child{
+      margin-top: 0;
+    }
+  }
+  figure{
+    margin: $spacer*2 0;
+    &:first-child{
+      margin-top: 0;
+    }
+  }
+  h5 + figure{
+    margin-top: 0;
+  }
+  ul{
+    padding-left: $spacer*2;
+    margin-bottom: $spacer;
+    > li{
+      margin-bottom: .5rem;
+    }
+  }
+  + article{
+    margin-top: $spacer*2;
+  }
+  pre + p{
+    margin-top: $spacer*1.5;
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  article{
+    figure{
+      margin: $spacer 0;
+    }
+    h4,h5{
+      &:not(:last-child){
+        margin-top: $spacer;
+      }
+    }
+  }
+}
+

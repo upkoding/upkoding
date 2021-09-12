@@ -1,0 +1,40 @@
+// 
+// 
+// content-lists.scss
+//
+// 
+
+
+// Used in project pages to preceed a content type, for example 'Tasks (+)'
+@include media-breakpoint-up(sm) {
+  .content-list-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;  
+  }  
+}
+
+@include media-breakpoint-down(md) {
+  .content-list-head{
+    > div:first-child{
+      margin-bottom: $spacer/2;
+    }
+  }
+}
+.content-list-head{
+  h3, h5{
+    margin: 0;
+    display: inline-block;
+  }
+  > [class*='col']{
+    display: flex;
+    align-items: center;
+  }
+  margin-bottom: $spacer;
+}
+
+.content-list{
+  + .content-list{
+    margin-top: $spacer;
+  }
+}
