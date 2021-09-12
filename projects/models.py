@@ -38,18 +38,36 @@ class Project(models.Model):
     STATUS_PENDING = 1
     STATUS_ACTIVE = 2
     STATUS_DELETED = 3
+    STATUS_ARCHIVED = 4
     STATUSES = [
         (STATUS_DRAFT, 'Draft'),
         (STATUS_PENDING, 'Pending'),
         (STATUS_ACTIVE, 'Active'),
         (STATUS_DELETED, 'Deleted'),
+        (STATUS_ARCHIVED, 'Archived'),
     ]
+
+    # dificulty levels and its point
+    LEVEL_NONE = 0  # default (backward compat for legacy project)
+    LEVEL_EASY = 1
+    LEVEL_MEDIUM = 2
+    LEVEL_HARD = 3
+    LEVELS = [
+        (LEVEL_NONE, 'none'),
+        (LEVEL_EASY, 'easy'),
+        (LEVEL_MEDIUM, 'medium'),
+        (LEVEL_HARD, 'hard'),
+    ]
+    POINT_EASY = 1
+    POINT_MEDIUM = 5
+    POINT_HARD = 10
 
     user = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
         related_name='projects')
+    level = models.PositiveIntegerField(choices=LEVELS, default=LEVEL_NONE)
     slug = models.SlugField(max_length=150, blank=True)
     title = models.CharField('Judul', max_length=100)
     description_short = models.CharField(
@@ -93,6 +111,7 @@ class Project(models.Model):
         indexes = [
             models.Index(fields=['slug'], name='project_slug_idx'),
             models.Index(fields=['status'], name='project_status_idx'),
+            models.Index(fields=['level'], name='project_level_idx'),
             models.Index(fields=['is_premium'], name='project_is_premium_idx'),
             GinIndex(fields=['search_vector'],
                      name='project_search_vector_idx'),
@@ -112,6 +131,15 @@ class Project(models.Model):
             self.tags = ','.join([
                 tag.strip().lower()
                 for tag in self.tags.split(',')])
+
+        # set point based on level
+        if self.level != self.LEVEL_NONE:
+            if self.level == self.LEVEL_EASY:
+                self.point = self.POINT_EASY
+            elif self.level == self.LEVEL_MEDIUM:
+                self.point = self.POINT_MEDIUM
+            elif self.level == self.LEVEL_HARD:
+                self.point = self.POINT_HARD
 
         # set search_vector on update
         # TODO: update this asynchronously (using PubSub / Cloud Task)

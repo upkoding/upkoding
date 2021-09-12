@@ -19,24 +19,24 @@ class ProjectImageInlineAdmin(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'user', 'status', 'is_premium', 'is_featured', 'codeblock', 'point',
+    list_display = ('title', 'user', 'level', 'status', 'is_premium', 'is_featured', 'codeblock',
                     'taken_count', 'completed_count', 'created',)
-    list_display_links = ('id', 'title')
-    list_filter = ('status', 'is_premium', 'is_featured')
+    list_display_links = ('title',)
+    list_filter = ('status', 'level', 'is_premium', 'is_featured')
     search_fields = ('title', 'user__username',)
 
     fieldsets = (
         ('Common fields',
-         {'fields': ('status',  'is_featured', 'is_premium', 'user', 'title', 'slug', 'description_short', 'description', 'cover', 'point', 'tags',)}),
+         {'fields': ('status',  'level', 'is_featured', 'is_premium', 'user', 'title', 'slug', 'description_short', 'description', 'cover', 'tags',)}),
         ('For Challenge', {
          'fields': ('codeblock',)}),
         ('For Project (legacy)',
-         {'fields': ('require_demo_url', 'require_sourcecode_url',)}),
+         {'fields': ('requirements', 'require_demo_url', 'require_sourcecode_url',)}),
         ('Stats & others',
-         {'fields': ('taken_count', 'completed_count', 'search_vector',)}),
+         {'fields': ('taken_count', 'completed_count', 'search_vector', 'point',)}),
     )
 
-    readonly_fields = ('search_vector',)
+    readonly_fields = ('search_vector', 'point',)
     formfield_overrides = {
         models.JSONField: {'widget': ProjectRequirementsWidget},
         models.TextField: {'widget': MDEditorWidget},

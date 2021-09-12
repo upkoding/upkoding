@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load base %}
+{% load static %}
 
 {% block meta %}
 {% meta title='Tentang UpKoding' desc='Tentang UpKoding, platform belajar coding interaktif Indonesia.'%}
@@ -10,6 +11,12 @@
     <div class="row justify-content-center">
         <div class="col-lg-11 col-xl-10">
             <div class="page-header">
+                <div class="mb-3 d-flex">
+                    <img alt="Pipeline" src="{% static 'assets/img/logo.png' %}" class="avatar avatar-lg mr-1" />
+                    <div>
+                        <span class="badge badge-success">beta</span>
+                    </div>
+                </div>
                 <h1>Tentang</h1>
                 <p class="lead">UpKoding mempunyai misi menjadi tempat belajar dan bermain bagi calon programmer hebat
                     Indonesia.

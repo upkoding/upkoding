@@ -91,7 +91,7 @@ ROOT_URLCONF = 'upkoding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / '_templates'],
+        'DIRS': [BASE_DIR / '_templates', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,7 +141,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'id-ID'
+LANGUAGE_CODE = 'en-US'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True

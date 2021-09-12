@@ -37,7 +37,7 @@ class CodeBlock(models.Model):
         (STATUS_INACTIVE, 'Inactive'),
     ]
 
-    language = models.SmallIntegerField(
+    language = models.PositiveSmallIntegerField(
         'Language', choices=LANGS, default=LANG_NODEJS)
 
     # block 1
