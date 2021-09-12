@@ -27,9 +27,6 @@ class ProfileForm(forms.ModelForm):
     """
     Customized profile form to match Bootstrap 5 styles.
     """
-    NAME = 'profile_form'
-    kind = forms.CharField(widget=forms.HiddenInput(), initial=NAME)
-
     username = UsernameField(required=True,
                              label='Username *',
                              validators=USERNAME_VALIDATORS,
@@ -45,8 +42,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['avatar', 'username', 'email',
-                  'first_name', 'description']
+        fields = ['avatar', 'username', 'email', 'first_name', 'description']
 
     def is_valid(self):
         """
@@ -64,9 +60,6 @@ class ProfileForm(forms.ModelForm):
 
 
 class LinkForm(forms.ModelForm):
-    NAME = 'links_form'
-    kind = forms.CharField(widget=forms.HiddenInput(), initial=NAME)
-
     class Meta:
         model = Link
         exclude = ('user',)
@@ -82,9 +75,6 @@ class LinkForm(forms.ModelForm):
 
 
 class EmailNotificationSettings(forms.Form):
-    NAME = 'email_notification_settings'
-    kind = forms.CharField(widget=forms.HiddenInput(), initial=NAME)
-
     email_notify_project_message = forms.BooleanField(
         label='Percakapan di timeline proyek',
         required=False)

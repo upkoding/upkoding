@@ -57,75 +57,77 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return data
 
 
-class ProfileView(LoginRequiredMixin, View):
-    def __render(self, request, profile_form, link_form):
-        return render(request, 'account/profile.html', {
-            'profile_form': profile_form,
-            'link_form': link_form
-        })
+class ProfileFormView(LoginRequiredMixin, View):
+    def __render(self, request, form,):
+        return render(request, 'account/form_profile.html', {'form': form})
 
     def get(self, request):
-        user = request.user
-        profile_form = ProfileForm(instance=user)
-        link_form = LinkForm(user, instance=user.get_link())
-        return self.__render(request, profile_form, link_form)
+        form = ProfileForm(instance=request.user)
+        return self.__render(request, form)
 
     def post(self, request):
-        user = request.user
-        kind = request.POST.get('kind')
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if not form.is_valid():
+            return self.__render(request, form)
 
-        if kind == ProfileForm.NAME:
-            form = ProfileForm(
-                request.POST, request.FILES, instance=request.user)
-            if not form.is_valid():
-                link_form = LinkForm(user, instance=user.get_link())
-                return self.__render(request, form, link_form)
-
-            form.save()
-            messages.info(self.request, 'Profil berhasil disimpan!',
-                          extra_tags='success')
-
-        if kind == LinkForm.NAME:
-            form = LinkForm(user, request.POST, instance=user.get_link())
-            if not form.is_valid():
-                profile_form = ProfileForm(instance=user)
-                return self.__render(request, profile_form, form)
-
-            form.save()
-            messages.info(self.request, 'Links berhasil disimpan!',
-                          extra_tags='success')
+        form.save()
+        messages.info(request, 'Profil berhasil disimpan!',
+                      extra_tags='success')
 
         return HttpResponseRedirect(reverse('account:profile'))
 
 
-class SettingsView(LoginRequiredMixin, View):
+class LinksFormView(LoginRequiredMixin, View):
+    def __render(self, request, form):
+        return render(request, 'account/form_links.html', {'form': form})
 
-    def __render(self, request, email_notification_form):
-        return render(request, 'account/settings.html', {
-            'email_notification_form': email_notification_form,
+    def get(self, request):
+        user = request.user
+        form = LinkForm(user, instance=user.get_link())
+        return self.__render(request, form)
+
+    def post(self, request):
+        user = request.user
+        form = LinkForm(user, request.POST, instance=user.get_link())
+        if not form.is_valid():
+            return self.__render(request, form)
+
+        form.save()
+        messages.info(request, 'Links berhasil disimpan!',
+                      extra_tags='success')
+
+        return HttpResponseRedirect(reverse('account:links'))
+
+
+class AuthenticationMethodFormView(LoginRequiredMixin, TemplateView):
+    template_name = 'account/form_auths.html'
+
+
+class NotificationFormView(LoginRequiredMixin, View):
+
+    def __render(self, request, form):
+        return render(request, 'account/form_notifications.html', {
+            'form': form,
         })
 
     def get(self, request):
         user = request.user
-        email_notification_form = StaffEmailNotificationSettings(
+        form = StaffEmailNotificationSettings(
             user) if user.is_staff else EmailNotificationSettings(user)
-        email_notification_form.load()
+        form.load()
 
-        return self.__render(request, email_notification_form)
+        return self.__render(request, form)
 
     def post(self, request):
         user = request.user
-        kind = request.POST.get('kind')
+        form = StaffEmailNotificationSettings(
+            user, request.POST) if user.is_staff else EmailNotificationSettings(user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.info(self.request, 'Pengaturan notifikasi berhasil disimpan!',
+                          extra_tags='success')
 
-        if kind == EmailNotificationSettings.NAME:
-            form = StaffEmailNotificationSettings(
-                user, request.POST) if user.is_staff else EmailNotificationSettings(user, request.POST)
-            if form.is_valid():
-                form.save()
-                messages.info(self.request, 'Pengaturan notifikasi berhasil disimpan!',
-                              extra_tags='success')
-
-        return HttpResponseRedirect(reverse('account:settings'))
+        return HttpResponseRedirect(reverse('account:notifications'))
 
 
 class ProStatusView(LoginRequiredMixin, View):
@@ -145,7 +147,7 @@ class ProStatusView(LoginRequiredMixin, View):
         purchases = ProAccessPurchase.objects \
             .filter(user=request.user)
 
-        return render(request, 'account/pro.html', {
+        return render(request, 'account/form_pro.html', {
             'selected_plan': selected_plan,
             'pro_access': pro_access,
             'purchases': purchases,

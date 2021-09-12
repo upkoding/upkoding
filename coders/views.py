@@ -61,18 +61,9 @@ class CoderDetail(DetailView):
         return valid_props
 
     def get_context_data(self, **kwargs):
-        """
-        Add `Link` to context
-        """
         data = super().get_context_data(**kwargs)
         data['links'] = self.__get_link_props()
-        data['current_projects'] = UserProject.objects \
+        data['user_projects'] = UserProject.objects \
             .select_related('user') \
-            .filter(user=self.object) \
-            .exclude(status=UserProject.STATUS_COMPLETE) \
-            .order_by('-updated')[:5]
-        data['completed_projects'] = UserProject.objects \
-            .select_related('user') \
-            .filter(user=self.object, status=UserProject.STATUS_COMPLETE) \
-            .order_by('-updated')[:5]
+            .filter(user=self.object)[:10]
         return data

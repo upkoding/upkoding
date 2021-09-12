@@ -1,0 +1,44 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='Dashboard' %}
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-bar navbar bg-white sticky-top">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+        </ol>
+    </nav>
+
+    <div class="dropdown">
+        <button class="btn btn-round" role="button" data-toggle="dropdown" aria-expanded="false">
+            <i class="material-icons">settings</i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="{% url 'account:profile' %}">Profil</a>
+            <a class="dropdown-item" href="{% url 'account:links' %}">Links</a>
+            <a class="dropdown-item" href="{% url 'account:auths' %}">Autentikasi</a>
+            <a class="dropdown-item" href="{% url 'account:pro' %}">Pro Access</a>
+            <a class="dropdown-item" href="{% url 'account:notifications' %}">Notifikasi</a>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col col-12 col-lg-6 mb-2">
+            {% include 'account/_projects_card.html' with projects=projects %}
+        </div>
+
+        <div class="col col-12 col-lg-6">
+            {% if projects_pending_review %}
+            {% include 'account/_pending_projects_card.html' with projects=projects_pending_review %}
+            {% endif %}
+
+            {% include 'account/_messages_card.html' with events=events %}
+        </div>
+    </div>
+</div>
+{% endblock %}

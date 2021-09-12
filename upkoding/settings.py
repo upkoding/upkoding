@@ -91,7 +91,7 @@ ROOT_URLCONF = 'upkoding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / '_templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -195,6 +195,10 @@ if not DEBUG:
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
+STATICFILES_DIRS = [
+    BASE_DIR / '_static/dist',
+]
+
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
 THUMBNAIL_FORCE_OVERWRITE = True
@@ -245,7 +249,7 @@ SITE_DOMAIN = os.getenv('SITE_DOMAIN')
 POINT_UNIT = 'UP'
 DEFAULT_METADATA = {
     'title': 'UpKoding',
-    'image': 'base/img/logo.png',
+    'image': 'assets/img/logo.png',
     'description': 'UpKoding adalah platform belajar pemrograman dengan format bite-sized learning, belajar materi secukupnya, langsung uji dan praktekkan.',
 }
 

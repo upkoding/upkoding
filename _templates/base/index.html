@@ -1,0 +1,228 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content%}
+<div class="breadcrumb-bar navbar bg-white sticky-top">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+        </ol>
+    </nav>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-9">
+            <section class="py-4 py-lg-5">
+                <div class="mb-3 d-flex">
+                    <img alt="Pipeline" src="{% static 'assets/img/logo.png' %}" class="avatar avatar-lg mr-1" />
+                    <div>
+                        <span class="badge badge-success">beta</span>
+                    </div>
+                </div>
+                <h1 class="display-4 mb-3">Belajar coding menyenangkan!</h1>
+                <p class="lead">
+                    UpKoding adalah platform belajar pemrograman dengan format <strong>bite-sized learning</strong>,
+                    belajar materi secukupnya, langsung uji dan praktekkan.
+                </p>
+            </section>
+            <section class="py-4 py-lg-5">
+                <div class="carousel slide carousel-fade mb-5" data-ride="carousel">
+                    <div class="carousel-inner overflow-visible">
+
+                        <div class="carousel-item shadow-lg active">
+                            <a href="pages-app.html">
+                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-team.png' %}"
+                                    class="img-fluid rounded border" />
+                            </a>
+                        </div>
+
+                        <div class="carousel-item shadow-lg ">
+                            <a href="pages-app.html">
+                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-project.png' %}"
+                                    class="img-fluid rounded border" />
+                            </a>
+                        </div>
+
+                        <div class="carousel-item shadow-lg ">
+                            <a href="pages-app.html">
+                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-task.png' %}"
+                                    class="img-fluid rounded border" />
+                            </a>
+                        </div>
+
+                        <div class="carousel-item shadow-lg ">
+                            <a href="pages-app.html">
+                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-kanban-board.png' %}"
+                                    class="img-fluid rounded border" />
+                            </a>
+                        </div>
+
+                        <div class="carousel-item shadow-lg ">
+                            <a href="pages-app.html">
+                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-chat.png' %}"
+                                    class="img-fluid rounded border" />
+                            </a>
+                        </div>
+
+                        <div class="carousel-item shadow-lg ">
+                            <a href="pages-app.html">
+                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-user.png' %}"
+                                    class="img-fluid rounded border" />
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-primary mr-3 h1">supervised_user_circle</i>
+                    <h2 class="h1 mb-0">Project Management Pages</h2>
+                </div>
+                <p class="lead">
+                    Pipeline makes building project management interfaces simple with pages for teams,
+                    projects, tasks, kanban boards and more.
+                </p>
+                <a href="pages-app.html" class="mr-3">App Pages</a><a href="pages-utility.html" class="mr-3">Utility
+                    Pages</a>
+            </section>
+            <section class="py-4 py-lg-5">
+                <div class="row mb-5">
+                    <div class="carousel slide carousel-fade col-6" data-ride="carousel">
+                        <div class="carousel-inner overflow-visible">
+
+                            <div class="carousel-item shadow-lg active">
+                                <img alt="Image" src="{% static 'assets/img/components/activity.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/avatar.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/avatar-list.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/card-kanban.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/card-note.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/card-project.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="carousel slide carousel-fade col-6" data-ride="carousel">
+                        <div class="carousel-inner overflow-visible">
+
+                            <div class="carousel-item shadow-lg active">
+                                <img alt="Image" src="{% static 'assets/img/components/card-team.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/card-task.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/card-list.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/chat-item.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/chat-module.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                            <div class="carousel-item shadow-lg ">
+                                <img alt="Image" src="{% static 'assets/img/components/checklist.png' %}"
+                                    class="img-fluid rounded border" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-primary mr-3 h1">widgets</i>
+                    <h2 class="h1 mb-0">Modular Components</h2>
+                </div>
+                <p class="lead">
+                    Build feature-rich pages with everything Bootstrap 4.5.2 has to offer and extend
+                    functionality with Pipeline's suite of stylish custom components.
+                </p>
+                <a href="components-pipeline.html" class="mr-3">Pipeline Components</a><a
+                    href="components-bootstrap.html" class="mr-3">Bootstrap Components</a>
+            </section>
+            <section class="py-4 py-lg-5">
+                <div class="row mb-5">
+                    <div class="col-4">
+                        <img alt="Image" src="{% static 'assets/img/layouts/layout-nav-side.svg' %}"
+                            class="shadow-lg img-fluid" style="border-radius:.75rem" />
+                    </div>
+                    <div class="col-4">
+                        <img alt="Image" src="{% static 'assets/img/layouts/layout-nav-top.svg' %}"
+                            class="shadow-lg img-fluid" style="border-radius:.75rem" />
+                    </div>
+                    <div class="col-4">
+                        <img alt="Image" src="{% static 'assets/img/layouts/layout-nav-top-sidebar.svg' %}"
+                            class="shadow-lg img-fluid" style="border-radius:.75rem" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-primary mr-3 h1">view_quilt</i>
+                    <h2 class="h1 mb-0">Flexible Layouts</h2>
+                </div>
+                <p class="lead">
+                    Pipeline offers three distinct layouts to suit a variety of content types. Layouts are
+                    fully responsive and scale elegantally for different devices and screen sizes.
+                </p>
+                <a href="pages-layouts.html">Explore Layouts</a>
+            </section>
+            <section class="py-4 py-lg-5">
+                <div class="row mb-5">
+                    <div class="col-3">
+                        <img alt="Bootstrap" src="{% static 'assets/img/logo-bootstrap.svg' %}"
+                            class="img-fluid rounded shadow-lg" />
+                    </div>
+                    <div class="col-3">
+                        <img alt="Gulp" src="{% static 'assets/img/logo-gulp.svg' %}"
+                            class="img-fluid rounded shadow-lg" />
+                    </div>
+                    <div class="col-3">
+                        <img alt="SASS" src="{% static 'assets/img/logo-sass.svg' %}"
+                            class="img-fluid rounded shadow-lg" />
+                    </div>
+                    <div class="col-3">
+                        <img alt="NPM" src="{% static 'assets/img/logo-npm.svg' %}"
+                            class="img-fluid rounded shadow-lg" />
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-primary mr-3 h1">build</i>
+                    <h2 class="h1 mb-0">Familiar Tooling</h2>
+                </div>
+                <p class="lead">
+                    Pipeline employs industry-standard development tools with an intuitive workflow designed
+                    to get you up and runnning faster.
+                </p>
+                <a href="../documentation/index.html" class="mr-3">View Documentation</a>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

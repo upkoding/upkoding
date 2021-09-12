@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+
+{% load markdownify %}
+{% load sorl_thumbnail %}
+{% load base %}
+
+{% block meta %}{% meta object=object %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-9 col-lg-10">
+            <div class="page-header mb-4">
+                <div class="media">
+                    {{ object|avatar_img:75 }}
+                    <div class="media-body ml-3">
+                        <h1 class="mb-0">{{ object.get_display_name|title }}</h1>
+                        <p class="lead">
+                            @{{ object.username }}
+                            {% if object.point > 0 %}
+                            <span class="badge badge-secondary">
+                                {{ object.get_point_display }}
+                            </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane active">
+                    <div class="content-list">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if object.description %}
+                                {{ object.description|markdownify }}
+                                {% else %}
+                                <p>Belum ada info pengguna.</p>
+                                {% endif %}
+
+                                {% if links %}
+                                <ul class="list-group mt-4 list-group-flush links">
+                                    {% for link in links %}
+                                    <li class="list-group-item pl-0 pl-0">
+                                        <a href="{{ link.url }}" target="_blank">
+                                            <i class="material-icons-x mr-1">link</i>
+                                            {{ link.label }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if user_projects %}
+                    <div class="content-list mt-4">
+                        <div class="row content-list-head">
+                            <div class="col-auto">
+                                <h3>Tantangan</h3>
+                            </div>
+                        </div>
+                        <div class="content-list-body row">
+                            {% for user_project in user_projects %}
+                            <div class="col-lg-6">
+                                {% include 'coders/_user_project.html' with user_project=user_project %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'account/base.html' %}
+{% load base %}
+{% load humanize %}
+
+{% block meta %}
+{% meta title='UpKoding Pro Access' desc='UpKoding Pro Access'%}
+{% endblock %}
+
+{% block breadcrumb %}Pro Access{% endblock %}
+
+{% block form %}
+<div class="row justify-content-center">
+    <div class="col col-lg-12 text-center">
+        {% if pro_access %}
+        <div>
+            {% if pro_access.is_active %}
+            <h4 class="text-success"><i class="material-icons-x">sentiment_very_satisfied</i> Kamu memiliki Pro Access!</h4>
+            {% else %}
+            <h4 class="text-danger"><i class="material-icons-x">sentiment_dissatisfied</i> Pro Access kadaluarsa.</h4>
+            {% endif %}
+        </div>
+
+        <p class="card-text"><strong>Berlaku sampai: {{ pro_access.end }}</strong></p>
+        <p class="card-text text-muted mt-4 mb-2">Perpanjang dengan memilih durasi di bawah ini:</p>
+
+        {% else %}
+        <h4 class="card-title text-danger"><i class="material-icons-x">heart_broken</i> Kamu tidak memiliki Pro Access.</h4>
+        <p class="card-text text-muted mt-4 mb-2">Pilih durasi akses yang kamu inginkan:</p>
+        {% endif %}
+    </div>
+
+    <div class="col col-lg-12 text-center">
+        <form method="POST">
+            <div class="input-group">
+                {% csrf_token %}
+                <select class="custom-select" aria-label="Pilih durasi akses" name="plan_id">
+                    {% for plan in plans %}
+                    <option value="{{plan.id}}" {% if plan.id == selected_plan %} selected {% endif %}>
+                        {{plan.label}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <div class="input-group-append">
+                    <input type="submit" class="btn btn-primary"
+                        value="{% if pro_access %}Perpanjang{% else %}Beli{% endif %}" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block form2 %}
+{% if purchases %}
+<div class="card mt-3">
+    <div class="card-header">
+        <i class="bi bi-clock-history mr-2"></i>Riwayat Pembelian
+    </div>
+    <ol class="list-group list-group-flush">
+        {% for purchase in purchases %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div>
+                <div><strong>{{ purchase.plan_name }}</strong></div>
+                <small>Rp. {{ purchase.price|intcomma }} / {{ purchase.created }}
+                    <span class="badge badge-{{purchase.status_color}} ml-1">{{ purchase.status_label }}</span>
+
+                    {% if purchase.review_required %}
+                    <span class="badge badge-dark">under review</span>
+                    {% endif %}
+
+                    {% if purchase.is_payment_pending %}
+                    <span class="text-muted ms-1"><i class="bi bi-question-circle"></i>
+                        Silahkan cek email kamu untuk detail dan cara pembayaran.
+                    </span>
+                    {% endif %}
+                </small>
+            </div>
+
+            {% if purchase.can_pay %}
+            <span class="mt-2">
+                <form action="{% url 'account:pro_purchase_cancel' %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="purchase_id" value="{{purchase.id}}" />
+                    <input type="hidden" name="purchase_action" value="cancel" />
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Batal</button>
+                </form>
+                <form action="{% url 'account:pro_purchase_payment' %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="purchase_id" value="{{purchase.id}}" />
+                    <input type="hidden" name="purchase_action" value="pay" />
+                    <button class="btn btn-sm btn-success ms-1" type="submit">
+                        Pembayaran
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </form>
+            </span>
+            {% endif %}
+
+        </li>
+        {% endfor %}
+    </ol>
+</div>
+{% endif %}
+{% endblock %}

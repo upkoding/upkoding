@@ -1,0 +1,13 @@
+{% load base %}
+<div class="form-group row align-items-center">
+    <label class="col-3" for="id_{{ field.name }}">{{ field.label }}</label>
+    <div class="col">
+        {{ field|input_class:'form-control' }}
+        {% if field.help_text %}
+        <small>{{ field.help_text }}</small>
+        {% endif %}
+        <div class="invalid-feedback">
+            {{ field.errors }}
+        </div>
+    </div>
+</div>

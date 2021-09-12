@@ -1,0 +1,22 @@
+{% extends 'account/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='Pengaturan Notifikasi' %}
+{% endblock %}
+
+{% block breadcrumb %}Pengaturan Notifikasi{% endblock %}
+
+{% block form %}
+<form method="POST">
+    <p class="text-muted h6 mb-3"><i class="bi bi-envelope mr-1"></i> Kirimkan notifikasi via email tentang:</p>
+    <div>
+        {% csrf_token %}
+        {% for field in form.visible_fields %}
+        {% include 'base/form/_checkbox.html' with field=field classes='mb-3' %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary mt-3">Simpan</button>
+    </div>
+</form>
+
+{% endblock %}

@@ -130,3 +130,4 @@ upkoding-sa.json
 .pyre/
 
 media
+.DS_Store

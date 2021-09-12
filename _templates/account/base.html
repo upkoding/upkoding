@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block content %}
+<div class="breadcrumb-bar navbar bg-white sticky-top">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'account:index' %}">Dashbord</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% block breadcrumb %}{% endblock %}</li>
+        </ol>
+    </nav>
+</div>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-3 mb-3">
+            <ul class="nav nav-tabs flex-lg-column" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link {% active_class '/account/profile/' %}"
+                        href="{% url 'account:profile' %}">Profil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% active_class '/account/links/' %}" href="{% url 'account:links' %}">Links</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% active_class '/account/auths/' %}"
+                        href="{% url 'account:auths' %}">Autentikasi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% active_class '/account/pro/' %}" href="{% url 'account:pro' %}">Pro Access</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% active_class '/account/notifications/' %}"
+                        href="{% url 'account:notifications' %}">Notifikasi</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xl-8 col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row justify-content-md-center">
+                        <div class="col col-lg-12 right text-center">
+                            {% include 'base/_messages.html' %}
+                        </div>
+                    </div>
+                    {% block form %}{% endblock %}
+                </div>
+            </div>
+            {% block form2 %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
