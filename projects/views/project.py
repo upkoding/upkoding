@@ -16,7 +16,7 @@ from projects.models import Project, UserProject, UserProjectEvent
 
 
 class ProjectList(ListView):
-    paginate_by = 12
+    paginate_by = 15
 
     def get_queryset(self):
         search_query = self.request.GET.get('s')

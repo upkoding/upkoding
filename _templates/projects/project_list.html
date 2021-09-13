@@ -6,66 +6,70 @@
 {% block meta %}
 {% meta title='Tantangan Pemrograman' desc='Latih keahlian kamu memecahkan masalah pemrograman dengan menyelesaikan setiap tantangan-tantangan berikut ini.'%}
 {% endblock %}
-{% block header_mb %}mb-5{% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="row justify-content-md-center text-center mb-5">
-        <div class="col col-lg-8">
-            <h1 class="display-6">Tantangan</h1>
-            <p class="lead mt-3 mb-4">Practice makes perfect! Latih
-                keahlian kamu memecahkan masalah pemrograman dengan menyelesaikan setiap tantangan-tantangan berikut
-                ini.</p>
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <h1>Tantangan</h1>
+                <p class="lead">Practice makes perfect! Latih
+                    keahlian kamu memecahkan masalah pemrograman dengan menyelesaikan setiap tantangan-tantangan berikut
+                    ini.
+                </p>
+            </div>
+            <div>
+                <form method="GET" action="{% url 'projects:list' %}">
+                    <input name="s" {% if search_query %}value="{{ search_query }}" {% endif %}
+                        class="form-control form-control-lg" type="text" placeholder="Cari tantangan..."
+                        aria-label="Cari Tantangan">
+                </form>
+                <div class="mt-2">
+                    <span class="text-muted mr-1">Topic populer:</span>
+                    <a href="{% url 'projects:list' %}?s=javascript"><span class="badge badge-info">javascript</span></a>
+                    <a href="{% url 'projects:list' %}?s=python"><span class="badge badge-info">python</span></a>
+                    <a href="{% url 'projects:list' %}?s=golang"><span class="badge badge-info">golang</span></a>
+                    <a href="{% url 'projects:list' %}?s=ruby"><span class="badge badge-info">ruby</span></a>
+                    <a href="{% url 'projects:list' %}?s=algoritma"><span class="badge badge-info">algoritma</span></a>
+                    <a href="{% url 'projects:list' %}?s=proyek"><span class="badge badge-info">proyek</span></a>
+                </div>
 
-            <form method="GET" action="{% url 'projects:list' %}">
-                <input name="s" {% if search_query %}value="{{ search_query }}" {% endif %}
-                    class="form-control form-control-lg" type="text" placeholder="Cari tantangan..."
-                    aria-label="Cari Tantangan">
-            </form>
+                <hr/>
 
-            <div class="mt-3">
-                <span class="text-muted">Topic populer:</span>
-                <a href="{% url 'projects:list' %}?s=javascript"><span class="badge bg-primary">javascript</span></a>
-                <a href="{% url 'projects:list' %}?s=python"><span class="badge bg-primary">python</span></a>
-                <a href="{% url 'projects:list' %}?s=golang"><span class="badge bg-primary">golang</span></a>
-                <a href="{% url 'projects:list' %}?s=ruby"><span class="badge bg-primary">ruby</span></a>
-                <a href="{% url 'projects:list' %}?s=algoritma"><span class="badge bg-primary">algoritma</span></a>
-                <a href="{% url 'projects:list' %}?s=proyek"><span class="badge bg-primary">proyek</span></a>
+                {% if featured_projects %}
+                <h6 class="section-title mb-3 text-muted text-upper">FEATURED</h6>
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mb-5">
+                    {% for project in featured_projects %}
+                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            
+                {% if search_query %}
+                <h6 class="section-title mb-3 text-muted text-upper text-center">
+                    {% if page_obj %}
+                    HASIL PENCARIAN `{{ search_query|upper }}`
+                    {% else %}
+                    TANTANGAN TIDAK DITEMUKAN!
+                    {% endif %}
+                </h6>
+                {% else %}
+                <h6 class="section-title mb-3 text-muted text-upper">SEMUA TANTANGAN</h6>
+                {% endif %}
+            
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
+                    {% if object_list %}
+                    {% for project in object_list %}
+                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-sm' %}
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            
+                {% if page_obj %}
+                {% include 'base/_pagination.html' with page_obj=page_obj search_query=search_query %}
+                {% endif %}
             </div>
         </div>
     </div>
-
-    {% if featured_projects %}
-    <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">FEATURED</h6>
-    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mb-5">
-        {% for project in featured_projects %}
-        {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if search_query %}
-    <h6 class="section-title mb-4 text-muted text-upper text-center" style="color: #999 !important;">
-        {% if page_obj %}
-        HASIL PENCARIAN `{{ search_query|upper }}`
-        {% else %}
-        TANTANGAN TIDAK DITEMUKAN!
-        {% endif %}
-    </h6>
-    {% else %}
-    <h6 class="section-title mb-4 text-muted text-upper" style="color: #999 !important;">SEMUA TANTANGAN</h6>
-    {% endif %}
-
-    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
-        {% if object_list %}
-        {% for project in object_list %}
-        {% include 'projects/_project_list_item.html' with project=project classes='shadow-sm' %}
-        {% endfor %}
-        {% endif %}
-    </div>
-
-    {% if page_obj %}
-    {% include 'base/_pagination.html' with page_obj=page_obj search_query=search_query %}
-    {% endif %}
 </div>
 {% endblock %}

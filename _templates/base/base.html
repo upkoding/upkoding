@@ -5,11 +5,10 @@
 
 <head>
     {% block meta %}{% meta %}{% endblock %}
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/favicon/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/img/favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/img/favicon/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'assets/img/favicon/site.webmanifest' %}">
-    <link rel="mask-icon" href="{% static 'assets/img/favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'assets/favicon/site.webmanifest' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.13.0/devicon.min.css">
@@ -32,7 +31,7 @@
         <div class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
 
             <a class="navbar-brand" href="{% url 'base:index' %}">
-                <img alt="Pipeline" src="{% static 'assets/img/logo.png' %}" class="avatar avatar-lg" />
+                <img alt="Pipeline" src="{% static 'assets/img/logo-white.png' %}" class="avatar avatar-lg" />
             </a>
 
             <div class="d-flex align-items-center">
@@ -135,20 +134,26 @@
     <script type="text/javascript" src="{% static 'assets/js/bootstrap.js' %}"></script>
 
     <!-- Optional Vendor Scripts (Remove the plugin script here and comment initializer script out of index.js if site does not use that feature) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"
+        integrity="sha512-axJX7DJduStuBB8ePC8ryGzacZPr3rdLaIDZitiEgWWk2gsXxEFlm4UW0iNzj2h3wp5mOylgHAzBzM4nRSvTZA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"
+        integrity="sha512-xCfKr8zIONbip3Q1XG/u5x40hoJ0/DtP1bxyMEi0GWzUFoUffE+Dfw1Br8j55RRt9qG7bGKsh+4tSb1CvFHPSA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Autosize - resizes textarea inputs as user types -->
-    <script type="text/javascript" src="{% static 'assets/js/autosize.min.js' %}"></script>
+    <!-- <script type="text/javascript" src="{% static 'assets/js/autosize.min.js' %}"></script> -->
     <!-- Flatpickr (calendar/date/time picker UI) -->
-    <script type="text/javascript" src="{% static 'assets/js/flatpickr.min.js' %}"></script>
+    <!-- <script type="text/javascript" src="{% static 'assets/js/flatpickr.min.js' %}"></script> -->
     <!-- Prism - displays formatted code boxes -->
-    <script type="text/javascript" src="{% static 'assets/js/prism.js' %}"></script>
+    <!-- <script type="text/javascript" src="{% static 'assets/js/prism.js' %}"></script> -->
     <!-- Shopify Draggable - drag, drop and sort items on page -->
-    <script type="text/javascript" src="{% static 'assets/js/draggable.bundle.legacy.js' %}"></script>
-    <script type="text/javascript" src="{% static 'assets/js/swap-animation.js"></script>
+    <!-- <script type="text/javascript" src="{% static 'assets/js/draggable.bundle.legacy.js' %}"></script> -->
+    <!-- <script type="text/javascript" src="{% static 'assets/js/swap-animation.js"></script> -->
     <!-- Dropzone - drag and drop files onto the page for uploading -->
-    <script type="text/javascript" src="{% static 'assets/js/dropzone.min.js' %}"></script>
+    <!-- <script type="text/javascript" src="{% static 'assets/js/dropzone.min.js' %}"></script> -->
     <!-- List.js - filter list elements -->
-    <script type="text/javascript" src="{% static 'assets/js/list.min.js' %}"></script>
+    <!-- <script type="text/javascript" src="{% static 'assets/js/list.min.js' %}"></script> -->
 
     <!-- Required theme scripts (Do not remove) -->
     <script type="text/javascript" src="{% static 'assets/js/theme.js' %}"></script>

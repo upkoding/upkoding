@@ -121,6 +121,15 @@ class Project(models.Model):
     def __str__(self, *args, **kwargs):
         return self.title
 
+    def get_level_color(self):
+        colors = {
+            self.LEVEL_NONE: 'secondary',
+            self.LEVEL_EASY:  'success',
+            self.LEVEL_MEDIUM: 'warning',
+            self.LEVEL_HARD: 'danger',
+        }
+        return colors.get(self.level)
+
     def save(self, *args, **kwargs):
         # set slug
         if not self.slug:

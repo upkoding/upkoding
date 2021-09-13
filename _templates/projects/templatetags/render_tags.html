@@ -1,9 +1,7 @@
 {% if tags %}
-<div class="tags">
-    {% for tag in tags %}
-    <a href="{% url 'projects:list' %}?s={{ tag }}">
-        <span class="badge bg-{{ color }}">{{ tag }}</span>
-    </a>
-    {% endfor %}
-</div>
+{% for tag in tags %}
+<a href="{% url 'projects:list' %}?s={{ tag }}">
+    <span class="badge badge-{{ color }}">{{ tag }}</span>
+</a>
+{% endfor %}
 {% endif %}

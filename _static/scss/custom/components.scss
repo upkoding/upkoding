@@ -44,6 +44,7 @@
 // These partials can be included and excluded as required
 
 @import "components/component-list";
-@import "CSS:components/plugins/prism";
+// @import "CSS:components/plugins/prism";
+@import "CSS:components/plugins/prism-okaidia";
 @import "CSS:components/plugins/inter-ui";
 @import "components/ie11";

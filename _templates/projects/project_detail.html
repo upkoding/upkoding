@@ -2,47 +2,79 @@
 
 {% load base %}
 {% load markdownify %}
+{% load humanize %}
 {% load projects %}
 
 {% block meta %}{% meta object=object %}{% endblock %}
 
 {% block content %}
-<div class="project-detail">
-    {% include 'projects/_project_header.html' with project=object user_project=None %}
+<div class="breadcrumb-bar navbar bg-white sticky-top">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Tantangan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}</li>
+        </ol>
+    </nav>
 
-    <div class="row mt-5 content">
+    <div class="dropdown">
+        <button class="btn btn-primary">
+            Kerjakan <i class="material-icons-x">play_arrow</i>
+        </button>
+    </div>
+</div>
 
-        {% with codeblock=object.codeblock %}
-        <div class="col col-12 col-lg-8">
-            {% include 'base/_messages.html' with closable=True %}
-            
-            {% if not codeblock %}
-            <h3 class="section-title mb-3"><i class="bi bi-list-task me-2"></i>Requirements</h3>
-            <div class="mb-5">
-                {% render_requirements object %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <h1>{{ object.title|title }}</h1>
+                <p class="lead">{{ object.description_short }}</p>
             </div>
-            {% endif %}
 
-            <div>
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        {% include 'projects/_project_images.html' with images=project.images.all %}
+            <ul class="nav nav-tabs nav-fill mb-3" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" href="" aria-selected="true">Tantangan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="" aria-selected="false">Statistik</a>
+                </li>
+            </ul>
 
-                        <p class="lead mb-4" style="font-size: 18px; color: rgba(0, 0, 0, 0.7); font-weight: 300;">
-                            {{ object.description_short }}
-                        </p>
-                        {{ object.description|markdownify }}
-                    </div>
+            {% include 'base/_messages.html' with closable=True %}
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {% include 'projects/_project_images.html' with images=project.images.all %}
+                    {{ object.description|markdownify }}
                 </div>
             </div>
 
+            {% with codeblock=object.codeblock %}
             {% if codeblock %}
             {% render_codeblock_readonly object %}
             {% endif %}
+            {% endwith %}
+
+            <div class="d-flex justify-content-between text-small mt-3">
+                <div class="d-flex align-items-center">
+                    <span>Diposting oleh
+                        <a href="{{ object.user.get_absolute_url }}">
+                            {{ object.user.get_display_name}}
+                        </a>
+                        pada {{ object.created|naturalday }}
+                    </span>
+                </div>
+                <span>
+                    {% render_tags object 'secondary' %}
+                </span>
+            </div>
 
         </div>
-        {% endwith %}
+    </div>
+</div>
 
+<!-- <div class="project-detail">
+    <div class="row mt-5 content">
         <div class="col col-12 col-lg-4 ps-lg-4">
             {% include 'projects/_project_stats.html' %}
 
@@ -50,9 +82,7 @@
             {% render_inprogress_projects object %}
             <h3 class="section-title mt-5 mb-3">Berhasil Menyelesaikan ({{ object.completed_count }})</h3>
             {% render_completed_projects object %}
-            <h3 class="section-title mt-5 mb-3">Tags</h3>
-            {% render_tags object 'secondary' %}
         </div>
     </div>
-</div>
+</div> -->
 {% endblock %}

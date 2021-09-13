@@ -31,25 +31,25 @@
                                 <tr>
                                     <th scope="row" class="text-start">Kelas gratis <span class="badge badge-warning">Coming
                                             Soon!</span></th>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Kelas premium <span
                                             class="badge badge-warning">Coming
                                             Soon!</span></th>
                                     <td><i class="material-icons text-secondary">not_interested</td>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Tantangan gratis</th>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Tantangan premium</th>
                                     <td><i class="material-icons text-secondary">not_interested</td>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-start">Submit kode solusi tantangan</th>
@@ -59,12 +59,12 @@
                                 <tr>
                                     <th scope="row" class="text-start">Lihat solusi dari peserta lainnya</th>
                                     <td><i class="material-icons text-secondary">not_interested</td>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
                                 </tr>
                                 <!-- <tr>
                                     <th scope="row" class="text-start">Diskusi via Discord</th>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
-                                    <td><i class="material-icons text-success">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
+                                    <td><i class="material-icons text-info">check_circle</i></td>
                                 </tr> -->
                             </tbody>
                         </table>
@@ -75,8 +75,8 @@
             <div class="row row-cols-1 row-cols-md-2 mb-3 text-center">
                 {% for plan in plans %}
                 <div class="col">
-                    <div class="card mb-4 rounded-3 {% if plan.id == 'PRO90' %}border-success{% endif %}">
-                        <div class="card-header py-3 {% if plan.id == 'PRO90' %} bg-success border-success{% endif %}">
+                    <div class="card mb-4 rounded-3 {% if plan.id == 'PRO90' %}border-info{% endif %}">
+                        <div class="card-header py-3 {% if plan.id == 'PRO90' %} bg-info border-info{% endif %}">
                             <h4 class="my-0 fw-normal">{{plan.name}}</h4>
                         </div>
                         <div class="card-body">
@@ -85,7 +85,7 @@
                                 <li class="text-muted">{{ plan.description }}</li>
                             </ul>
                             <a href="{% url 'account:pro' %}?plan={{plan.id}}"
-                                class="w-100 btn btn-lg {% if plan.id == 'PRO90' %}btn-success{% else %}btn-outline-success{% endif %}">Mulai
+                                class="w-100 btn btn-lg {% if plan.id == 'PRO90' %}btn-info{% else %}btn-outline-info{% endif %}">Mulai
                                 Sekarang</a>
                         </div>
                     </div>

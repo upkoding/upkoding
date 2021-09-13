@@ -3,32 +3,37 @@
 {% load humanize %}
 <div class="col col-12">
     <div class="card h-100 {{ classes }}">
-        <span class="badge bg-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99; font-weight: 400;">
-            <i class="bi bi-person-fill"></i> {{ project.taken_count|intcomma }}
+        <span class="badge badge-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99;">
+            <i class="material-icons-x">person</i> {{ project.taken_count|intcomma }}
         </span>
-        <span class="badge {% if project.is_premium %}bg-warning{% else %}bg-success{% endif %}" style="position: absolute; top: 10px; right: 10px; z-index: 99;">
-            {{ project.get_point_display|upper }}
+        <span class="badge badge-{{ project.get_level_color }}"
+            style="position: absolute; top: 10px; right: 10px; z-index: 99;">
+            {{ project.get_level_display }}
         </span>
 
-        <a href="{{ project.get_absolute_url }}" class="link-card" title="{{ project.title|title }}{% if project.is_premium %} (PRO){% endif %}">
-            {% thumbnail project.cover "640x360" crop="center" as im %}
-            <img src="{{ im.url }}" class="card-img-top ratio ratio-16x9">
+        <a href="{{ project.get_absolute_url }}" class="link-card"
+            title="{{ project.title|title }}{% if project.is_premium %} (PRO){% endif %}">
+            {% thumbnail project.cover "640x274" crop="center" as im %}
+            <img src="{{ im.url }}" class="card-img-top">
             {% endthumbnail %}
             <div class="card-body">
                 {% with codeblock=project.codeblock %}
-                <h5 class="card-title" style="font-size: 1.05rem; color: #333 !important;">
-                    {% if codeblock %}
+                <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
+                    <!-- {% if codeblock %}
                     <i class="devicon-{{codeblock.get_language_display}}-plain"></i>
-                    {% endif %}
-                    {{ project.title|title }}
+                    {% endif %} -->
+                    {{ project.title|title }} with linger title that good
                 </h5>
+                <div style="opacity: 0.6;">
+                    {% if project.is_premium %}
+                    <a href="{% url 'projects:list' %}?s=pro">
+                        <span class="badge badge-secondary">pro</span>
+                    </a>
+                    {% endif %}
+                    {% render_tags project 'secondary' %}
+                </div>
                 {% endwith %}
-                <p class="card-text"
-                    style="color: #888 !important; line-height: 1.3em; font-size: 0.9rem;font-weight: 300;">
-                    {{ project.description_short|truncatechars:65 }}
-                </p>
             </div>
         </a>
-        <div class="pt-0 pe-3 ps-3 pb-3" style="opacity: 0.6;">{% render_tags project 'secondary' %}</div>
     </div>
 </div>
