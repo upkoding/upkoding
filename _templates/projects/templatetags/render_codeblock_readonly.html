@@ -2,23 +2,27 @@
 {% load markdownify %}
 <div class="card mt-3">
     <div class="card-header">
-        <i class="devicon-{{codeblock.get_language_display}}-plain"></i> Lengkapi kode di bawah ini
+        <i class="devicon-{{codeblock.get_language_display}}-plain mr-1"></i> <strong>Lengkapi kode di bawah
+            ini</strong>
     </div>
     <div>
         <pre><code class="language-{{codeblock.get_language_display}}">{{ source_code }}</code></pre>
     </div>
-    
+
     {% if codeblock.expected_output %}
-    <div class="alert alert-light rounded-0 border-0 mb-0" role="alert" x-show="run_error">
-        <h6 class="alert-heading">Output yang diharapkan</h6>
-        <pre><code>{{ codeblock.expected_output }}</code></pre>
+    <div class="alert alert-primary rounded-0 border-0 m-0 p-3" role="alert" x-show="run_error">
+        <div><i class="material-icons-x mr-1">info</i>Buatlah program diatas menghasilkan output:</div>
+        <pre class="rounded mt-1"><code class="language-bash">{{ codeblock.expected_output }}</code></pre>
+    </div>
+    {% else %}
+    <div class="alert alert-primary rounded-0 border-0 m-0 p-3" role="alert" x-show="run_error">
+        <p><i class="material-icons-x mr-1">info</i>Buatlah program diatas berjalan tanpa error.</p>
     </div>
     {% endif %}
 
     {% if completed %}
-    <div class="alert alert-success d-flex rounded-0 border-0 mb-0" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        <div>Tantangan ini berhasil diselesaikan!</div>
+    <div class="alert alert-success d-flex rounded-0 border-0 mb-0 p-3" role="alert">
+        <strong><i class="material-icons-x mr-1">check_circle</i>Tantangan ini berhasil diselesaikan!</strong>
     </div>
     {% endif %}
 
