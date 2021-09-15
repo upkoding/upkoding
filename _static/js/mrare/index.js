@@ -6,6 +6,7 @@
 // import mrKanban from './kanban';
 // import './prism';
 import mrUtil from './util';
+import lightbox from './lightbox';
 
 (() => {
   if (typeof $ === 'undefined') {
@@ -17,5 +18,6 @@ export {
   // mrFilterList,
   // mrFlatpickr,
   // mrKanban,
+  lightbox,
   mrUtil,
 };

@@ -45,10 +45,6 @@
    from: "node_modules/prismjs"
    to: "pages/assets/js"
 - 
-   files: "prism.css"
-   from: "node_modules/prismjs/themes"
-   to: "scss/custom/components/plugins"
-- 
    files: "prism-okaidia.css"
    from: "node_modules/prismjs/themes"
    to: "scss/custom/components/plugins"
@@ -56,3 +52,7 @@
    files: "swap-animation.js"
    from: "node_modules/@shopify/draggable/lib/plugins"
    to: "pages/assets/js"
+- 
+   files: "simpleLightbox.css"
+   from: "node_modules/simple-lightbox/dist/"
+   to: "scss/custom/components/plugins"

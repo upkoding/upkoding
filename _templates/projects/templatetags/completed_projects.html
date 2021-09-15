@@ -1,34 +1,51 @@
 {% load base %}
-<div class="user-progress">
-    {% if items %}
-    {% for item in items %}
-    <a href="{{ item.get_absolute_url }}">
-        <div class="card">
-            <div class="card-body">
-                <h6 class="card-title">
-                    {% with u=item.user %}
-                    <img src="{{ u|avatar_url:40 }}" height="20" width="20" class="rounded-circle" alt="avatar" />
-                    {{ u.username }}
-                    <small>
-                        (+{{ item.get_point_display }})
-                    </small>
-                    {% endwith %}
-                </h6>
-                <div class="progress" style="height: 3px; margin-left: 36px;">
-                    <div class="progress-bar progress-bar-striped bg-{{ item.get_color_class }}" role="progressbar"
-                        style="width: {{ item.requirements_completed_percent|safe }}%"
-                        aria-valuenow="{{ item.requirements_completed_percent|safe }}" aria-valuemin="0"
-                        aria-valuemax="100"></div>
+{% if items %}
+<div class="card">
+    <div class="list-group list-group-flush mb-0">
+        {% for item in items %}
+        <a class="list-group-item list-group-item-action" href="{{ item.get_absolute_url }}">
+            <div class="media media-member mb-0">
+                {% with u=item.user %}
+                <img alt="{{ u.username }}" src="{{ u|avatar_url:32 }}" class="avatar" />
+                <div class="media-body">
+                    <h6 class="mb-0" data-filter-by="text">{{ u.get_display_name }}</h6>
+                    <span data-filter-by="text" class="text-muted">{{ u.username }}</span>
                 </div>
+                <i class="material-icons text-success">check_circle</i>
+                {% endwith %}
             </div>
-        </div>
-    </a>
-    {% endfor %}
-    {% else %}
-    <div class="card text-center">
-        <div class="card-body">
-            <p class="card-text" style="color: grey;">Belum ada yang menyelesaikan.</p>
-        </div>
+        </a>
+        <a class="list-group-item list-group-item-action" href="{{ item.get_absolute_url }}">
+            <div class="media media-member mb-0">
+                {% with u=item.user %}
+                <img alt="{{ u.username }}" src="{{ u|avatar_url:32 }}" class="avatar" />
+                <div class="media-body">
+                    <h6 class="mb-0" data-filter-by="text">{{ u.get_display_name }}</h6>
+                    <span data-filter-by="text" class="text-muted">{{ u.username }}</span>
+                </div>
+                <i class="material-icons text-success">check_circle</i>
+                {% endwith %}
+            </div>
+        </a>
+        <a class="list-group-item list-group-item-action" href="{{ item.get_absolute_url }}">
+            <div class="media media-member mb-0">
+                {% with u=item.user %}
+                <img alt="{{ u.username }}" src="{{ u|avatar_url:32 }}" class="avatar" />
+                <div class="media-body">
+                    <h6 class="mb-0" data-filter-by="text">{{ u.get_display_name }}</h6>
+                    <span data-filter-by="text" class="text-muted">{{ u.username }}</span>
+                </div>
+                <i class="material-icons text-secondary">av_timer</i>
+                {% endwith %}
+            </div>
+        </a>
+        {% endfor %}
     </div>
-    {% endif %}
 </div>
+{% else %}
+<div class="card text-center">
+    <div class="card-body">
+        <p class="card-text text-muted">Belum ada yang menyelesaikan.</p>
+    </div>
+</div>
+{% endif %}

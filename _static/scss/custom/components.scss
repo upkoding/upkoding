@@ -1,9 +1,8 @@
-// 
-// 
+//
+//
 // components.scss
 //
 //
-
 
 // Required Components
 //
@@ -37,14 +36,14 @@
 @import "components/tooltips";
 @import "components/type";
 @import "components/utilities";
-
+@import "components/upkoding/challenge";
 
 // Optional Components
 //
 // These partials can be included and excluded as required
 
 @import "components/component-list";
-// @import "CSS:components/plugins/prism";
-@import "CSS:components/plugins/prism-okaidia";
+@import "CSS:components/plugins/prism-upkoding";
 @import "CSS:components/plugins/inter-ui";
+@import "CSS:components/plugins/simpleLightbox";
 @import "components/ie11";

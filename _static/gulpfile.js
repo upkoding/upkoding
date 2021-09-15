@@ -236,7 +236,7 @@ gulp.task('mrarejs', async (done) => {
     .pipe(eslint())
     .pipe(eslint.format());
 
-  let fileDest = `theme${theme.minify_scripts === true ? '.min' : ''}js`;
+  let fileDest = `theme${theme.minify_scripts === true ? '.min' : ''}.js`;
   const banner = `/*!
   * ${theme.name}
   * Copyright 2018-${year} Medium Rare (${theme.purchase_link})
@@ -372,6 +372,6 @@ gulp.task('watch', function (done) {
 
 });
 
-gulp.task('default', gulp.series('clean:dist', 'copy-assets', gulp.series('html', 'sass', 'sass-min', 'bootstrapjs', 'mrarejs'), gulp.series('serve', 'watch')));
+gulp.task('default', gulp.series('clean:dist', 'deps', 'copy-assets', gulp.series('html', 'sass', 'sass-min', 'bootstrapjs', 'mrarejs'), gulp.series('serve', 'watch')));
 
-gulp.task('build', gulp.series('clean:dist', 'copy-assets', gulp.series('html', 'sass', 'sass-min', 'bootstrapjs', 'mrarejs')));
+gulp.task('build', gulp.series('clean:dist', 'deps', 'copy-assets', gulp.series('html', 'sass', 'sass-min', 'bootstrapjs', 'mrarejs')));

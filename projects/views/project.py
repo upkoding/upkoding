@@ -38,6 +38,7 @@ class ProjectList(ListView):
 
 
 class ProjectDetail(DetailView):
+
     def get_object(self):
         """
         We need to find object by using `pk` and `slug`.
@@ -53,6 +54,18 @@ class ProjectDetail(DetailView):
         if user.is_staff or obj.is_active():
             return obj
         raise Http404()
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        project = self.get_object()
+
+        user_projects = UserProject.objects.select_related('user').filter(
+            project=project,
+            status__in=(UserProject.STATUS_IN_PROGRESS,
+                        UserProject.STATUS_COMPLETE)
+        ).order_by('-created')[:10]
+        data['user_projects'] = user_projects
+        return data
 
     def get(self, request, *args, **kwargs):
         if request.GET.get('me') == 'true':

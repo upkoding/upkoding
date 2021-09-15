@@ -29,7 +29,8 @@
     "jquery": "~3.5.1",
     "list.js": "~1.5.0",
     "popper.js": "~1.16.1",
-    "prismjs": "~1.21.0"
+    "prismjs": "~1.21.0",
+    "simple-lightbox": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "~7.11.6",

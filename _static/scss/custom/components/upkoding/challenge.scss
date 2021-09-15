@@ -1,0 +1,99 @@
+//
+//
+// upkoding project-detail.scss
+// modified version of chat.css
+//
+//
+
+.challenge-module {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  .challenge-module-top {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-height: 100%;
+    position: relative;
+  }
+  .challenge-module-body {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    overflow-y: scroll;
+    padding-bottom: 3rem;
+
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .challenge-module-bottom {
+    position: relative;
+    padding-top: 1rem;
+    border-top: $border-width solid $border-color;
+    background: $white;
+    textarea {
+      max-height: $spacer * 6;
+    }
+  }
+}
+
+.sidebar-content {
+  .challenge-module {
+    padding: $spacer * 0.75;
+  }
+}
+
+/** Full Page Chat Layouts **/
+
+.layout-nav-side {
+  .content-container > .challenge-module {
+    height: 100%;
+  }
+}
+
+.layout-sidebar .content-container > .challenge-module {
+  height: calc(100% - 3.5625rem);
+}
+
+.layout-nav-side .content-container > .challenge-module,
+.layout-sidebar .content-container > .challenge-module {
+  overflow: hidden;
+  .challenge-module-body {
+    width: 100%;
+    padding-right: 0;
+  }
+  .chat-item {
+    padding-bottom: $spacer;
+    &:not(:last-child) {
+      border-bottom: $border-width solid $border-color;
+    }
+    .media-body {
+      padding: 0;
+      background: none;
+    }
+    + .chat-item {
+      margin-top: $spacer;
+    }
+  }
+  .challenge-module-bottom {
+    background: $body-bg;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .layout-sidebar .content-container > .challenge-module {
+    height: calc(100vh - 7.1875rem);
+  }
+}
+
+@include media-breakpoint-down(lg) {
+  .layout-nav-side {
+    .content-container .challenge-module {
+      height: calc(100vh - 105px);
+    }
+  }
+}
