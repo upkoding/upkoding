@@ -8,18 +8,13 @@ from .forms import CodeBlockAdminForm
 class CodeBlockAdmin(admin.ModelAdmin):
     list_filter = ('language',)
     list_display = ('id', 'language', 'run_count', 'last_run',)
-    fields = (
-        'language',
-        'block_1_code',
-        'block_1_ro',
-        'block_2_code',
-        'block_2_ro',
-        'block_3_code',
-        'block_3_ro',
-        'expected_output',
-        'run_result',
-        'run_count',
-        'last_run',
+    fieldsets = (
+        (None, {'fields': ('language',)}),
+        ('Block 1', {'fields': ('block_1_ro', 'block_1_code', )}),
+        ('Block 2', {'fields': ('block_2_ro', 'block_2_code', )}),
+        ('Block 3', {'fields': ('block_3_ro', 'block_3_code', )}),
+        ('Output and stats', {
+         'fields': ('expected_output', 'run_result', 'run_count', 'last_run')})
     )
     form = CodeBlockAdminForm
 
