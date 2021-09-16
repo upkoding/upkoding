@@ -56,35 +56,30 @@ class ProjectDetail(DetailView):
         raise Http404()
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
         project = self.get_object()
+        user = self.request.user
 
-        user_projects = UserProject.objects.select_related('user').filter(
-            project=project,
-            status__in=(UserProject.STATUS_IN_PROGRESS,
-                        UserProject.STATUS_COMPLETE)
-        ).order_by('-created')[:10]
+        data = super().get_context_data(**kwargs)
+        data['project_owner'] = project.user
+
+        if user.is_authenticated:
+            try:
+                data['my_project'] = UserProject.objects.get(
+                    project=project,
+                    user=user
+                )
+            except UserProject.DoesNotExist:
+                pass
+
+        user_projects = UserProject.objects \
+            .select_related('user') \
+            .filter(
+                project=project,
+                status__in=(UserProject.STATUS_IN_PROGRESS,
+                            UserProject.STATUS_COMPLETE)
+            ).order_by('-created')[:10]
         data['user_projects'] = user_projects
         return data
-
-    def get(self, request, *args, **kwargs):
-        if request.GET.get('me') == 'true':
-            if not request.user.is_authenticated:
-                return HttpResponseForbidden()
-
-            project = self.get_object()
-            user_project = None
-            try:
-                user_project = get_object_or_404(
-                    UserProject, user=request.user, project=project)
-            except Http404:
-                pass
-            return JsonResponse({
-                'status': user_project.status if user_project else -1,
-                'color_class': user_project.get_color_class() if user_project else 'primary'
-            })
-
-        return super().get(request, *args, **kwargs)
 
     def post(self, request, slug, pk):
         user = request.user
@@ -96,7 +91,7 @@ class ProjectDetail(DetailView):
         if not user.is_authenticated:
             messages.warning(
                 request,
-                'Silahkan login terlebih dahulu sebelum mengerjakan proyek.',
+                'Silahkan login terlebih dahulu sebelum mengerjakan tantangan.',
                 extra_tags='warning'
             )
             return HttpResponseRedirect(reverse('account:login') + '?next={}'.format(next_url))
@@ -111,8 +106,7 @@ class ProjectDetail(DetailView):
             if created:
                 user_project.add_event(UserProjectEvent.TYPE_PROJECT_START)
                 messages.info(request,
-                              "Selamat mengerjakan `{}`!".format(
-                                  project.title),
+                              f"Selamat mengerjakan '{project.title}'!",
                               extra_tags='success')
             success_url = reverse('projects:detail_user', args=[
                                   slug, pk, user.username])
@@ -134,12 +128,27 @@ class ProjectDetailUser(DetailView):
         )
 
     def get_context_data(self, **kwargs):
+        project = self.get_object()
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         user_project = get_object_or_404(
-            UserProject, user=user, project=self.object)
+            UserProject,
+            user=user,
+            project=self.object
+        )
 
         data = super().get_context_data(**kwargs)
+        data['project_owner'] = project.user
         data['user_project'] = user_project
+        data['user_project_owner'] = user
+
+        user_projects = UserProject.objects \
+            .select_related('user') \
+            .filter(
+                project=project,
+                status__in=(UserProject.STATUS_IN_PROGRESS,
+                            UserProject.STATUS_COMPLETE)
+            ).order_by('-created')[:10]
+        data['user_projects'] = user_projects
 
         # show completion form only when:
         # - requirements completed
@@ -151,10 +160,14 @@ class ProjectDetailUser(DetailView):
 
         if show_rr_form:
             data['rr_form'] = UserProjectReviewRequestForm(
-                instance=user_project)
+                instance=user_project
+            )
         return data
 
-    def __handle_code_submission(self, request, user, project, user_project):
+    def _handle_code_submission(self, project, user_project):
+        request = self.request
+        user = request.user
+
         submission = UserProjectCodeSubmissionForm(
             user, project, user_project, request.POST
         )
@@ -173,12 +186,14 @@ class ProjectDetailUser(DetailView):
             return JsonResponse(data)
         return HttpResponseBadRequest(submission.errors.as_json())
 
-    def __handle_update(self, request, project, user_project):
+    def _handle_update(self, project, user_project):
         """
         Handle requirements status changes.
         """
+        request = self.request
+        user = request.user
         redirect_url = reverse('projects:detail_user', args=[
-                               project.slug, project.pk, request.user.username])
+                               project.slug, project.pk, user.username])
 
         # deepcopy to preserve the original state
         requirements = copy.deepcopy(user_project.requirements)
@@ -213,7 +228,8 @@ class ProjectDetailUser(DetailView):
             if progress_after > float(max_progress):
                 for msg in become_complete:
                     user_project.add_event(
-                        UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg)
+                        UserProjectEvent.TYPE_PROGRESS_UPDATE,
+                        message=msg)
 
             # if all requirements completed, ready for review
             if user_project.is_requirements_complete():
@@ -224,7 +240,9 @@ class ProjectDetailUser(DetailView):
 
         return HttpResponseRedirect(redirect_url)
 
-    def __handle_review_request(self, request, project, user_project):
+    def _handle_review_request(self, project, user_project):
+        request = self.request
+
         form = UserProjectReviewRequestForm(
             request.POST, instance=user_project)
 
@@ -242,6 +260,12 @@ class ProjectDetailUser(DetailView):
             return HttpResponse()
         return HttpResponseBadRequest(form.errors.as_json(), content_type='application/json; charset=utf-8')
 
+    def _handle_delete(self, project, user_project):
+        user_project.delete()
+        message = f"Tantangan telah dibatalkan." if project.has_codeblock else f"Tantangan telah dibatalkan."
+        messages.info(self.request, message, extra_tags='warning')
+        return HttpResponse()
+
     @method_decorator(login_required)
     def post(self, request, slug, pk, username):
         user = request.user
@@ -256,19 +280,14 @@ class ProjectDetailUser(DetailView):
             UserProject, user=user, project=project)
 
         if request_kind == 'code_submission':
-            return self.__handle_code_submission(request, user, project, user_project)
+            return self._handle_code_submission(project, user_project)
 
         if request_kind == 'update':
-            return self.__handle_update(request, project, user_project)
+            return self._handle_update(project, user_project)
 
         if request_kind == 'delete':
-            user_project.delete()
-            messages.info(request,
-                          "Proyek `{}` telah dibatalkan :(".format(
-                              project.title),
-                          extra_tags='warning')
-            return HttpResponse()
+            return self._handle_delete(project, user_project)
 
         if request_kind == 'review_request':
-            return self.__handle_review_request(request, project, user_project)
+            return self._handle_review_request(project, user_project)
         return HttpResponseRedirect(project_url)

@@ -12,15 +12,28 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Tantangan</a></li>
+            {% block breadcrumb_item %}
             <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}</li>
+            {% endblock %}
         </ol>
     </nav>
 
+    {% block breadcrumb_action %}
     <div class="dropdown">
-        <button class="btn btn-primary">
-            Kerjakan <i class="material-icons-x">play_arrow</i>
-        </button>
+        {% if my_project %}
+        <a href="{{ my_project.get_absolute_url }}" class="btn btn-success">
+            Lanjutkan <i class="material-icons-x">play_arrow</i>
+        </a>
+        {% else %}
+        <form method="POST">
+            {% csrf_token %}
+            <button class="btn btn-primary">
+                Kerjakan <i class="material-icons-x">play_arrow</i>
+            </button>
+        </form>
+        {% endif %}
     </div>
+    {% endblock %}
 </div>
 
 <div class="content-container">
@@ -35,7 +48,7 @@
                                 <p class="lead">{{ object.description_short }}</p>
                             </div>
 
-                            {% include 'base/_messages.html' with closable=True %}
+                            {% include 'base/_messages.html' %}
 
                             <div class="card shadow-sm">
                                 <div class="card-body">
@@ -44,17 +57,19 @@
                                 </div>
                             </div>
 
+                            {% block challenge %}
                             {% with codeblock=object.codeblock %}
                             {% if codeblock %}
                             {% render_codeblock_readonly object %}
                             {% endif %}
                             {% endwith %}
+                            {% endblock %}
 
                             <div class="d-flex justify-content-between text-small mt-2">
                                 <div class="d-flex align-items-center">
                                     <span>Diposting oleh
-                                        <a href="{{ object.user.get_absolute_url }}">
-                                            {{ object.user.get_display_name}}</a>,
+                                        <a href="{{ project_owner.get_absolute_url }}">
+                                            {{ project_owner.get_display_name }}</a>,
                                         {{ object.created|naturalday }}.
                                     </span>
                                 </div>
@@ -68,50 +83,6 @@
             </div>
         </div>
     </div>
-    <div class="sidebar collapse" id="sidebar-collapse">
-        <div class="sidebar-content">
-            <div class="chat-team-sidebar text-small">
-                {% if not user_projects %}
-                <div class="chat-team-sidebar-top">
-                    <div class="media align-items-center text-center">
-                        <div class="media-body">
-                            <h5 class="mb-1 text-muted"><i class="material-icons">auto_awesome</i></h5>
-                            <p>Belum ada yang mengerjakan.</p>
-                        </div>
-                    </div>
-                </div>
-                {% else %}
-                <div class="chat-team-sidebar-bottom">
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="members">
-                            <div class="list-group list-group-flush">
-                                {% for up in user_projects %}
-                                {% with u=up.user %}
-                                <a class="list-group-item list-group-item-action" href="{{ up.get_absolute_url }}">
-                                    <div class="media media-member mb-0">
-                                        <img alt="{{ u.get_display_name }}" src="{{ u|avatar_url:32 }}"
-                                            class="avatar" />
-                                        <div class="media-body">
-                                            <h6 class="mb-0" data-filter-by="text">{{ u.get_display_name }}</h6>
-                                            <span class="text-muted">{{ up.created|naturaltime }}</span>
-                                        </div>
-                                        {% if not up.is_complete %}
-                                        <i class="material-icons text-success" title="Berhasil diselesaikan">check_circle</i>
-                                        {% else %}
-                                        <i class="material-icons text-secondary" title="Masih mengerjakan">timer</i>
-                                        {% endif %}
-                                    </div>
-                                </a>
-                                {% endwith %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
+    {% include 'projects/_project_sidebar.html' with user_projects=user_projects %}
 </div>
 {% endblock %}

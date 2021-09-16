@@ -1,4 +1,4 @@
-{% extends 'projects/base.html' %}
+{% extends 'projects/project_detail.html' %}
 
 {% load static %}
 {% load markdownify %}
@@ -7,10 +7,41 @@
 
 
 {% block meta %}
-{% meta object=object title=user_project.user.get_display_name|add:" - "|add:object.title|title %}
+{% meta object=object title=user_project_owner.get_display_name|add:" - "|add:object.title|title %}
 {% endblock %}
 
-{% block content %}
+{% block breadcrumb_item %}
+<li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title|title }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ user_project_owner.get_display_name }}</li>
+{% endblock %}
+
+{% block breadcrumb_action %}
+{% if user.is_authenticated and user == user_project_owner %}
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <button class="btn btn-danger">
+            Batalkan <i class="material-icons-x">pause</i>
+        </button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block challenge %}{{ block.super }}{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+{% block contentxxx %}
 <div class="project-detail">
     {% include 'projects/_project_header.html' with project=object user_project=user_project %}
 
@@ -87,15 +118,6 @@
             <!-- end legacy challange -->
 
             {% endif %}
-        </div>
-
-        <div class="col col-12 col-lg-4 ps-lg-4">
-            <h3 class="section-title mb-3">Sedang Mengerjakan</h3>
-            {% render_inprogress_projects object %}
-            <h3 class="section-title mt-5 mb-3">Berhasil Menyelesaikan</h3>
-            {% render_completed_projects object %}
-            <h3 class="section-title mt-5 mb-3">Tags</h3>
-            {% render_tags object 'secondary' %}
         </div>
     </div>
 </div>

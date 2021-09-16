@@ -1,0 +1,46 @@
+{% load base %}
+{% load humanize %}
+<div class="sidebar collapse" id="sidebar-collapse">
+    <div class="sidebar-content">
+        <div class="chat-team-sidebar text-small">
+            {% if not user_projects %}
+            <div class="chat-team-sidebar-top">
+                <div class="media align-items-center text-center">
+                    <div class="media-body">
+                        <h5 class="mb-1 text-muted"><i class="material-icons">auto_awesome</i></h5>
+                        <p>Belum ada yang mengerjakan.</p>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="chat-team-sidebar-bottom">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="members">
+                        <div class="list-group list-group-flush">
+                            {% for up in user_projects %}
+                            {% with u=up.user %}
+                            <a class="list-group-item list-group-item-action" href="{{ up.get_absolute_url }}">
+                                <div class="media media-member mb-0">
+                                    <img alt="{{ u.get_display_name }}" src="{{ u|avatar_url:64 }}" class="avatar" />
+                                    <div class="media-body">
+                                        <h6 class="mb-0" data-filter-by="text">{{ u.get_display_name }}</h6>
+                                        <span class="text-muted">{{ up.created|naturaltime }}</span>
+                                    </div>
+                                    {% if up.is_complete %}
+                                    <i class="material-icons text-success"
+                                        title="Berhasil diselesaikan">check_circle</i>
+                                    {% else %}
+                                    <i class="material-icons text-secondary" title="Masih mengerjakan">timer</i>
+                                    {% endif %}
+                                </div>
+                            </a>
+                            {% endwith %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
