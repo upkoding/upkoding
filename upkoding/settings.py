@@ -317,6 +317,7 @@ MARKDOWNIFY = {
             'href',
             'src',
             'alt',
+            'class',
         ],
         'MARKDOWN_EXTENSIONS': [
             'markdown.extensions.fenced_code',

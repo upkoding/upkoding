@@ -1,21 +1,20 @@
 {% if blocks %}
-{% load markdownify %}
 <div class="card mt-3">
     <div class="card-header">
-        <i class="devicon-{{codeblock.get_language_display}}-plain mr-1"></i> <strong>Lengkapi kode di bawah
-            ini</strong>
+        <i class="devicon-{{codeblock.get_language_display}}-plain mr-1"></i>
+        <strong>Lengkapi kode di bawah ini</strong>
     </div>
     <div>
-        <pre><code class="language-{{codeblock.get_language_display}}">{{ source_code }}</code></pre>
+        <pre class="no-round"><code class="language-{{codeblock.get_language_display}}">{{ source_code }}</code></pre>
     </div>
 
     {% if codeblock.expected_output %}
-    <div class="alert alert-primary rounded-0 border-0 m-0 p-3" role="alert" x-show="run_error">
+    <div class="alert alert-primary rounded-0 border-0 m-0 p-3">
         <div><i class="material-icons-x mr-1">info</i>Buatlah program diatas menghasilkan output berikut:</div>
         <pre class="rounded mt-1"><code class="language-bash">{{ codeblock.expected_output }}</code></pre>
     </div>
     {% else %}
-    <div class="alert alert-primary rounded-0 border-0 m-0 p-3" role="alert" x-show="run_error">
+    <div class="alert alert-primary rounded-0 border-0 m-0 p-3">
         <p><i class="material-icons-x mr-1">info</i>Buatlah program diatas berjalan tanpa error.</p>
     </div>
     {% endif %}

@@ -1,0 +1,72 @@
+{% if blocks %}
+{% load markdownify %}
+<div class="card mt-3">
+    <div class="card-header">
+        <i class="devicon-{{codeblock.get_language_display}}-plain"></i>
+        <strong>Lengkapi kode di bawah ini</strong>
+    </div>
+
+    <div>
+        {% for block in blocks %}
+        {% if block.code %}
+        {% if block.readonly %}
+        <pre><code class="language-{{codeblock.get_language_display}}" style="padding-left: 30px;">{{ block.code }}</code></pre>
+        {% else %}
+        <div style="position: relative; height: 320px;">
+            <div id="codeblock-editor" data-block-id="{{ block.block_id }}">{{ block.code }}</div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    {% if codeblock.expected_output %}
+    <div class="alert alert-primary rounded-0 border-0 m-0 p-3">
+        <div><i class="material-icons-x mr-1">info</i>Buatlah program diatas menghasilkan output berikut:</div>
+        <pre class="rounded mt-1"><code class="language-bash">{{ codeblock.expected_output }}</code></pre>
+    </div>
+    {% else %}
+    <div class="alert alert-primary rounded-0 border-0 m-0 p-3">
+        <p><i class="material-icons-x mr-1">info</i>Buatlah program diatas berjalan tanpa error.</p>
+    </div>
+    {% endif %}
+
+    <pre id="codeblock-output" class="d-none"><code class="language-bash"></code></pre>
+
+    <div>
+        <div class="card-body">
+            <form method="POST" class="text-right" id="codeblock-form">
+                {% csrf_token %}
+                <input type="hidden" name="kind" value="code_submission" />
+                {% if not user.is_pro_user %}
+                <small class="text-muted">Batas menjalankan kode 3 kali dalam 24 jam,
+                    <a href="{% url 'base:pro' %}">go Pro</a>!</small>
+                {% endif %}
+                <button type="submit" class="btn btn-primary ml-2">
+                    <i class="material-icons-x">play_arrow</i>
+                    <span id="codeblock-run" data-text="Jalankan" data-text-loading="Loading...">Jalankan</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="codeblock-success" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Well done!</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Kamu berhasil menyelesaikan tantangan ini!</p>
+                </div>
+                <div class="modal-footer">
+                    <button role="button" class="btn btn-primary" type="submit" id="codeblock-success-action">
+                        Lanjutkan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endif %}

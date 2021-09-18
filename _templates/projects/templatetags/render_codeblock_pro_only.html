@@ -1,14 +1,17 @@
-<div class="card mt-4 mb-5 shadow">
+<div class="card mt-3">
     <div class="card-header">
-        Upgrade ke PRO untuk melihat solusi dari @{{user_project.user}}
+        <i class="devicon-{{codeblock.get_language_display}}-plain mr-1"></i> <strong>Upgrade ke PRO untuk melihat
+            solusi dari <a href="{{ user_project_owner.get_absolute_url }}">
+                {{ user_project_owner.get_display_name }}</a>
+        </strong>
     </div>
-    <div style="position: relative;">
-        <pre style="margin: 0 !important;"><code style="padding: 100px 30px;"></code></pre>
-        <a href="{% url 'base:pro'%}"
-            class="btn btn-lg btn-outline-warning position-absolute top-50 start-50 translate-middle">Upgrade ke PRO</a>
-        <small class="position-absolute top-50 start-50 translate-middle text-muted text-center"
-            style="margin-top: 40px; width: 100%;">
-            Akses semua kelas, tantangan dan lihat solusi dari peserta lainnya.
+    <div class="bg-dark text-center p-3">
+        <a href="{% url 'base:pro'%}" class="btn btn-lg btn-warning mt-3">
+            <i class="material-icons-x mr-1">spa</i>
+            Get Pro Access!
+        </a>
+        <small class="d-block text-center text-muted mt-2 mb-2">
+            Lihat solusi peserta lainnya, akses semua kelas dan tantangan premium.
         </small>
     </div>
 
@@ -21,8 +24,17 @@
 
     {% if completed %}
     <div class="alert alert-success d-flex rounded-0 border-0 mb-0" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        <div>Tantangan ini berhasil diselesaikan!</div>
+        <div>
+            <i class="material-icons-x">check_circle</i>
+            Tantangan ini berhasil diselesaikan!
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-secondary d-flex rounded-0 border-0 mb-0" role="alert">
+        <div>
+            <i class="material-icons-x">timer</i>
+            Tantangan ini masih dikerjakan.
+        </div>
     </div>
     {% endif %}
 

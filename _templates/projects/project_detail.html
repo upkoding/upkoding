@@ -13,7 +13,9 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Tantangan</a></li>
             {% block breadcrumb_item %}
-            <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}
+                {% if object.is_premium %}<span class="badge badge-warning ml-1">PRO</span>{% endif %}
+            </li>
             {% endblock %}
         </ol>
     </nav>
@@ -22,12 +24,13 @@
     <div class="dropdown">
         {% if my_project %}
         <a href="{{ my_project.get_absolute_url }}" class="btn btn-success">
-            Lanjutkan <i class="material-icons-x">play_arrow</i>
+            {% if my_project.is_complete %}Lihat{% else %}Lanjutkan{% endif %}
+            <i class="material-icons-x">play_arrow</i>
         </a>
         {% else %}
         <form method="POST">
             {% csrf_token %}
-            <button class="btn btn-primary">
+            <button class="btn btn-{% if object.is_premium %}warning{% else %}primary{% endif %}">
                 Kerjakan <i class="material-icons-x">play_arrow</i>
             </button>
         </form>
@@ -58,11 +61,9 @@
                             </div>
 
                             {% block challenge %}
-                            {% with codeblock=object.codeblock %}
-                            {% if codeblock %}
+                            {% if object.has_codeblock %}
                             {% render_codeblock_readonly object %}
                             {% endif %}
-                            {% endwith %}
                             {% endblock %}
 
                             <div class="d-flex justify-content-between text-small mt-2">

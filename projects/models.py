@@ -180,6 +180,9 @@ class Project(models.Model):
         self.completed_count = models.F('completed_count') - 1
         self.save()
 
+    def has_codeblock(self):
+        return self.codeblock_id is not None
+
     def assign_to(self, user):
         """
         Returns `UserProject` instance and created (bool).
@@ -395,6 +398,16 @@ class UserProject(models.Model):
 
     def has_codeblock(self):
         return self.codeblock_id is not None
+
+    def is_solution_viewable_by(self, user):
+        if not self.has_codeblock() or self.user == user:
+            return True
+        if user.is_authenticated and user.is_pro_user():
+            return True
+        return False
+
+    def is_solution_editable_by(self, user):
+        return self.user == user
 
     def can_run_codeblock(self, user):
         if not self.has_codeblock():

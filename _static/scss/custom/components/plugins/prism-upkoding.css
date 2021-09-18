@@ -28,6 +28,7 @@ pre[class*="language-"] {
   -moz-hyphens: none;
   -ms-hyphens: none;
   hyphens: none;
+  border-radius: 0.3em;
 }
 
 /* Code blocks */
@@ -35,6 +36,10 @@ pre[class*="language-"] {
   padding: 1em;
   margin: 0;
   overflow: auto;
+}
+
+pre.no-round {
+  border-radius: 0 !important;
 }
 
 :not(pre) > code[class*="language-"],

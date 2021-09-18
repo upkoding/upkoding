@@ -16,200 +16,55 @@
 {% endblock %}
 
 {% block breadcrumb_action %}
-{% if user.is_authenticated and user == user_project_owner %}
+{% if user.is_authenticated and user == user_project_owner and not user_project.is_complete %}
 <div>
     <form method="POST">
         {% csrf_token %}
-        <button class="btn btn-danger">
-            Batalkan <i class="material-icons-x">pause</i>
+        <input type="hidden" name="action" value="delete" />
+        <button class="btn btn-outline-danger">
+            Batalkan
         </button>
     </form>
 </div>
 {% endif %}
 {% endblock %}
 
-{% block challenge %}{{ block.super }}{% endblock %}
+{% block challenge %}
+{% if user_project.has_codeblock %}
+{% with viewable=user_project|is_solution_viewable_by:user %}
 
+{% if viewable %}
 
+{% with editable=user_project|is_solution_editable_by:user %}
+{% if editable and not user_project.is_complete %}
+{% render_codeblock_editable object user_project %}
+{% else %}
+{% render_codeblock_readonly object user_project %}
+{% endif %}
+<!-- end if-editable -->
+{% endwith %}
 
+{% else %}
+{% render_codeblock_pro_only object user_project %}
+{% endif %}
+<!-- end if-viewable -->
 
-
-
-
-
-
-
-
-
-{% block contentxxx %}
-<div class="project-detail">
-    {% include 'projects/_project_header.html' with project=object user_project=user_project %}
-
-    <div class="row mt-5 content">
-        <div class="col col-12 col-lg-8">
-            {% include 'base/_messages.html' with closable=True %}
-
-            {% if user_project.has_codeblock %}
-            <div>
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        {% include 'projects/_project_images.html' with images=object.images.all %}
-
-                        <p class="lead mb-4" style="font-size: 18px; color: rgba(0, 0, 0, 0.7); font-weight: 300;">
-                            {{ object.description_short }}
-                        </p>
-                        {{ object.description|markdownify }}
-                    </div>
-                </div>
-            </div>
-            {% if not user.is_authenticated %}
-            {% render_codeblock_pro_only object user_project %}
-            {% else %}
-
-            {% if user == user_project.user %}
-            {% render_codeblock object user_project %}
-            {% else %}
-
-            {% if user.is_pro_user %}
-            {% render_codeblock_readonly object user_project %}
-            {% else %}
-            {% render_codeblock_pro_only object user_project %}
-            {% endif %}
-
-            {% endif %}
-            {% endif %}
-
-            {% else %}
-            <!-- legacy challange -->
-            {% if rr_form %}
-            <!-- form available: show review request form -->
-            {% render_review_request_form user_project rr_form %}
-
-            {% else %}
-            <!-- form not available: show tasks list, timeline, description and discussion -->
-            <h3 class="section-title mb-3"><i class="bi bi-card-checklist me-2"></i>Tasks</h3>
-            {% render_requirements_form user_project %}
-
-            <div class="events mt-5">
-                <h3 class="section-title"><i class="bi bi-card-list me-2"></i>Timeline Proyek</h3>
-                {% render_timeline user_project %}
-            </div>
-
-            <div class="card shadow-sm mt-5">
-                <div class="card-body">
-                    <div x-data="descriptionToggle()" :class="{'shrink': shrink, 'pb-4': !shrink}" class="description">
-                        {% include 'projects/_project_images.html' with images=project.images.all %}
-
-                        <p class="lead ps-3 mb-4"
-                            style="font-size: 18px; color: rgba(0, 0, 0, 0.7); font-weight: 300; font-style: italic; border-left: 2px solid #ccc;">
-                            {{ object.description_short }}
-                        </p>
-                        {{ object.description|markdownify }}
-                        <div class="toggle text-center">
-                            <button class="btn btn-outline-secondary bg-white text-secondary btn-sm"
-                                style="margin-top: 65px;" @click="toggle" title="Deskripsi selengkapnya">
-                                <i class="bi" :class="{'bi-arrow-down': shrink, 'bi-arrow-up': !shrink}"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            <!-- end legacy challange -->
-
-            {% endif %}
-        </div>
-    </div>
-</div>
+{% endwith %}
+{% endif %}
 {% endblock %}
 
-{% block headscripts %}
-{{ block.super }}
-<style type="text/css" media="screen">
-    #editor {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-</style>
-{% endblock %}
-
-{% block footscripts %}
-{{ block.super }}
-{% if user.is_authenticated and user_project.has_codeblock and not user_project.is_complete %}
-<script src="{% static 'base/vendor/ace/src-min-noconflict/ace.js' %}"></script>
+{% block extrascript %}
+{% if user_project.has_codeblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"
+    integrity="sha512-GoORoNnxst42zE3rYPj4bNBm0Q6ZRXKNH2D9nEmNvVF/z24ywVnijAWVi/09iBiVDQVf3UlZHpzhAJIdd9BXqw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    var editor = ace.edit('editor');
-    editor.setTheme('ace/theme/chrome');
+    ace.config.set("basePath", "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/");
+
+    var editor = ace.edit("codeblock-editor");
     editor.setFontSize(14);
-    editor.session.setMode('ace/mode/{{user_project.codeblock.get_custom_language_display}}');
-
-    window.codeEditor = function () {
-        return {
-            run_status: null,
-            run_error: null,
-            run_output: null,
-            compile_output: null,
-            loading: false,
-            blockId: null,
-            setBlockId(id) {
-                this.blockId = id
-            },
-            reload() {
-                window.location.reload();
-            },
-            reset() {
-                this.run_status = { description: null }
-                this.run_error = null
-                this.run_output = null
-                this.compile_output = null
-            },
-            submit(e) {
-                if (this.loading) return
-
-                this.loading = true
-                const data = new FormData(e.target)
-                data.append('code_block_id', this.blockId)
-                data.append('code_block', editor.getValue())
-
-                fetch('', {
-                    method: 'POST',
-                    body: data
-                }).then(async (resp) => {
-                    this.reset()
-                    if (resp.ok) {
-                        const json = await resp.json()
-                        const result = json.result
-                        this.run_status = result.status
-                        this.run_error = result.stderr
-                        this.run_output = result.stdout
-                        this.compile_output = result.compile_output
-
-                        if (json.completed) {
-                            const modal = new bootstrap.Modal(this.$refs.completedModal)
-                            modal.show()
-                        } else {
-                            if (result.is_expecting_output && !result.is_output_match && result.stderr === null) {
-                                this.run_status = { description: null }
-                                this.run_error = 'Output program tidak sesuai dengan yang diharapkan!'
-                            }
-                        }
-                    } else {
-                        const errors = JSON.parse(await resp.text())
-                        for (key in errors) {
-                            const err = errors[key][0]
-                            this.run_error = err.message
-                        }
-                    }
-                }).finally(() => {
-                    this.loading = false
-                })
-            }
-        }
-    }
-
+    editor.setTheme("ace/theme/chrome");
+    editor.session.setMode("ace/mode/{{user_project.codeblock.get_custom_language_display}}");
 </script>
 {% endif %}
 {% endblock %}

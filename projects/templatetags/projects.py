@@ -4,6 +4,24 @@ from projects.models import UserProjectEvent
 register = template.Library()
 
 
+@register.filter
+def is_solution_viewable_by(user_project, user):
+    """
+    Check whether user_project's solution is viewable by a user.
+    Usage:  {{ user_project|solution_viewable_by:user }}
+    """
+    return user_project.is_solution_viewable_by(user)
+
+
+@register.filter
+def is_solution_editable_by(user_project, user):
+    """
+    Check whether user_project's solution is editable by a user.
+    Usage:  {{ user_project|is_solution_editable_by:user }}
+    """
+    return user_project.is_solution_editable_by(user)
+
+
 @register.inclusion_tag('projects/templatetags/render_codeblock_readonly.html', takes_context=True)
 def render_codeblock_readonly(context, project, user_project=None):
     codeblock = user_project.codeblock if user_project else project.codeblock
@@ -16,8 +34,8 @@ def render_codeblock_readonly(context, project, user_project=None):
     }
 
 
-@register.inclusion_tag('projects/templatetags/render_codeblock.html', takes_context=True)
-def render_codeblock(context, project, user_project):
+@register.inclusion_tag('projects/templatetags/render_codeblock_editable.html', takes_context=True)
+def render_codeblock_editable(context, project, user_project):
     codeblock = user_project.codeblock
     return {
         'user': context.request.user,
@@ -37,6 +55,7 @@ def render_codeblock_pro_only(context, project, user_project):
         'user': context.request.user,
         'project': project,
         'user_project': user_project,
+        'user_project_owner': user_project.user,
         'codeblock': codeblock,
         'completed': user_project.is_complete(),
     }

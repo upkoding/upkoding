@@ -143,11 +143,10 @@ class ProjectDetailUser(DetailView):
 
         user_projects = UserProject.objects \
             .select_related('user') \
-            .filter(
-                project=project,
-                status__in=(UserProject.STATUS_IN_PROGRESS,
-                            UserProject.STATUS_COMPLETE)
-            ).order_by('-created')[:10]
+            .filter(project=project,
+                    status__in=(UserProject.STATUS_IN_PROGRESS,
+                                UserProject.STATUS_COMPLETE)) \
+            .order_by('-created')[:10]
         data['user_projects'] = user_projects
 
         # show completion form only when:
@@ -204,8 +203,7 @@ class ProjectDetailUser(DetailView):
             requirements_copy = copy.deepcopy(requirements)
 
             # update requirements_copy
-            updated_reqs = map(lambda r: int(r),
-                               request.POST.getlist('reqs', []))
+            updated_reqs = [int(r) for r in request.POST.getlist('reqs', [])]
 
             # remove `complete` flag
             for r in requirements_copy:
@@ -262,9 +260,8 @@ class ProjectDetailUser(DetailView):
 
     def _handle_delete(self, project, user_project):
         user_project.delete()
-        message = f"Tantangan telah dibatalkan." if project.has_codeblock else f"Tantangan telah dibatalkan."
-        messages.info(self.request, message, extra_tags='warning')
-        return HttpResponse()
+        messages.info(self.request, 'Berhasil dibatalkan.',
+                      extra_tags='warning')
 
     @method_decorator(login_required)
     def post(self, request, slug, pk, username):
@@ -272,22 +269,23 @@ class ProjectDetailUser(DetailView):
         if user.username != username:
             return HttpResponseForbidden()
 
-        request_kind = request.POST.get('kind')
-        project_url = reverse('projects:detail', args=[slug, pk])
+        action = request.POST.get('action')
 
         project = self.get_object()
         user_project = get_object_or_404(
             UserProject, user=user, project=project)
 
-        if request_kind == 'code_submission':
+        if action == 'code_submission':
             return self._handle_code_submission(project, user_project)
 
-        if request_kind == 'update':
+        if action == 'update':
             return self._handle_update(project, user_project)
 
-        if request_kind == 'delete':
-            return self._handle_delete(project, user_project)
+        if action == 'delete':
+            self._handle_delete(project, user_project)
 
-        if request_kind == 'review_request':
+        if action == 'review_request':
             return self._handle_review_request(project, user_project)
+
+        project_url = reverse('projects:detail', args=[slug, pk])
         return HttpResponseRedirect(project_url)

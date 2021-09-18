@@ -7,6 +7,7 @@
 // import './prism';
 import mrUtil from './util';
 import lightbox from './lightbox';
+import codeblock from './upkoding/codeblock';
 
 (() => {
   if (typeof $ === 'undefined') {
@@ -20,4 +21,5 @@ export {
   // mrKanban,
   lightbox,
   mrUtil,
+  codeblock,
 };
