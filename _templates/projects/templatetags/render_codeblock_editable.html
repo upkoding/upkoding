@@ -10,7 +10,8 @@
         {% for block in blocks %}
         {% if block.code %}
         {% if block.readonly %}
-        <pre><code class="language-{{codeblock.get_language_display}}" style="padding-left: 30px;">{{ block.code }}</code></pre>
+        <pre
+            class="no-round"><code class="language-{{codeblock.get_language_display}}" style="padding-left: 30px;">{{ block.code }}</code></pre>
         {% else %}
         <div style="position: relative; height: 320px;">
             <div id="codeblock-editor" data-block-id="{{ block.block_id }}">{{ block.code }}</div>
