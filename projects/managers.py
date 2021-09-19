@@ -26,7 +26,8 @@ class ProjectManager(models.Manager):
         Which is equivalent to:
             `Project.objects.all(status=2)`
         """
-        return self.select_related('codeblock').filter(status=2)
+        return self.select_related('codeblock') \
+            .filter(status__in=[self.model.STATUS_ACTIVE, self.model.STATUS_ARCHIVED])
 
     def featured(self):
         """

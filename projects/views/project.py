@@ -56,11 +56,18 @@ class ProjectDetail(DetailView):
         raise Http404()
 
     def get_context_data(self, **kwargs):
-        project = self.get_object()
-        user = self.request.user
-
         data = super().get_context_data(**kwargs)
+        project = data.get('object')
+
+        user = self.request.user
         data['project_owner'] = project.user
+
+        if project.is_archived():
+            messages.warning(
+                self.request,
+                'Maaf tantangan ini sudah diarsip, tidak bisa dikerjakan.',
+                extra_tags='warning'
+            )
 
         if user.is_authenticated:
             try:
@@ -86,6 +93,10 @@ class ProjectDetail(DetailView):
         project = self.get_object()
 
         next_url = reverse('projects:detail', args=[slug, pk])
+
+        # if archived, redirect to project detail
+        if project.is_archived():
+            return HttpResponseRedirect(next_url)
 
         # not authenticated, ask for login
         if not user.is_authenticated:
@@ -128,7 +139,9 @@ class ProjectDetailUser(DetailView):
         )
 
     def get_context_data(self, **kwargs):
-        project = self.get_object()
+        data = super().get_context_data(**kwargs)
+
+        project = data.get('object')
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         user_project = get_object_or_404(
             UserProject,
@@ -136,7 +149,6 @@ class ProjectDetailUser(DetailView):
             project=self.object
         )
 
-        data = super().get_context_data(**kwargs)
         data['project_owner'] = project.user
         data['user_project'] = user_project
         data['user_project_owner'] = user

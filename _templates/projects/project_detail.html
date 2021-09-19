@@ -14,7 +14,11 @@
             <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Tantangan</a></li>
             {% block breadcrumb_item %}
             <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}
-                {% if object.is_premium %}<span class="badge badge-warning ml-1">PRO</span>{% endif %}
+                {% if object.is_premium %}
+                <span class="badge badge-warning ml-1 mt-1">PRO</span>
+                {% elif object.level == 0 %}
+                <span class="badge badge-secondary ml-1 mt-1">PROJECT</span>
+                {% endif %}
             </li>
             {% endblock %}
         </ol>
@@ -28,12 +32,14 @@
             <i class="material-icons-x">play_arrow</i>
         </a>
         {% else %}
+        {% if not object.is_archived %}
         <form method="POST">
             {% csrf_token %}
             <button class="btn btn-{% if object.is_premium %}warning{% else %}primary{% endif %}">
                 Kerjakan <i class="material-icons-x">play_arrow</i>
             </button>
         </form>
+        {% endif %}
         {% endif %}
     </div>
     {% endblock %}
@@ -53,16 +59,19 @@
 
                             {% include 'base/_messages.html' %}
 
-                            <div class="card shadow-sm">
+                            <div class="card shadow-sm mb-3">
                                 <div class="card-body">
-                                    {% include 'projects/_project_images.html' with images=project.images.all %}
                                     {{ object.description|markdownify }}
+                                    
+                                    {% include 'projects/_project_images.html' with images=project.images.all %}
                                 </div>
                             </div>
 
                             {% block challenge %}
                             {% if object.has_codeblock %}
                             {% render_codeblock_readonly object %}
+                            {% else %}
+                            {% render_requirements object %}
                             {% endif %}
                             {% endblock %}
 

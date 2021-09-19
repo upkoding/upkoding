@@ -48,12 +48,12 @@ class Project(models.Model):
     ]
 
     # dificulty levels and its point
-    LEVEL_NONE = 0  # default (backward compat for legacy project)
+    LEVEL_PROJECT = 0  # default (backward compat with legacy project)
     LEVEL_EASY = 1
     LEVEL_MEDIUM = 2
     LEVEL_HARD = 3
     LEVELS = [
-        (LEVEL_NONE, 'none'),
+        (LEVEL_PROJECT, 'project'),
         (LEVEL_EASY, 'easy'),
         (LEVEL_MEDIUM, 'medium'),
         (LEVEL_HARD, 'hard'),
@@ -67,7 +67,7 @@ class Project(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         related_name='projects')
-    level = models.PositiveIntegerField(choices=LEVELS, default=LEVEL_NONE)
+    level = models.PositiveIntegerField(choices=LEVELS, default=LEVEL_PROJECT)
     slug = models.SlugField(max_length=150, blank=True)
     title = models.CharField('Judul', max_length=100)
     description_short = models.CharField(
@@ -123,7 +123,7 @@ class Project(models.Model):
 
     def get_level_color(self):
         colors = {
-            self.LEVEL_NONE: 'secondary',
+            self.LEVEL_PROJECT: 'dark',
             self.LEVEL_EASY:  'success',
             self.LEVEL_MEDIUM: 'warning',
             self.LEVEL_HARD: 'danger',
@@ -142,7 +142,7 @@ class Project(models.Model):
                 for tag in self.tags.split(',')])
 
         # set point based on level
-        if self.level != self.LEVEL_NONE:
+        if self.level != self.LEVEL_PROJECT:
             if self.level == self.LEVEL_EASY:
                 self.point = self.POINT_EASY
             elif self.level == self.LEVEL_MEDIUM:
@@ -158,6 +158,9 @@ class Project(models.Model):
 
     def is_active(self):
         return self.status == self.STATUS_ACTIVE
+
+    def is_archived(self):
+        return self.status == self.STATUS_ARCHIVED
 
     def has_codeblock(self):
         return self.codeblock_id is not None

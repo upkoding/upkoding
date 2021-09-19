@@ -1,7 +1,7 @@
 {% load sorl_thumbnail %}
 {% load projects %}
 {% load humanize %}
-<div class="col col-12">
+<div class="col col-12 mb-3">
     <div class="card h-100 {{ classes }}">
         <span class="badge badge-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99;">
             <i class="material-icons-x">person</i> {{ project.taken_count|intcomma }}
@@ -16,12 +16,9 @@
             {% thumbnail project.cover "640x274" crop="center" as im %}
             <img src="{{ im.url }}" class="card-img-top">
             {% endthumbnail %}
-            <div class="card-body">
+            <div class="card-body d-flex flex-column justify-content-between">
                 {% with codeblock=project.codeblock %}
                 <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
-                    <!-- {% if codeblock %}
-                    <i class="devicon-{{codeblock.get_language_display}}-plain"></i>
-                    {% endif %} -->
                     {{ project.title|title }}
                 </h5>
                 <div style="opacity: 0.6;">

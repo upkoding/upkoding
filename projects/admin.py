@@ -33,10 +33,10 @@ class ProjectAdmin(admin.ModelAdmin):
         ('For Project (legacy)',
          {'fields': ('requirements', 'require_demo_url', 'require_sourcecode_url',)}),
         ('Stats & others',
-         {'fields': ('taken_count', 'completed_count', 'search_vector', 'point',)}),
+         {'fields': ('point', 'taken_count', 'completed_count', 'search_vector', )}),
     )
 
-    readonly_fields = ('search_vector', 'point',)
+    readonly_fields = ('search_vector',)
     formfield_overrides = {
         models.JSONField: {'widget': ProjectRequirementsWidget},
         models.TextField: {'widget': MDEditorWidget},

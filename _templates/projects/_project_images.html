@@ -1,16 +1,13 @@
 {% if images %}
 {% load sorl_thumbnail %}
-<div class="images mb-4 simpleLightbox">
-    <div class="row row-cols-sm-3 row-cols-md-5 row-cols-lg-5 g-3">
+<div class="images mt-4 simpleLightbox">
+    <div class="d-flex justify-content-start">
         {% for img in images %}
-        {% thumbnail img.image "200x200" crop="center" as im %}
-        <div class="col col-6">
-            <a href="{{ img.image.url }}" {%if img.title %}title="{{ img.title }}" {% endif %}target="_blank"
-                rel="noopener noreferrer">
-                <img src="{{ im.url }}" class="rounded img-fluid"
-                    alt="Image {%if img.title %}{{ img.title }}{% endif %}" />
-            </a>
-        </div>
+        {% thumbnail img.image "100x100" crop="center" as im %}
+        <a href="{{ img.image.url }}" {%if img.title %}title="{{ img.title }}" {% endif %}target="_blank"
+            rel="noopener noreferrer" class="mr-2">
+            <img src="{{ im.url }}" class="rounded img-fluid" alt="Image {%if img.title %}{{ img.title }}{% endif %}" />
+        </a>
         {% endthumbnail %}
         {% endfor %}
     </div>
