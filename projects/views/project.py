@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 
@@ -83,7 +83,8 @@ class ProjectDetail(DetailView):
             .filter(
                 project=project,
                 status__in=(UserProject.STATUS_IN_PROGRESS,
-                            UserProject.STATUS_COMPLETE)
+                            UserProject.STATUS_COMPLETE,
+                            UserProject.STATUS_PENDING_REVIEW)
             ).order_by('-created')[:10]
         data['user_projects'] = user_projects
         return data
@@ -157,20 +158,18 @@ class ProjectDetailUser(DetailView):
             .select_related('user') \
             .filter(project=project,
                     status__in=(UserProject.STATUS_IN_PROGRESS,
-                                UserProject.STATUS_COMPLETE)) \
+                                UserProject.STATUS_COMPLETE,
+                                UserProject.STATUS_PENDING_REVIEW)) \
             .order_by('-created')[:10]
         data['user_projects'] = user_projects
 
         # show completion form only when:
         # - requirements completed
-        # - url has `?form=1`
         # - current user is the owner
-        rev_request = self.request.GET.get('form') == '1'
-        show_rr_form = user_project.is_requirements_complete(
-        ) and rev_request and (user == self.request.user)
-
-        if show_rr_form:
-            data['rr_form'] = UserProjectReviewRequestForm(
+        show_review_request_form = user_project.is_requirements_complete() \
+            and (user == self.request.user)
+        if show_review_request_form:
+            data['review_request_form'] = UserProjectReviewRequestForm(
                 instance=user_project
             )
         return data
@@ -203,8 +202,8 @@ class ProjectDetailUser(DetailView):
         """
         request = self.request
         user = request.user
-        redirect_url = reverse('projects:detail_user', args=[
-                               project.slug, project.pk, user.username])
+        redirect_url = reverse('projects:detail_user',
+                               args=[project.slug, project.pk, user.username])
 
         # deepcopy to preserve the original state
         requirements = copy.deepcopy(user_project.requirements)
@@ -243,16 +242,18 @@ class ProjectDetailUser(DetailView):
 
             # if all requirements completed, ready for review
             if user_project.is_requirements_complete():
-                # user_project.add_event(UserProjectEvent.TYPE_PROGRESS_COMPLETE)
                 messages.info(request,
-                              "Mantap! Proyek kamu siap untuk direview. Klik tombol `Minta Review`",
+                              "Mantap! Proyek kamu siap untuk direview",
                               extra_tags='success')
 
         return HttpResponseRedirect(redirect_url)
 
     def _handle_review_request(self, project, user_project):
         request = self.request
+        user = request.user
 
+        redirect_url = reverse('projects:detail_user',
+                               args=[project.slug, project.pk, user.username])
         form = UserProjectReviewRequestForm(
             request.POST, instance=user_project)
 
@@ -261,14 +262,18 @@ class ProjectDetailUser(DetailView):
             if review_requested:
                 user_project.add_event(UserProjectEvent.TYPE_REVIEW_REQUEST)
                 messages.info(request,
-                              "Great job! Proyek kamu sudah disubmit untuk direview team UpKoding.",
+                              "Great job! Proyek kamu akan segera direview team UpKoding.",
                               extra_tags='success')
             else:
                 messages.info(request,
                               "Detail proyek berhasil diupdate!",
                               extra_tags='success')
-            return HttpResponse()
-        return HttpResponseBadRequest(form.errors.as_json(), content_type='application/json; charset=utf-8')
+            return HttpResponseRedirect(redirect_url)
+
+        self.object = self.get_object()
+        context = self.get_context_data(**self.kwargs)
+        context['review_request_form'] = form
+        return render(request, self.template_name, context)
 
     def _handle_delete(self, project, user_project):
         user_project.delete()

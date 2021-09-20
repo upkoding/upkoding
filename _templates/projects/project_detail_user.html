@@ -17,7 +17,7 @@
         {% if object.is_premium %}
         <span class="badge badge-warning mt-1">PRO</span>
         {% elif object.level == 0 %}
-        <span class="badge badge-decondary mt-1">PROJECT</span>
+        <span class="badge badge-secondary mt-1">PROJECT</span>
         {% endif %}
     </a>
 </li>
@@ -57,8 +57,16 @@
 {% render_codeblock_pro_only object user_project %}
 {% endif %}
 <!-- end if-viewable -->
-
 {% endwith %}
+<!-- end with-viewable -->
+
+{% else %}
+<!-- end if-has_codeblock -->
+<!-- start legacy-challenge -->
+{% render_requirements_form user_project %}
+{% render_review_request_form user_project review_request_form %}
+{% render_timeline user_project %}
+<!-- end legacy-challenge -->
 {% endif %}
 {% endblock %}
 

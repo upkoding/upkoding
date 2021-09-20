@@ -53,8 +53,8 @@ class UserProjectCodeSubmissionForm(forms.Form):
 
 
 class UserProjectReviewRequestForm(forms.ModelForm):
-    kind = forms.CharField(widget=forms.HiddenInput(),
-                           initial='review_request')
+    action = forms.CharField(widget=forms.HiddenInput(),
+                             initial='review_request')
 
     class Meta:
         model = UserProject

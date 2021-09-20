@@ -54,7 +54,7 @@
                         <div class="col-lg-11 col-xl-10">
                             <div class="page-header">
                                 <h1>{{ object.title|title }}</h1>
-                                <p class="lead">{{ object.description_short }}</p>
+                                <p class="lead mb-0">{{ object.description_short }}</p>
                             </div>
 
                             {% include 'base/_messages.html' %}
@@ -62,7 +62,7 @@
                             <div class="card shadow-sm mb-3">
                                 <div class="card-body">
                                     {{ object.description|markdownify }}
-                                    
+
                                     {% include 'projects/_project_images.html' with images=project.images.all %}
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
 
                             <div class="d-flex justify-content-between text-small mt-2">
                                 <div class="d-flex align-items-center">
-                                    <span>Diposting oleh
+                                    <span>Tantangan diposting oleh
                                         <a href="{{ project_owner.get_absolute_url }}">
                                             {{ project_owner.get_display_name }}</a>,
                                         {{ object.created|naturalday }}.
@@ -87,6 +87,7 @@
                                     {% render_tags object 'secondary' %}
                                 </span>
                             </div>
+
                         </div>
                     </div>
                 </div>
