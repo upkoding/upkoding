@@ -8,6 +8,7 @@
 import mrUtil from './util';
 import lightbox from './lightbox';
 import codeblock from './upkoding/codeblock';
+import projectReviewForm from './upkoding/project-review-form';
 
 (() => {
   if (typeof $ === 'undefined') {
@@ -22,4 +23,5 @@ export {
   lightbox,
   mrUtil,
   codeblock,
+  projectReviewForm
 };

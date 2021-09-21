@@ -1,19 +1,11 @@
 {% load humanize %}
-<div class="card shadow-sm">
-    <div class="card-body pt-2 pb-2 ps-3 pe-3">
-        <span class="float-end d-inline-block ps-2 created">
-            {{ event.obj.created|naturalday }}
-        </span>
-        <div class="title">
-            <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
-                <strong>
-                    {{ event_user.username }}
-                </strong>
-            </a>
-            {% if event_user.is_staff %}
-            <span class="badge bg-secondary ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
-            {% endif %}
-            memulai proyek
-        </div>
-    </div>
+<div class="d-flex w-100 justify-content-between">
+    <p class="mb-0">
+        {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
+        <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
+            {{ event_user.get_display_name }}
+        </a>
+        memulai proyek
+    </p>
+    <small>{{ event.created|naturalday }}</small>
 </div>

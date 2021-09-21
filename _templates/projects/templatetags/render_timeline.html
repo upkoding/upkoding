@@ -1,26 +1,28 @@
-<ul class="timeline mt-4">
-    {% for event in events %}
-    <li>
-        {% with event_user=event.obj.user %}
-        {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
-        {% include event.tpl with object=event.obj %}
-        {% endwith %}
-    </li>
-    {% endfor %}
+<div class="card mt-3">
+    <div class="card-header">
+        <i class="material-icons-x">timeline</i>
+        <strong>Timeline proyek</strong>
+    </div>
 
-    {% if user == user_project.user and not user_project.is_in_progress %}
-    <!-- if project owner, show review form (message mode only) -->
-    <li>
-        {% include 'projects/templatetags/timeline/avatar.html' with u=user %}
-        {% include 'projects/templatetags/timeline/review_form.html' with fullmode=False %}
-    </li>
-    {% endif %}
+    <div class="list-group list-group-flush">
+        {% for event in events %}
+        <div class="list-group-item">
+            {% include event.tpl with event=event.obj event_user=event.obj.user %}
+        </div>
+        {% endfor %}
 
-    {% if user.is_staff and user != user_project.user %}
-    <!-- if current user is staff and project waiting for review, show review form (full mode) -->
-    <li>
-        {% include 'projects/templatetags/timeline/avatar.html' with u=user %}
-        {% include 'projects/templatetags/timeline/review_form.html' with fullmode=True %}
-    </li>
-    {% endif %}
-</ul>
+        {% if user == user_project.user and not user_project.is_in_progress %}
+        <!-- if project owner, show review form (message mode only) -->
+        <div class="list-group-item bg-light" id="timeline-form">
+            {% include 'projects/templatetags/timeline/review_form.html' with fullmode=False %}
+        </div>
+        {% endif %}
+
+        {% if user.is_staff and user != user_project.user %}
+        <!-- if current user is staff and project waiting for review, show review form (full mode) -->
+        <div class="list-group-item bg-light" id="timeline-form">
+            {% include 'projects/templatetags/timeline/review_form.html' with fullmode=True %}
+        </div>
+        {% endif %}
+    </div>
+</div>

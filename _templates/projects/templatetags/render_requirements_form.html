@@ -11,8 +11,7 @@
 
         <div class="list-group list-group-flush">
             {% for req in requirements %}
-            <div class="list-group-item list-group-item-action {% if req.complete %}list-group-item-{{ user_project.get_color_class }}{% endif %}"
-                aria-current="true">
+            <div class="list-group-item list-group-item-action" aria-current="true">
                 <div class="d-flex w-100 justify-content-start ml-3">
                     <input {% if req.complete %}checked{% endif %} {% if not editable %}disabled{% endif %}
                         class="form-check-input me-2" type="checkbox" name="reqs" id="reqs-{{ forloop.counter0 }}"

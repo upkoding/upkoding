@@ -1,18 +1,14 @@
 {% load humanize %}
 {% load markdownify %}
-<div class="card shadow-sm">
-    <div class="card-header">
+<div class="d-flex w-100 justify-content-between">
+    <p class="mb-0">
+        {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
         <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
-            {{ event_user.username }}
+            {{ event_user.get_display_name }}
         </a>
-        {% if event_user.is_staff %}
-        <span class="badge bg-secondary ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
-        {% endif %}
-        <span class="float-end d-inline-block ps-2 created">
-            {{ object.created|naturalday }}
-        </span>
-    </div>
-    <div class="card-body pt-3 pb-1 ps-3 pe-3">
-        {{ object.message|markdownify }}
-    </div>
+    </p>
+    <small>{{ event.created|naturalday }}</small>
 </div>
+<p class="mb-1">
+    {{ event.message|markdownify }}
+</p>

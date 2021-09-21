@@ -262,7 +262,7 @@ class ProjectDetailUser(DetailView):
             if review_requested:
                 user_project.add_event(UserProjectEvent.TYPE_REVIEW_REQUEST)
                 messages.info(request,
-                              "Great job! Proyek kamu akan segera direview team UpKoding.",
+                              "Terima kasih! Proyek kamu akan segera direview team UpKoding.",
                               extra_tags='success')
             else:
                 messages.info(request,

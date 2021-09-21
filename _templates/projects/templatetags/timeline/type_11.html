@@ -1,36 +1,17 @@
 {% load humanize %}
 {% load markdownify %}
-<div class="card border-success shadow-sm">
-    {% if object.message %}
-    <div class="card-header">
+<div class="d-flex w-100 justify-content-between">
+    <p class="mb-0 text-success">
+        {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
         <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
-            {{ event_user.username }}
+            {{ event_user.get_display_name }}
         </a>
-        <span class="badge bg-success ms-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
-        <span class="text-success">menyetujui proyek ini</span>
-        <span class="float-end d-inline-block ps-2 created">
-            {{ object.created|naturalday }}
-        </span>
-    </div>
-    <div class="card-body pt-3 pb-1 ps-3 pe-3">
-        {{ object.message|markdownify }}
-    </div>
-    {% else %}
-    <div class="card-body pt-2 pb-2 ps-3 pe-3">
-        <span class="float-end d-inline-block ps-2 created">
-            {{ event.obj.created|naturalday }}
-        </span>
-        <div class="title">
-            <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
-                <strong>
-                    {{ event_user.username }}
-                </strong>
-            </a>
-            {% if event_user.is_staff %}
-            <span class="badge bg-success ms-1 me-1" style="font-size: 10px; font-weight: 300;">STAFF</span>
-            {% endif %}
-            <span class="text-success">menyetujui proyek ini</span>
-        </div>
-    </div>
-    {% endif %}
+        menyetujui proyek ini
+    </p>
+    <small>{{ event.created|naturalday }}</small>
 </div>
+{% if event.message %}
+<p class="mb-1">
+    {{ event.message|markdownify }}
+</p>
+{% endif %}
