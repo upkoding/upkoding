@@ -23,7 +23,7 @@
                                 <div class="media media-member mb-0">
                                     <img alt="{{ u.get_display_name }}" src="{{ u|avatar_url:64 }}" class="avatar" />
                                     <div class="media-body">
-                                        <h6 class="mb-0" data-filter-by="text">{{ u.get_display_name }}</h6>
+                                        <h6 class="mb-0" data-filter-by="text">{{ u.username }}</h6>
                                         <span class="text-muted">{{ up.created|naturaltime }}</span>
                                     </div>
                                     {% if up.is_complete %}

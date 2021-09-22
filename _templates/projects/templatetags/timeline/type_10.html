@@ -1,14 +1,17 @@
 {% load humanize %}
 {% load markdownify %}
-<div class="d-flex w-100 justify-content-between">
-    <p class="mb-0">
-        {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
-        <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
-            {{ event_user.get_display_name }}
-        </a>
-    </p>
-    <small>{{ event.created|naturalday }}</small>
+<div class="list-group-item">
+    <div class="d-flex w-100 justify-content-between">
+        <p class="mb-0">
+            {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
+            <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
+                {{ event_user.username }}
+            </a>
+        </p>
+        <small>{{ event.created|naturalday }}</small>
+    </div>
+
+    <ul class="list-group mt-2 mb-1">
+        <li class="list-group-item bg-light">{{ event.message|markdownify }}</li>
+    </ul>
 </div>
-<p class="mb-1">
-    {{ event.message|markdownify }}
-</p>

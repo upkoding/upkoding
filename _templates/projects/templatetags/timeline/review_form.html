@@ -1,93 +1,23 @@
 {% load markdownify %}
-<textarea class="form-control mt-2" id="timeline-input-message" rows="3" placeholder="Tulis pesan disini..."></textarea>
+<div class="list-group-item bg-light" id="timeline-form" data-url="{% url 'projects:review' user_project.pk %}">
+    <textarea class="form-control mt-2" id="timeline-input-message" rows="3"
+        placeholder="Tulis pesan disini..."></textarea>
 
-<div class="alert alert-success mt-2 d-none" id="timeline-alert"></div>
+    <div class="alert mt-2 d-none" id="timeline-alert"></div>
 
-<div class="d-flex w-100 mt-2 mb-2 {% if fullmode %}justify-content-between{% else %}justify-content-end{% endif %}">
-    {% if not user_project.is_complete and user.is_staff and user != user_project.user %}
-    <button type="button" class="btn btn-success" id="timeline-btn-approve" data-text="Approve"
-        data-loading-text="Approving...">Approve</button>
-    {% endif %}
+    <div
+        class="d-flex w-100 mt-2 mb-2 {% if fullmode %}justify-content-between{% else %}justify-content-end{% endif %}">
+        {% if not user_project.is_complete and user.is_staff and user != user_project.user %}
+        <button type="button" class="btn btn-success timeline-btn-action" data-text="Approve"
+            data-loading-text="Approving..." data-action="approve">Approve</button>
+        {% endif %}
 
-    {% if user_project.is_complete and user.is_superuser %}
-    <button type="button" class="btn btn-danger" id="timeline-btn-disapprove" data-text="Disapprove"
-        data-loading-text="Disapproving...">Disapprove</button>
-    {% endif %}
+        {% if user_project.is_complete and user.is_superuser %}
+        <button type="button" class="btn btn-danger timeline-btn-action" data-text="Disapprove"
+            data-loading-text="Disapproving..." data-action="disapprove">Disapprove</button>
+        {% endif %}
 
-    <button type="button" class="btn btn-primary" id="timeline-btn-sendmessage" data-text="Kirim pesan"
-        data-loading-text="Mengirim...">Kirim pesan</button>
+        <button type="button" class="btn btn-primary timeline-btn-action" data-text="Kirim pesan"
+            data-loading-text="Mengirim..." data-action="message">Kirim pesan</button>
+    </div>
 </div>
-
-<script type="text/javascript">
-    window.reviewForm = function () {
-        return {
-            spinner: '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Loading...',
-            loading: null,
-            alert: { type: null, message: '' },
-            message: '',
-            showAlert(type, message) {
-                this.alert = { type: type, message: message }
-            },
-            resetAlert() {
-                this.alert = { type: null, message: '' }
-            },
-            _post(data, callback) {
-                fetch("{% url 'projects:review' user_project.pk %}", {
-                    method: 'post',
-                    headers: { 'x-CSRFToken': window.csrftoken, 'Content-Type': 'application/javascript' },
-                    body: JSON.stringify(data)
-                })
-                    .then(resp => {
-                        if (!resp.ok) {
-                            throw Error(resp.statusText)
-                        }
-                        callback()
-                        window.location.reload()
-                    })
-                    .catch(err => {
-                        this.showAlert('server', err)
-                    })
-                    .finally(() => {
-                        this.loading = null
-                    })
-            },
-            approve() {
-                if (this.loading) return;
-                this.loading = 'approve'
-                const payload = { message: this.message, action: 'approve' }
-
-                this._post(payload, () => {
-                    this.message = ''
-                    this.showAlert('success', 'Proyek telah disetujui!')
-                })
-            },
-            disapprove() {
-                if (this.loading) return;
-                if (this.message.trim().length == 0) {
-                    return this.showAlert('client', 'Berikan alasan kenapa proyek ini batal disetujui!')
-                }
-
-                this.loading = 'disapprove'
-                const payload = { message: this.message, action: 'disapprove' }
-
-                this._post(payload, () => {
-                    this.message = ''
-                    this.showAlert('success', 'Proyek telah batal disetujui!')
-                })
-            },
-            sendMessage() {
-                if (this.loading) return;
-                if (this.message.trim().length == 0) {
-                    return this.showAlert('client', 'Pesan tidak boleh kosong!')
-                }
-
-                this.loading = 'message'
-                const payload = { message: this.message, action: 'message' }
-                this._post(payload, () => {
-                    this.message = ''
-                    this.showAlert('success', 'Pesan dikirim!')
-                })
-            },
-        }
-    }
-</script>

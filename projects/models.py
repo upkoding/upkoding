@@ -457,11 +457,13 @@ class UserProject(models.Model):
         self.project.inc_completed_count()
 
     def add_event(self, event_type, **kwargs):
-        UserProjectEvent(
+        event = UserProjectEvent(
             user_project=self,
             user=kwargs.get('user', self.user),
             event_type=event_type,
-            message=kwargs.get('message', '')).save()
+            message=kwargs.get('message', ''))
+        event.save()
+        return event
 
 
 class UserProjectEvent(models.Model):
