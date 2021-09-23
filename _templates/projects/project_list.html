@@ -21,30 +21,33 @@
             <div>
                 <form method="GET" action="{% url 'projects:list' %}">
                     <input name="s" {% if search_query %}value="{{ search_query }}" {% endif %}
-                        class="form-control form-control-lg" type="text" placeholder="Cari tantangan..."
+                        class="form-control form-control-lg p-3" type="text" placeholder="Cari tantangan..."
                         aria-label="Cari Tantangan">
                 </form>
-                <div class="mt-2">
-                    <span class="text-muted mr-1">Topic populer:</span>
-                    <a href="{% url 'projects:list' %}?s=javascript"><span class="badge badge-info">javascript</span></a>
+                <div class="mt-2 mb-5">
+                    <span class="text-muted mr-1">Filter:</span>
+                    <a href="{% url 'projects:list' %}?s=javascript"><span
+                            class="badge badge-info">javascript</span></a>
                     <a href="{% url 'projects:list' %}?s=python"><span class="badge badge-info">python</span></a>
                     <a href="{% url 'projects:list' %}?s=golang"><span class="badge badge-info">golang</span></a>
                     <a href="{% url 'projects:list' %}?s=ruby"><span class="badge badge-info">ruby</span></a>
                     <a href="{% url 'projects:list' %}?s=algoritma"><span class="badge badge-info">algoritma</span></a>
-                    <a href="{% url 'projects:list' %}?s=proyek"><span class="badge badge-info">proyek</span></a>
+                    <a href="{% url 'projects:list' %}?s=level:easy"><span class="badge badge-info">easy</span></a>
+                    <a href="{% url 'projects:list' %}?s=level:medium"><span class="badge badge-info">medium</span></a>
+                    <a href="{% url 'projects:list' %}?s=level:hard"><span class="badge badge-info">hard</span></a>
+                    <a href="{% url 'projects:list' %}?s=level:project"><span class="badge badge-info">project</span></a>
+                    <a href="{% url 'projects:list' %}?s=pricing:pro"><span class="badge badge-info">pro</span></a>
                 </div>
-
-                <hr/>
 
                 {% if featured_projects %}
                 <h6 class="section-title mb-3 text-muted text-upper">FEATURED</h6>
-                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mb-5">
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mb-4">
                     {% for project in featured_projects %}
-                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
+                    {% include 'projects/_project_list_item.html' with project=project %}
                     {% endfor %}
                 </div>
                 {% endif %}
-            
+
                 {% if search_query %}
                 <h6 class="section-title mb-3 text-muted text-upper text-center">
                     {% if page_obj %}
@@ -56,7 +59,7 @@
                 {% else %}
                 <h6 class="section-title mb-3 text-muted text-upper">SEMUA TANTANGAN</h6>
                 {% endif %}
-            
+
                 <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
                     {% if object_list %}
                     {% for project in object_list %}
@@ -64,7 +67,7 @@
                     {% endfor %}
                     {% endif %}
                 </div>
-            
+
                 {% if page_obj %}
                 {% include 'base/_pagination.html' with page_obj=page_obj search_query=search_query %}
                 {% endif %}

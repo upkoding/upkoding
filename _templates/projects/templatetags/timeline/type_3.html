@@ -11,7 +11,7 @@
                 meminta review
             </strong>
         </p>
-        <small>{{ event.created|naturalday }}</small>
+        <small>{{ event.created|naturaltime }}</small>
     </div>
 
     {% if user_project.has_details %}
@@ -32,7 +32,7 @@
         </li>
         {% endif %}
         {% if user_project.note %}
-        <li class="list-group-item bg-light">{{ user_project.note|markdownify }}</li>
+        <li class="list-group-item bg-light text-dark">{{ user_project.note|markdownify }}</li>
         {% endif %}
     </ul>
     </p>

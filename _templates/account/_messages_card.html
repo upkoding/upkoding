@@ -1,14 +1,14 @@
 {% load sorl_thumbnail %}
 {% load base %}
 {% load humanize %}
-<div class="card shadow-sm">
+<div class="card">
     <div class="card-header">
-        <i class="bi bi-chat-left-text mr-2"></i></i>Pesan Terbaru
+        <i class="material-icons-x">comment</i> <strong>Pesan Terbaru</strong>
     </div>
     {% if events %}
     <div class="list-group list-group-flush">
         {% for event in events %}
-        <a href="{{ event.user_project.get_absolute_url }}" class="list-group-item list-group-item-action p-3">
+        <a href="{{ event.user_project.get_absolute_url }}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
                 <h6 class="mb-1">
                     {% with u=event.user %}
@@ -16,11 +16,11 @@
                     {{ u.username }}
                     {% endwith %}
                 </h6>
-                <small class="text-muted" style="font-size: 0.8rem; color: #999 !important;">
-                    {{event.updated|naturalday}}
+                <small class="text-muted">
+                    {{event.updated|naturaltime}}
                 </small>
             </div>
-            <p class="mt-2 mb-1 text-muted" style="font-size: 0.9rem">{{ event.message|truncatechars:120 }}</p>
+            <p class="mt-1">{{ event.message|truncatechars:120 }}</p>
         </a>
         {% endfor %}
     </div>

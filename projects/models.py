@@ -48,15 +48,15 @@ class Project(models.Model):
     ]
 
     # dificulty levels and its point
-    LEVEL_PROJECT = 0  # default (backward compat with legacy project)
     LEVEL_EASY = 1
     LEVEL_MEDIUM = 2
     LEVEL_HARD = 3
+    LEVEL_PROJECT = 99  # (backward compat with legacy project)
     LEVELS = [
-        (LEVEL_PROJECT, 'project'),
         (LEVEL_EASY, 'easy'),
         (LEVEL_MEDIUM, 'medium'),
         (LEVEL_HARD, 'hard'),
+        (LEVEL_PROJECT, 'project'),
     ]
     POINT_EASY = 1
     POINT_MEDIUM = 5
@@ -67,7 +67,7 @@ class Project(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         related_name='projects')
-    level = models.PositiveIntegerField(choices=LEVELS, default=LEVEL_PROJECT)
+    level = models.PositiveIntegerField(choices=LEVELS, default=LEVEL_EASY)
     slug = models.SlugField(max_length=150, blank=True)
     title = models.CharField('Judul', max_length=100)
     description_short = models.CharField(

@@ -1,7 +1,7 @@
 {% load sorl_thumbnail %}
 {% load projects %}
 {% load humanize %}
-<div class="col col-12 mb-3">
+<div class="col col-12 mb-3" {% if project.is_archived %}style="opacity: 0.5;" {% endif %}>
     <div class="card h-100 {{ classes }}">
         <span class="badge badge-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99;">
             <i class="material-icons-x">person</i> {{ project.taken_count|intcomma }}
@@ -23,7 +23,7 @@
                 </h5>
                 <div style="opacity: 0.6;">
                     {% if project.is_premium %}
-                    <a href="{% url 'projects:list' %}?s=pro">
+                    <a href="{% url 'projects:list' %}?s=pricing:pro">
                         <span class="badge badge-secondary">pro</span>
                     </a>
                     {% endif %}

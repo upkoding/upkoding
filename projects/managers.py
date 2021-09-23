@@ -37,7 +37,7 @@ class ProjectManager(models.Manager):
         Which is equivalent to:
             `Project.objects.all(status=2, is_featured=True)`
         """
-        return self.select_related('codeblock').filter(status=2, is_featured=True)
+        return self.select_related('codeblock').filter(status=2, is_featured=True).order_by('level')
 
     def search(self, text):
         """
@@ -53,6 +53,6 @@ class ProjectManager(models.Manager):
         return self.get_queryset() \
             .annotate(rank=search_rank, similarity=trigram_similarity) \
             .select_related('codeblock') \
-            .filter(status=2) \
+            .filter(status__in=[self.model.STATUS_ACTIVE, self.model.STATUS_ARCHIVED]) \
             .filter(Q(rank__gte=0.2) | Q(similarity__gt=0.1)) \
-            .order_by('-rank')
+            .order_by('-rank', 'status', 'level')

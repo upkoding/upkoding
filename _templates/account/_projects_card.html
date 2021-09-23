@@ -4,31 +4,24 @@
 
 <div class="card shadow-sm">
     <div class="card-header">
-        <i class="bi bi-code-slash mr-2"></i></i>Proyek Saya
+        <i class="material-icons-x">extension</i> <strong>Tantangan Saya</strong>
     </div>
     {% if projects %}
     <div class="list-group list-group-flush">
         {% for item in projects %}
         {% with u=item.user p=item.project %}
-        <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action p-3">
-            <div class="position-relative">
+        <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-start">
                 {% thumbnail p.cover "160x160" crop="center" as im %}
-                <img src="{{ im.url }}" width="80" height="80" class="me-3 rounded float-start"
+                <img src="{{ im.url }}" width="50" height="50" class="mr-2 rounded"
                     alt="{{ p.title|title }}">
                 {% endthumbnail %}
                 <div>
                     <h6 class="mt-0 mb-1">{{ p.title|title }}</h6>
                     <small class="text-muted">
-                        <span class="badge me-2 bg-{{ item.get_color_class }}">{{ item.get_status_display }}</span>
-                        {{ item.updated|naturalday }}
+                        <span class="badge mr-1 badge-{{ item.get_color_class }}">{{ item.get_status_display }}</span>
+                        {{ item.updated|naturaltime }}
                     </small>
-                    <div class="progress mt-2" style="height: 3px;">
-                        <div class="progress-bar progress-bar-striped bg-{{ item.get_color_class }}" role="progressbar"
-                            style="width: {{ item.requirements_completed_percent|safe }}%"
-                            aria-valuenow="{{ item.requirements_completed_percent|safe }}" aria-valuemin="0"
-                            aria-valuemax="100">
-                        </div>
-                    </div>
                 </div>
             </div>
         </a>
@@ -37,8 +30,7 @@
     </div>
     {% else %}
     <div class="card-body">
-        <span class="text-muted">Kamu belum mengerjakan proyek. Lihat daftar proyek <a
-                href="{% url 'projects:list' %}">disini</a>.</span>
+        <span class="text-muted">Kamu belum mengerjakan tantangan.</span>
     </div>
     {% endif %}
 </div>

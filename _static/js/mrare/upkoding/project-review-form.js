@@ -39,7 +39,10 @@ const projectReviewForm = (($) => {
         if (resp.ok) {
           const { message, html } = await resp.json();
           if (message !== null) showAlert("alert-success", message);
-          if (html !== null) reviewForm.before(html);
+          if (html !== null) {
+            reviewForm.before(html);
+            Prism.highlightAll();
+          }
         } else {
           showAlert("alert-danger", await resp.text());
         }

@@ -11,11 +11,11 @@
                 menyetujui proyek ini <i class="material-icons-x">check</i>
             </strong>
         </p>
-        <small>{{ event.created|naturalday }}</small>
+        <small>{{ event.created|naturaltime }}</small>
     </div>
     {% if event.message %}
     <ul class="list-group mt-2 mb-1">
-        <li class="list-group-item bg-light">{{ event.message|markdownify }}</li>
+        <li class="list-group-item bg-light text-dark">{{ event.message|markdownify }}</li>
     </ul>
     {% endif %}
 </div>

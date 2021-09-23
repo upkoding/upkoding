@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='level',
-            field=models.PositiveIntegerField(choices=[(0, 'none'), (1, 'easy'), (2, 'medium'), (3, 'hard')], default=0),
+            field=models.PositiveIntegerField(choices=[(1, 'easy'), (2, 'medium'), (3, 'hard'), (99, 'project')], default=1),
         ),
         migrations.AddField(
             model_name='userproject',

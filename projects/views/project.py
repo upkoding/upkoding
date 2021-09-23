@@ -21,8 +21,19 @@ class ProjectList(ListView):
     def get_queryset(self):
         search_query = self.request.GET.get('s')
         if search_query:
-            return Project.objects.search(search_query)
-        return Project.objects.active()
+            if search_query == 'level:easy':
+                return Project.objects.active().filter(level=Project.LEVEL_EASY)
+            elif search_query == 'level:medium':
+                return Project.objects.active().filter(level=Project.LEVEL_MEDIUM)
+            elif search_query == 'level:hard':
+                return Project.objects.active().filter(level=Project.LEVEL_HARD)
+            elif search_query == 'level:project':
+                return Project.objects.active().filter(level=Project.LEVEL_PROJECT).order_by('status')
+            elif search_query == 'pricing:pro':
+                return Project.objects.active().filter(is_premium=True)
+            else:
+                return Project.objects.search(search_query)
+        return Project.objects.active().order_by('level')
 
     def get_context_data(self, **kwargs):
         search_query = self.request.GET.get('s')
@@ -51,7 +62,7 @@ class ProjectDetail(DetailView):
         )
         # - allow staff to preview inactive project
         # - or if its active
-        if user.is_staff or obj.is_active():
+        if user.is_staff or obj.is_active() or obj.is_archived():
             return obj
         raise Http404()
 
@@ -136,7 +147,7 @@ class ProjectDetailUser(DetailView):
             Project,
             pk=self.kwargs.get('pk'),
             slug=self.kwargs.get('slug'),
-            status=Project.STATUS_ACTIVE
+            status__in=[Project.STATUS_ACTIVE, Project.STATUS_ARCHIVED]
         )
 
     def get_context_data(self, **kwargs):
