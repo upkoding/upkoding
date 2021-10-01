@@ -75,6 +75,11 @@ class User(AbstractUser):
         except Exception:
             return False
 
+    @staticmethod
+    def get_active_staffs(exclude_user=None):
+        qs = User.objects.filter(is_active=True, is_staff=True)
+        return qs.exclude(pk=exclude_user.pk) if exclude_user else qs
+
 
 class Link(models.Model):
     user = models.OneToOneField(

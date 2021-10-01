@@ -202,6 +202,9 @@ class ProjectDetailUser(DetailView):
             if (codeblock.is_expecting_output and codeblock.is_output_match) or (not codeblock.is_expecting_output and codeblock.is_run_accepted):
                 with transaction.atomic():
                     user_project.set_complete()
+                    user_project.add_event(
+                        UserProjectEvent.TYPE_PROJECT_COMPLETE,
+                        user=user)
                     data['completed'] = True
 
             return JsonResponse(data)
@@ -288,7 +291,7 @@ class ProjectDetailUser(DetailView):
 
     def _handle_delete(self, project, user_project):
         user_project.delete()
-        messages.info(self.request, 'Berhasil dibatalkan.',
+        messages.info(self.request, 'Tantangan telah dibatalkan.',
                       extra_tags='warning')
 
     @method_decorator(login_required)
@@ -298,7 +301,7 @@ class ProjectDetailUser(DetailView):
             return HttpResponseForbidden()
 
         action = request.POST.get('action')
-
+        project_url = reverse('projects:detail', args=[slug, pk])
         project = self.get_object()
         user_project = get_object_or_404(
             UserProject, user=user, project=project)
@@ -311,9 +314,8 @@ class ProjectDetailUser(DetailView):
 
         if action == 'delete':
             self._handle_delete(project, user_project)
+            return HttpResponse(project_url)
 
         if action == 'review_request':
             return self._handle_review_request(project, user_project)
-
-        project_url = reverse('projects:detail', args=[slug, pk])
         return HttpResponseRedirect(project_url)

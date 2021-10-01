@@ -16,8 +16,6 @@
         {{ object.title|title }}
         {% if object.is_premium %}
         <span class="badge badge-warning mt-1">PRO</span>
-        {% elif object.level == 0 %}
-        <span class="badge badge-secondary mt-1">PROJECT</span>
         {% endif %}
     </a>
 </li>
@@ -26,14 +24,13 @@
 
 {% block breadcrumb_action %}
 {% if user.is_authenticated and user == user_project_owner and not user_project.is_complete %}
-<div>
-    <form method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="delete" />
-        <button class="btn btn-outline-danger">
-            Batalkan
-        </button>
-    </form>
+<div class="dropdown">
+    <button class="btn btn-round" role="button" data-toggle="dropdown" aria-expanded="false">
+        <i class="material-icons">settings</i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right">
+        <a class="dropdown-item text-danger cancel-challenge" href="javascript:;" data-challenge-url="{{ user_project.get_absolute_url }}">Batalkan</a>
+    </div>
 </div>
 {% endif %}
 {% endblock %}

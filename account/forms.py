@@ -110,7 +110,7 @@ class EmailNotificationSettings(forms.Form):
 
 class StaffEmailNotificationSettings(EmailNotificationSettings):
     email_notify_project_review_request = forms.BooleanField(
-        label='Permintaan review proyek', help_text='Hanya untuk proyek yang saya buat (staff).', required=False)
+        label='Permintaan review proyek (for staff only)', required=False)
 
 
 class ProAccessPurchaseForm(forms.Form):

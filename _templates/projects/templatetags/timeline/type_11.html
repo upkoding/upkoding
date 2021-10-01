@@ -14,8 +14,8 @@
         <small>{{ event.created|naturaltime }}</small>
     </div>
     {% if event.message %}
-    <ul class="list-group mt-2 mb-1">
-        <li class="list-group-item bg-light text-dark">{{ event.message|markdownify }}</li>
-    </ul>
+    <div class="mt-2 mb-1 text-dark">
+        {{ event.message|markdownify }}
+    </div>
     {% endif %}
 </div>

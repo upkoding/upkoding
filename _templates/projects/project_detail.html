@@ -16,8 +16,6 @@
             <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}
                 {% if object.is_premium %}
                 <span class="badge badge-warning ml-1 mt-1">PRO</span>
-                {% elif object.level == 0 %}
-                <span class="badge badge-secondary ml-1 mt-1">PROJECT</span>
                 {% endif %}
             </li>
             {% endblock %}
@@ -94,6 +92,6 @@
             </div>
         </div>
     </div>
-    {% include 'projects/_project_sidebar.html' with user_projects=user_projects %}
+    {% include 'projects/_project_sidebar.html' with user_projects=user_projects user_project_owner=user_project_owner %}
 </div>
 {% endblock %}

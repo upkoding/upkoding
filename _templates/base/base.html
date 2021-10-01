@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 {% load static %}
 {% load base %}
 
@@ -56,25 +56,28 @@
             <div class="collapse navbar-collapse flex-column" id="navbar-collapse">
                 <ul class="navbar-nav d-lg-block">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'base:classrooms' %}"><i
-                                class="material-icons-x mr-1">meeting_room</i> Ruang
-                            Kelas</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'projects:list' %}"><i
-                                class="material-icons-x mr-1">extension</i>
+                                class="material-icons-x mr-1 text-info">extension</i>
                             Tantangan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'coders:list' %}"><i class="material-icons-x mr-1">people</i>
+                        <a class="nav-link" href="{% url 'base:classrooms' %}"><i
+                                class="material-icons-x mr-1 text-info">widgets</i> Kelas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'coders:list' %}"><i
+                                class="material-icons-x mr-1 text-info">people</i>
                             Koders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'base:pro' %}"><i class="material-icons-x mr-1">spa</i>
+                        <a class="nav-link" href="{% url 'base:pro' %}"><i
+                                class="material-icons-x mr-1 text-info">spa</i>
                             PRO</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'base:tentang' %}"><i class="material-icons-x mr-1">info</i>
+                        <a class="nav-link" href="{% url 'base:tentang' %}"><i
+                                class="material-icons-x mr-1 text-info">info</i>
                             Tentang</a>
                     </li>
                 </ul>
@@ -95,13 +98,12 @@
                         </li>
                         {% endif %}
                     </ul>
-                    <!-- <span class="text-small text-muted">&copy; 2021 UpKoding</span> -->
                     <hr>
                 </div>
                 {% if not user.is_authenticated %}
                 <div class="d-block w-100">
                     <div class="mt-2">
-                        <a href="{% url 'account:login' %}" class="btn btn-primary btn-block">
+                        <a href="{% url 'account:login' %}" class="btn btn-info btn-block">
                             Login / Register
                         </a>
                     </div>
@@ -125,6 +127,20 @@
         <div class="main-container {% block main_container_classes %}{% endblock %}">
             {% block content %}
             {% endblock %}
+        </div>
+    </div>
+
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000"
+        style="position: absolute; bottom: 0; right: 20px;" id="toast-main">
+        <div class="toast-header">
+            <strong class="mr-auto toast-main-title">Notifikasi</strong>
+            <small class="toast-main-time d-none">11 mins ago</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body toast-main-text">
+            Hello, world! This is a toast message.
         </div>
     </div>
 

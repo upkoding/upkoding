@@ -4,11 +4,15 @@
         <strong>Timeline proyek</strong>
     </div>
 
-    <div class="list-group list-group-flush">
-        {% for event in events %}
-        {% include event.tpl with event=event.obj event_user=event.obj.user %}
-        {% endfor %}
+    <div class="card-body p-0">
+        <div class="list-group list-group-flush" id="timeline-events">
+            {% for event in events %}
+            {% include event.tpl with event=event.obj event_user=event.obj.user %}
+            {% endfor %}
+        </div>
+    </div>
 
+    <div class="card-footer py-2">
         {% if user == user_project.user and not user_project.is_in_progress %}
         <!-- if project owner, show review form (message mode only) -->
         {% include 'projects/templatetags/timeline/review_form.html' with fullmode=False %}

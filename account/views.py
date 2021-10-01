@@ -11,6 +11,9 @@ from django.views.generic import View, TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from stream_django.enrich import Enrich
+from upkoding.activity_feed import feed_manager
+
 from projects.models import UserProject, UserProjectEvent
 from .midtrans import is_payment_notification_valid
 from .models import ProAccessPurchase, MidtransPaymentNotification
@@ -24,7 +27,7 @@ from .forms import (
     ProAccessPurchaseActionForm,
 )
 
-log = logging.getLogger(__file__)
+log = logging.getLogger(__name__)
 
 
 class LoginView(views.LoginView):
@@ -51,6 +54,13 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
         data['projects'] = UserProject.objects.filter(user=user) \
             .order_by('-updated')[:6]
+
+        enricher = Enrich()
+        feed = feed_manager.get_notification_feed(user.id)
+        activities = feed.get(limit=10)['results']
+        data['notifications'] = enricher.enrich_aggregated_activities(
+            activities)
+        print(data['notifications'])
         data['events'] = UserProjectEvent.objects.filter(event_type=UserProjectEvent.TYPE_REVIEW_MESSAGE, user_project__user=user) \
             .exclude(user=user) \
             .order_by('-updated')[:6]

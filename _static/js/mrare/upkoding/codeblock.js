@@ -1,6 +1,6 @@
 import jQuery from "jquery";
 
-const codeblock = (($) => {
+(($) => {
   let loading = false;
   const blockId = $("#codeblock-editor").data("block-id");
   const codeblockForm = $("#codeblock-form");
@@ -44,7 +44,7 @@ const codeblock = (($) => {
 
     setLoading(true);
 
-    const form = new URLSearchParams();
+    const form = new FormData();
     form.append("csrfmiddlewaretoken", csrfmiddlewaretoken);
     form.append("action", "code_submission");
     form.append("code_block_id", blockId);
@@ -52,58 +52,65 @@ const codeblock = (($) => {
 
     let output = [];
 
-    $.post("", form.toString(), (data) => {
-      setLoading(false);
-      const { completed, result } = data;
-      const {
-        compile_output,
-        is_expecting_output,
-        is_output_match,
-        status,
-        stderr,
-        stdout,
-      } = result;
-      const { description } = status;
+    fetch("", {
+      method: "post",
+      body: form,
+    })
+      .then(async (resp) => {
+        const data = await resp.json();
 
-      // compile output
-      if (compile_output !== null) {
-        output.push({ title: "Compile output", text: compile_output });
-      }
+        if (resp.ok) {
+          const { completed, result } = data;
+          const {
+            compile_output,
+            is_expecting_output,
+            is_output_match,
+            status,
+            stderr,
+            stdout,
+          } = result;
+          const { description } = status;
 
-      // stderr
-      if (stderr !== null) {
-        output.push({ title: description, text: stderr });
-      }
+          // compile output
+          if (compile_output !== null) {
+            output.push({ title: "Compile output", text: compile_output });
+          }
 
-      // stdout
-      if (stdout !== null) {
-        output.push({ title: "Output", text: stdout });
-      }
+          // stderr
+          if (stderr !== null) {
+            output.push({ title: description, text: stderr });
+          }
 
-      if (completed) {
-        codeblockSuccess.modal({ backdrop: "static" });
-      } else {
-        if (is_expecting_output && !is_output_match && stderr === null) {
-          output.push({
-            title: description,
-            text: "Output program tidak sesuai dengan yang diharapkan!",
+          // stdout
+          if (stdout !== null) {
+            output.push({ title: "Output", text: stdout });
+          }
+
+          if (completed) {
+            codeblockSuccess.modal({ backdrop: "static" });
+          } else {
+            if (is_expecting_output && !is_output_match && stderr === null) {
+              output.push({
+                title: description,
+                text: "Output program tidak sesuai dengan yang diharapkan!",
+              });
+            }
+            renderOutput(output);
+          }
+        } else {
+          // error
+          let error = null;
+
+          Object.entries(data).forEach((item) => {
+            error = item[1][0].message;
           });
+
+          output.push({ title: error, text: null });
+          renderOutput(output);
         }
-        renderOutput(output);
-      }
-    }).fail((xhr) => {
-      setLoading(false);
-      const errors = JSON.parse(xhr.responseText);
-      let error = null;
-
-      Object.entries(errors).forEach((item) => {
-        error = item[1][0].message;
+      })
+      .finally((_) => {
+        setLoading(false);
       });
-
-      output.push({ title: error, text: null });
-      renderOutput(output);
-    });
   });
 })(jQuery);
-
-export default codeblock;

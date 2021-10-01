@@ -31,7 +31,6 @@ else:
         path('account/', include('account.urls', namespace='account')),
         path('challenges/', include('projects.urls', namespace='projects')),
         path('coders/', include('coders.urls', namespace='coders')),
-        # path('forum/', include('forum.urls', namespace='forum')),
         path('mdeditor/', include('mdeditor.urls')),
         path('', include('base.urls', namespace='base')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

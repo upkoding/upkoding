@@ -12,7 +12,10 @@
     <div class="row justify-content-center">
         <div class="col-lg-11 col-xl-10">
             <div class="page-header">
-                <h1>Koders &#x2615;</h1>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="material-icons text-info mr-2 h1">people</i>
+                    <h1 class="h1 mb-0">Koders</h1>
+                </div>
                 <p class="lead">UpKoding adalah platform dari coder untuk coder, belajar, bermain dan maju bersama.
                     {% if not user.is_authenticated %}
                     Belum punya akun? yuk
@@ -21,18 +24,18 @@
                 </p>
             </div>
             <hr>
-            <div class="tab-content">
+            <div class="tab-content pt-2">
                 <div class="tab-pane fade show active" id="members" role="tabpanel"
                     data-filter-list="content-list-body">
                     <div class="content-list">
-                        <div class="row content-list-head mb-4">
+                        <!-- <div class="row content-list-head mb-4">
                             <div class="col-auto">
                                 <h3>Para coder</h3>
                                 <button class="btn btn-round" data-toggle="modal" data-target="#user-invite-modal">
                                     <i class="material-icons">add</i>
                                 </button>
                             </div>
-                            <!-- <form class="col-md-auto">
+                            <form class="col-md-auto">
                                 <div class="input-group input-group-round">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
@@ -42,14 +45,14 @@
                                     <input type="search" class="form-control filter-list-input"
                                         placeholder="Filter members" aria-label="Filter Members">
                                 </div>
-                            </form> -->
-                        </div>
+                            </form>
+                        </div> -->
                         <!--end of content list head-->
                         <div class="content-list-body row">
 
                             {% if object_list %}
                             {% for coder in object_list %}
-                            <div class="col-6">
+                            <div class="col-4 mb-2">
                                 <a class="media media-member" href="{{ coder.get_absolute_url }}">
                                     {{ coder|avatar_img:70 }}
                                     <div class="media-body">

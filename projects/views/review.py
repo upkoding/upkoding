@@ -2,11 +2,11 @@ import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http.response import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.http.response import HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
 from django.views.generic import DetailView
 from django.template.loader import render_to_string
 
-from projects.models import UserProject, UserProjectEvent
+from projects.models import UserProject, UserProjectEvent, UserProjectParticipant
 
 
 class ProjectReview(LoginRequiredMixin, DetailView):
@@ -33,6 +33,10 @@ class ProjectReview(LoginRequiredMixin, DetailView):
                 user=current_user,
                 message=message)
 
+            # add current user as participant if doesn't yet
+            UserProjectParticipant.objects.get_or_create(
+                user_project=user_project, user=current_user)
+
             return JsonResponse({
                 'message': 'Pesan telah dikirim!',
                 'html': render_to_string(f'projects/templatetags/timeline/type_{event.event_type}.html', {
@@ -48,6 +52,10 @@ class ProjectReview(LoginRequiredMixin, DetailView):
                     UserProjectEvent.TYPE_PROJECT_COMPLETE,
                     user=current_user,
                     message=message)
+
+                # add current user as participant if doesn't yet
+                UserProjectParticipant.objects.get_or_create(
+                    user_project=user_project, user=current_user)
 
                 return JsonResponse({
                     'message': 'Proyek telah disetujui!',
@@ -78,6 +86,10 @@ class ProjectReview(LoginRequiredMixin, DetailView):
                     UserProjectEvent.TYPE_PROJECT_INCOMPLETE,
                     user=current_user,
                     message=message)
+
+                # add current user as participant if doesn't yet
+                UserProjectParticipant.objects.get_or_create(
+                    user_project=user_project, user=current_user)
 
                 return JsonResponse({
                     'message': 'Proyek batal disetujui!',

@@ -4,216 +4,198 @@
 {% block content%}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-lg-11 col-xl-9">
-            <section class="py-4 py-lg-5">
+        <div class="col-lg-11 col-xl-10">
+            <section class="pt-4 pt-lg-5">
                 <div class="mb-3 d-flex">
                     <img alt="Pipeline" src="{% static 'assets/img/logo.png' %}" class="avatar avatar-lg mr-1" />
                     <div>
-                        <span class="badge badge-info">beta</span>
+                        <span class="badge badge-info">{{ app_version }}</span>
                     </div>
                 </div>
                 <h1 class="display-4 mb-3">Belajar coding menyenangkan!</h1>
                 <p class="lead">
-                    UpKoding adalah platform belajar pemrograman dengan format <strong>bite-sized learning</strong>,
-                    belajar materi secukupnya, langsung uji dan praktekkan.
+                    UpKoding adalah platform belajar pemrograman dengan format bite-sized learning,
+                    belajar materi secukupnya, langsung uji dan praktekkan dengan problem solving.
                 </p>
             </section>
-            <section class="py-4 py-lg-5">
-                <div class="carousel slide carousel-fade mb-5" data-ride="carousel">
-                    <div class="carousel-inner overflow-visible">
-
-                        <div class="carousel-item shadow-lg active">
-                            <a href="pages-app.html">
-                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-team.png' %}"
-                                    class="img-fluid rounded border" />
-                            </a>
-                        </div>
-
-                        <div class="carousel-item shadow-lg ">
-                            <a href="pages-app.html">
-                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-project.png' %}"
-                                    class="img-fluid rounded border" />
-                            </a>
-                        </div>
-
-                        <div class="carousel-item shadow-lg ">
-                            <a href="pages-app.html">
-                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-task.png' %}"
-                                    class="img-fluid rounded border" />
-                            </a>
-                        </div>
-
-                        <div class="carousel-item shadow-lg ">
-                            <a href="pages-app.html">
-                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-kanban-board.png' %}"
-                                    class="img-fluid rounded border" />
-                            </a>
-                        </div>
-
-                        <div class="carousel-item shadow-lg ">
-                            <a href="pages-app.html">
-                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-chat.png' %}"
-                                    class="img-fluid rounded border" />
-                            </a>
-                        </div>
-
-                        <div class="carousel-item shadow-lg ">
-                            <a href="pages-app.html">
-                                <img alt="Image" src="{% static 'assets/img/overview/nav-side-user.png' %}"
-                                    class="img-fluid rounded border" />
-                            </a>
-                        </div>
-
-                    </div>
+            <section class="pt-5">
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
+                    {% if featured_projects %}
+                    {% for project in featured_projects %}
+                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
+                    {% endfor %}
+                    {% endif %}
                 </div>
-                <div class="d-flex align-items-center mb-3">
-                    <i class="material-icons text-primary mr-3 h1">supervised_user_circle</i>
-                    <h2 class="h1 mb-0">Project Management Pages</h2>
+
+                <div class="text-center mt-3">
+                    <a href="{% url 'projects:list' %}" class="btn btn-lg btn-info">
+                        Semua tantangan
+                        <i class="material-icons-x">east</i>
+                    </a>
                 </div>
-                <p class="lead">
-                    Pipeline makes building project management interfaces simple with pages for teams,
-                    projects, tasks, kanban boards and more.
-                </p>
-                <a href="pages-app.html" class="mr-3">App Pages</a><a href="pages-utility.html" class="mr-3">Utility
-                    Pages</a>
             </section>
             <section class="py-4 py-lg-5">
-                <div class="row mb-5">
-                    <div class="carousel slide carousel-fade col-6" data-ride="carousel">
-                        <div class="carousel-inner overflow-visible">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-info mr-2 h1">widgets</i>
+                    <h2 class="h1 mb-0">Kelas</h2>
+                </div>
+                <p class="lead mb-4">
+                    Belajar berbagai topik pemrograman, menyiapkan kamu kuat secara fundamental sebelum
+                    menghadapi tantangan yang sesungguhnya.
+                </p>
 
-                            <div class="carousel-item shadow-lg active">
-                                <img alt="Image" src="{% static 'assets/img/components/activity.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/avatar.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/avatar-list.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/card-kanban.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/card-note.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/card-project.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 mb-3">
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Bite-sized learning</h5>
+                            <p class="text-muted">Belajar teori secukupnya, langsung uji dan praktekkan.</p>
                         </div>
                     </div>
-                    <div class="carousel slide carousel-fade col-6" data-ride="carousel">
-                        <div class="carousel-inner overflow-visible">
-
-                            <div class="carousel-item shadow-lg active">
-                                <img alt="Image" src="{% static 'assets/img/components/card-team.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/card-task.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/card-list.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/chat-item.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/chat-module.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
-                            <div class="carousel-item shadow-lg ">
-                                <img alt="Image" src="{% static 'assets/img/components/checklist.png' %}"
-                                    class="img-fluid rounded border" />
-                            </div>
-
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Baca dan baca</h5>
+                            <p class="text-muted">Materi utama berupa text, video hanya pendukung dan pendek.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Quiz</h5>
+                            <p class="text-muted">Uji pemahamanmu tentang topik yang dipelajari.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Coding time!</h5>
+                            <p class="text-muted">Setelah berteori, praktekkan langsung di dalam kelas.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Sertifikat</h5>
+                            <p class="text-muted">Sebagai bukti kamu telah menyelesaikan kelas.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Free dan Premium</h5>
+                            <p class="text-muted">Selain gratis, ada juga kelas khusus buat PRO member.
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="d-flex align-items-center mb-3">
-                    <i class="material-icons text-primary mr-3 h1">widgets</i>
-                    <h2 class="h1 mb-0">Modular Components</h2>
+
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
+                    <div class="col col-12 mb-3">
+                        <div class="card h-100 shadow-lg">
+                            <img src="{% static 'assets/img/class-web.jpg' %}" class="card-img-top">
+                            <div class="card-body d-flex flex-column justify-content-between p-2">
+                                <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
+                                    Belajar Membuat Website
+                                </h5>
+                                <div style="opacity: 0.5;">
+                                    <span class="badge badge-secondary">contoh</span>
+                                    <span class="badge badge-secondary">kelas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-12 mb-3">
+                        <div class="card h-100 shadow-lg">
+                            <img src="{% static 'assets/img/class-javascript.jpg' %}" class="card-img-top">
+                            <div class="card-body d-flex flex-column justify-content-between p-2">
+                                <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
+                                    Fundamental Javascript
+                                </h5>
+                                <div style="opacity: 0.5;">
+                                    <span class="badge badge-secondary">contoh</span>
+                                    <span class="badge badge-secondary">kelas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-12 mb-3">
+                        <div class="card h-100 shadow-lg">
+                            <img src="{% static 'assets/img/class-python.jpg' %}" class="card-img-top">
+                            <div class="card-body d-flex flex-column justify-content-between p-2">
+                                <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
+                                    Fundamental Python
+                                </h5>
+                                <div style="opacity: 0.5;">
+                                    <span class="badge badge-secondary">contoh</span>
+                                    <span class="badge badge-secondary">kelas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="lead">
-                    Build feature-rich pages with everything Bootstrap 4.5.2 has to offer and extend
-                    functionality with Pipeline's suite of stylish custom components.
-                </p>
-                <a href="components-pipeline.html" class="mr-3">Pipeline Components</a><a
-                    href="components-bootstrap.html" class="mr-3">Bootstrap Components</a>
+
+                <div class="text-center mt-2">
+                    <p class="text-muted">
+                        <span class="material-icons-x">schedule</span> Coming soon! fitur ini masih dalam pengembangan.
+                    </p>
+                </div>
+
             </section>
-            <section class="py-4 py-lg-5">
-                <div class="row mb-5">
-                    <div class="col-4">
-                        <img alt="Image" src="{% static 'assets/img/layouts/layout-nav-side.svg' %}"
-                            class="shadow-lg img-fluid" style="border-radius:.75rem" />
-                    </div>
-                    <div class="col-4">
-                        <img alt="Image" src="{% static 'assets/img/layouts/layout-nav-top.svg' %}"
-                            class="shadow-lg img-fluid" style="border-radius:.75rem" />
-                    </div>
-                    <div class="col-4">
-                        <img alt="Image" src="{% static 'assets/img/layouts/layout-nav-top-sidebar.svg' %}"
-                            class="shadow-lg img-fluid" style="border-radius:.75rem" />
-                    </div>
-                </div>
+            <section class="py-3 py-lg-3">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="material-icons text-primary mr-3 h1">view_quilt</i>
-                    <h2 class="h1 mb-0">Flexible Layouts</h2>
+                    <i class="material-icons text-info mr-2 h1">spa</i>
+                    <h2 class="h1 mb-0">Pro Access</h2>
                 </div>
                 <p class="lead">
-                    Pipeline offers three distinct layouts to suit a variety of content types. Layouts are
-                    fully responsive and scale elegantally for different devices and screen sizes.
+                    Dapatkan manfaat penuh dari platform UpKoding. Akses semua kelas, tantangan dan semua
+                    fitur premium tanpa batasan.
                 </p>
-                <a href="pages-layouts.html">Explore Layouts</a>
-            </section>
-            <section class="py-4 py-lg-5">
-                <div class="row mb-5">
-                    <div class="col-3">
-                        <img alt="Bootstrap" src="{% static 'assets/img/logo-bootstrap.svg' %}"
-                            class="img-fluid rounded shadow-lg" />
-                    </div>
-                    <div class="col-3">
-                        <img alt="Gulp" src="{% static 'assets/img/logo-gulp.svg' %}"
-                            class="img-fluid rounded shadow-lg" />
-                    </div>
-                    <div class="col-3">
-                        <img alt="SASS" src="{% static 'assets/img/logo-sass.svg' %}"
-                            class="img-fluid rounded shadow-lg" />
-                    </div>
-                    <div class="col-3">
-                        <img alt="NPM" src="{% static 'assets/img/logo-npm.svg' %}"
-                            class="img-fluid rounded shadow-lg" />
+                <div class="text-center">
+                    <img src="{% static 'assets/img/undraw_freelancer.svg' %}" style="max-width: 480px;" />
+                </div>
+
+                <div class="container mt-4" id="icon-grid">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2">
+                        <div class="col d-flex align-items-start mb-3">
+                            <i class="material-icons mr-2 text-info">check_circle</i>
+                            <div>
+                                <h5 class="mb-0">Akses semua Kelas</h5>
+                                <p class="text-muted">Ikuti semua kelas gratis dan premium.</p>
+                            </div>
+                        </div>
+                        <div class="col d-flex align-items-start mb-3">
+                            <i class="material-icons mr-2 text-info">check_circle</i>
+                            <div>
+                                <h5 class="mb-0">Akses semua tantangan</h5>
+                                <p class="text-muted">Libas semua tantangan gratis dan premium.</p>
+                            </div>
+                        </div>
+                        <div class="col d-flex align-items-start mb-3">
+                            <i class="material-icons mr-2 text-info">check_circle</i>
+                            <div>
+                                <h5 class="mb-0">Tanpa batasan</h5>
+                                <p class="text-muted">Eksekusi code tanpa quota, intip code peserta lain.</p>
+                            </div>
+                        </div>
+                        <div class="col d-flex align-items-start mb-3">
+                            <i class="material-icons mr-2 text-info">check_circle</i>
+                            <div>
+                                <h5 class="mb-0">Belajar sepuasnya</h5>
+                                <p class="text-muted">Belajar sepuasnya from zero to hero.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="d-flex align-items-center mb-3">
-                    <i class="material-icons text-primary mr-3 h1">build</i>
-                    <h2 class="h1 mb-0">Familiar Tooling</h2>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'base:pro' %}" class="btn btn-lg btn-info">
+                        Dapatkan Pro Access
+                        <i class="material-icons-x">east</i>
+                    </a>
                 </div>
-                <p class="lead">
-                    Pipeline employs industry-standard development tools with an intuitive workflow designed
-                    to get you up and runnning faster.
-                </p>
-                <a href="../documentation/index.html" class="mr-3">View Documentation</a>
+
             </section>
         </div>
     </div>

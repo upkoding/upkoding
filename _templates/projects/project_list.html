@@ -4,7 +4,7 @@
 {% load sorl_thumbnail %}
 
 {% block meta %}
-{% meta title='Tantangan Pemrograman' desc='Latih keahlian kamu memecahkan masalah pemrograman dengan menyelesaikan setiap tantangan-tantangan berikut ini.'%}
+{% meta title='Tantangan Pemrograman' desc='Latih keahlian problem solving dengan menyelesaikan setiap tantangan berikut ini.'%}
 {% endblock %}
 
 {% block content %}
@@ -12,10 +12,12 @@
     <div class="row justify-content-center">
         <div class="col-lg-11 col-xl-10">
             <div class="page-header">
-                <h1>Tantangan</h1>
-                <p class="lead">Practice makes perfect! Latih
-                    keahlian kamu memecahkan masalah pemrograman dengan menyelesaikan setiap tantangan-tantangan berikut
-                    ini.
+                <div class="d-flex align-items-center mb-2">
+                    <i class="material-icons text-info mr-2 h1">extension</i>
+                    <h1 class="h1 mb-0">Tantangan</h1>
+                </div>
+                <p class="lead">Practice makes perfect! Latih keahlian problem solving dengan menyelesaikan setiap
+                    tantangan berikut ini.
                 </p>
             </div>
             <div>
@@ -35,7 +37,8 @@
                     <a href="{% url 'projects:list' %}?s=level:easy"><span class="badge badge-info">easy</span></a>
                     <a href="{% url 'projects:list' %}?s=level:medium"><span class="badge badge-info">medium</span></a>
                     <a href="{% url 'projects:list' %}?s=level:hard"><span class="badge badge-info">hard</span></a>
-                    <a href="{% url 'projects:list' %}?s=level:project"><span class="badge badge-info">project</span></a>
+                    <a href="{% url 'projects:list' %}?s=level:project"><span
+                            class="badge badge-info">project</span></a>
                     <a href="{% url 'projects:list' %}?s=pricing:pro"><span class="badge badge-info">pro</span></a>
                 </div>
 
@@ -43,7 +46,7 @@
                 <h6 class="section-title mb-3 text-muted text-upper">FEATURED</h6>
                 <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5 mb-4">
                     {% for project in featured_projects %}
-                    {% include 'projects/_project_list_item.html' with project=project %}
+                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
                     {% endfor %}
                 </div>
                 {% endif %}
@@ -63,7 +66,7 @@
                 <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
                     {% if object_list %}
                     {% for project in object_list %}
-                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-sm' %}
+                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
                     {% endfor %}
                     {% endif %}
                 </div>

@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField
+from stream_django.activity import Activity
 
 from account.models import User
 from codeblocks.models import CodeBlock
@@ -218,8 +219,7 @@ class Project(models.Model):
 
             # add project creator as participant
             UserProjectParticipant.objects.get_or_create(
-                user_project=obj, user=self.user
-            )
+                user_project=obj, user=self.user)
             # add user who working on the project as participant
             UserProjectParticipant.objects.get_or_create(
                 user_project=obj, user=user)
@@ -251,11 +251,13 @@ class UserProject(models.Model):
     STATUS_PENDING_REVIEW = 1
     STATUS_COMPLETE = 2
     STATUS_INCOMPLETE = 3
+    STATUS_ARCHIVED = 4
     STATUSES = [
         (STATUS_IN_PROGRESS, 'In Progress'),
         (STATUS_PENDING_REVIEW, 'Pending Review'),
         (STATUS_COMPLETE, 'Complete'),
         (STATUS_INCOMPLETE, 'Incomplete'),
+        (STATUS_ARCHIVED, 'Archived'),
     ]
 
     user = models.ForeignKey(
@@ -466,7 +468,7 @@ class UserProject(models.Model):
         return event
 
 
-class UserProjectEvent(models.Model):
+class UserProjectEvent(models.Model, Activity):
     TYPE_PROJECT_START = 0
     TYPE_PROGRESS_UPDATE = 1
     TYPE_PROGRESS_COMPLETE = 2
@@ -475,13 +477,13 @@ class UserProjectEvent(models.Model):
     TYPE_PROJECT_COMPLETE = 11
     TYPE_PROJECT_INCOMPLETE = 12
     TYPES = [
-        (TYPE_PROJECT_START, 'Project start'),
-        (TYPE_PROGRESS_UPDATE, 'Progress update'),
-        (TYPE_PROGRESS_COMPLETE, 'Progress complete'),
-        (TYPE_REVIEW_REQUEST, 'Review request'),
-        (TYPE_REVIEW_MESSAGE, 'Review message'),
-        (TYPE_PROJECT_COMPLETE, 'Project complete'),
-        (TYPE_PROJECT_INCOMPLETE, 'Project incomplete'),
+        (TYPE_PROJECT_START, 'project_start'),
+        (TYPE_PROGRESS_UPDATE, 'progress_update'),
+        (TYPE_PROGRESS_COMPLETE, 'progress_complete'),
+        (TYPE_REVIEW_REQUEST, 'review_request'),
+        (TYPE_REVIEW_MESSAGE, 'review_message'),
+        (TYPE_PROJECT_COMPLETE, 'project_complete'),
+        (TYPE_PROJECT_INCOMPLETE, 'project_incomplete'),
     ]
 
     user_project = models.ForeignKey(
@@ -503,6 +505,30 @@ class UserProjectEvent(models.Model):
 
     def istype(self, event_type: int):
         return self.event_type == event_type
+
+    # START ==> properties and methods for getstream.io activity feed.
+    @property
+    def activity_object_attr(self):
+        return self.user_project
+
+    @property
+    def activity_verb(self):
+        return self.get_event_type_display()
+
+    @property
+    def activity_time(self):
+        return self.created
+
+    @classmethod
+    def activity_related_models(cls):
+        return ['user_project', 'user']
+
+    @property
+    def extra_activity_data(self):
+        return dict(
+            event_type=self.event_type,
+            event_message=self.message)
+    # END <== properties and methods for getstream.io activity feed.
 
 
 class UserProjectParticipant(models.Model):

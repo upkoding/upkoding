@@ -3,11 +3,20 @@
 {% load humanize %}
 <div class="card">
     <div class="card-header">
-        <i class="material-icons-x">comment</i> <strong>Pesan Terbaru</strong>
+        <i class="material-icons-x">comment</i> <strong>Notifikasi</strong>
     </div>
+
     {% if events %}
     <div class="list-group list-group-flush">
+        {% load activity_tags %}
+        {% for notification in notifications %}
+        {% for activity in notification.activities %}
+        {% render_activity activity %}
+        {% endfor %}
+        {% endfor %}
+
         {% for event in events %}
+        <!-- 
         <a href="{{ event.user_project.get_absolute_url }}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
                 <h6 class="mb-1">
@@ -22,6 +31,7 @@
             </div>
             <p class="mt-1">{{ event.message|truncatechars:120 }}</p>
         </a>
+         -->
         {% endfor %}
     </div>
     {% else %}

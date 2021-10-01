@@ -14,8 +14,26 @@
             </div>
             {% else %}
             <div class="chat-team-sidebar-bottom">
+
+                {% if user_project_owner %}
+                <div class="media align-items-start p-3">
+                    <a href="{{ user_project_owner.get_absolute_url }}" title="{{ user_project_owner.username }}"
+                        class="mr-2">
+                        <img alt="Avatar {{ user_project_owner.username }}"
+                            src="{{ user_project_owner|avatar_url:136 }}" class="avatar avatar-lg" />
+                    </a>
+                    <div class="media-body">
+                        <a href="{{ user_project_owner.get_absolute_url }}" title="{{ user_project_owner.username }}">
+                            <h5 class="mb-0">{{ user_project_owner.username }}</h5>
+                        </a>
+                        <p>{{ user_project_owner.description|truncatechars:60 }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="members">
+                        <div class="py-2 pl-3 bg-light"><strong>YANG MENGERJAKAN</strong></div>
                         <div class="list-group list-group-flush">
                             {% for up in user_projects %}
                             {% with u=up.user %}

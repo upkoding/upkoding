@@ -1,80 +1,93 @@
 {% extends 'base/base.html' %}
 {% load base %}
+{% load static %}
 
 {% block meta %}
-{% meta title='Ruang Kelas Pemrogramab' desc='Belajar pemrograman dengan metode bite-sized learning, mempersiapkan fundamental pemrograman yang kuat.' %}
+{% meta title='Kelas Pemrograman' desc='Belajar berbagai topik pemrograman, menyiapkan kamu kuat secara fundamental sebelum menghadapi tantangan yang sesungguhnya.' %}
 {% endblock %}
 
 {% block header_mb %}mb-5{% endblock %}
 
 {% block content %}
-<div class="row justify-content-md-center text-center mb-3">
-    <div class="col col-lg-8">
-        <h1 class="display-6">Ruang Kelas</h1>
-        <p class="lead" style="margin-top: 1rem;">
-            Ruang Kelas adalah tempat kamu belajar teori pemrograman, menyiapkan kamu kuat secara fundamental sebelum
-            berusaha memecahkan tantangan pemrograman yang sesungguhnya.
-        </p>
-    </div>
-</div>
-
-<div class="container py-5" id="icon-grid">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 py-3">
-        <div class="col d-flex align-items-start">
-            <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-            <div>
-                <h5 class="mb-0">Bite-sized learning</h5>
-                <p class="text-muted">Belajar teori secukupnya, langsung uji dan praktekkan.</p>
-            </div>
-        </div>
-        <div class="col d-flex align-items-start">
-            <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-            <div>
-                <h5 class="mb-0">Text dan Video</h5>
-                <p class="text-muted">Materi utama berupa text. Video hanya pendukung, pendek, kurang dari 5 menit.</p>
-            </div>
-        </div>
-        <div class="col d-flex align-items-start">
-            <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-            <div>
-                <h5 class="mb-0">Quiz</h5>
-                <p class="text-muted">Uji pemahamanmu dengan menjawab quiz yang disediakan.</p>
-            </div>
-        </div>
-        <div class="col d-flex align-items-start">
-            <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-            <div>
-                <h5 class="mb-0">Coding time!</h5>
-                <p class="text-muted">Setelah belajar teori, saatnya praktekkan dengan UpKoding code runner.</p>
-            </div>
-        </div>
-        <div class="col d-flex align-items-start">
-            <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-            <div>
-                <h5 class="mb-0">Sertifikat</h5>
-                <p class="text-muted">Berhasil menyelesaikan sebuah kelas? dapatkan sertifikat.</p>
-            </div>
-        </div>
-        <div class="col d-flex align-items-start">
-            <i class="bi bi-check-circle-fill flex-shrink-0 me-3 text-primary"></i>
-            <div>
-                <h5 class="mb-0">Free dan Premium</h5>
-                <p class="text-muted">Selain yang gratis, kelas Premium dirancang khusus untuk topik yang lebih advance dan bisa diakses PRO member.
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="material-icons text-info mr-2 h1">widgets</i>
+                    <h1 class="h1 mb-0">Kelas</h1>
+                </div>
+                <p class="lead">Belajar berbagai topik pemrograman, menyiapkan kamu kuat secara fundamental sebelum
+                    menghadapi tantangan yang sesungguhnya.
                 </p>
             </div>
+
+            <div class="row justify-content-md-center mb-5">
+                <div class="col col-lg-12">
+                    <div class="text-center my-4">
+                        <img src="{% static 'assets/img/undraw_designer.svg' %}" style="max-width: 300px;" />
+                    </div>
+
+                    <div class="card card-note">
+                        <div class="card-body">
+                            Saat ini <strong>kelas</strong> masih dalam pengembangan, kamu bisa ikuti perkembangannya <a
+                                href="https://github.com/upkoding/upkoding" target="_blank">disini</a> dan kalau
+                            ada ide, saran dan masukkan bisa via <a href="">Discord</a> ya.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3">
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Bite-sized learning</h5>
+                            <p class="text-muted">Belajar teori secukupnya, langsung uji dan praktekkan.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Baca dan baca</h5>
+                            <p class="text-muted">Materi utama berupa text, video hanya pendukung dan pendek.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Quiz</h5>
+                            <p class="text-muted">Uji pemahamanmu tentang topik yang dipelajari.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Coding time!</h5>
+                            <p class="text-muted">Setelah berteori, praktekkan langsung di dalam kelas.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Sertifikat</h5>
+                            <p class="text-muted">Sebagai bukti kamu telah menyelesaikan kelas.</p>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-start mb-4">
+                        <i class="material-icons text-info mr-2">check_circle</i>
+                        <div>
+                            <h5 class="mb-0">Free dan Premium</h5>
+                            <p class="text-muted">Selain gratis, ada juga kelas khusus buat PRO member.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
-
-<div class="row justify-content-md-center">
-    <div class="col col-lg-10">
-        <div class="text-center">
-            <button class="btn btn-lg btn-outline-secondary">
-                Oops! masih tahap pengembangan
-                <i class="bi bi-emoji-wink"></i>
-            </button>
-        </div>
-    </div>
-</div>
-
 {% endblock %}

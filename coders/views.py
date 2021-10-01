@@ -8,7 +8,7 @@ from projects.models import UserProject
 class CoderList(ListView):
     template_name = 'coders/coder_list.html'
     queryset = User.objects.filter(is_active=True)
-    paginate_by = 12
+    paginate_by = 24
 
 
 class CoderDetail(DetailView):

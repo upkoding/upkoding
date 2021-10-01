@@ -1,0 +1,19 @@
+{% load base %}
+{% load humanize %}
+<a href="{{ activity.object.get_absolute_url }}" class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+        <h6 class="mb-1">
+            {% with u=activity.actor %}
+            <img src="{{ u|avatar_url:40 }}" height="20" width="20" class="rounded-circle me-1" alt="avatar" />
+            {{ u.username }}
+            {% endwith %}
+            {{ activity.verb }}
+        </h6>
+        <small class="text-muted">
+            {{activity.time|naturaltime}}
+        </small>
+    </div>
+    {% if activity.event_message %}
+    <p class="mt-1">{{ activity.event_message|truncatechars:120 }}</p>
+    {% endif %}
+</a>

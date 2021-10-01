@@ -1,11 +1,12 @@
 import "regenerator-runtime/runtime"; // fix: https://flaviocopes.com/parcel-regeneratorruntime-not-defined/
 import jQuery from "jquery";
 
-const projectReviewForm = (($) => {
+(($) => {
   const reviewForm = $("#timeline-form");
   const reviewFormMessage = $("#timeline-form #timeline-input-message");
   const reviewActionBtn = $("#timeline-form .timeline-btn-action");
   const reviewAlertMessage = $("#timeline-form #timeline-alert");
+  const reviewList = $("#timeline-events");
 
   let loading = false;
 
@@ -40,7 +41,7 @@ const projectReviewForm = (($) => {
           const { message, html } = await resp.json();
           if (message !== null) showAlert("alert-success", message);
           if (html !== null) {
-            reviewForm.before(html);
+            reviewList.append(html);
             Prism.highlightAll();
           }
         } else {
@@ -58,5 +59,3 @@ const projectReviewForm = (($) => {
     runReviewAction(e.target);
   });
 })(jQuery);
-
-export default projectReviewForm;

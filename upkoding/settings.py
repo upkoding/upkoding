@@ -31,6 +31,7 @@ SECRET_KEY = os.getenv(
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 AUTH_USER_MODEL = 'account.User'
+APP_VERSION = os.getenv('APP_VERSION', 'devel')
 
 # Application definition
 
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'mdeditor',
     'anymail',
     'django_ace',
+    'stream_django',
 
     # django contribs
     'django.contrib.postgres',
@@ -156,6 +158,12 @@ ANYMAIL = {
     'MAILGUN_SENDER_DOMAIN': os.getenv('MAILGUN_SENDER_DOMAIN'),
 }
 JUDGE0_API_KEY = os.getenv('JUDGE0_API_KEY')
+
+STREAM_API_KEY = os.getenv('STREAM_API_KEY')
+STREAM_API_SECRET = os.getenv('STREAM_API_SECRET')
+# we want to send activity to Stream manually.
+STREAM_DISABLE_MODEL_TRACKING = True
+STREAM_FEED_MANAGER_CLASS = 'upkoding.activity_feed.FeedManager'
 
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
