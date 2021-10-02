@@ -20,8 +20,8 @@
                     <small class="text-muted">
                         <img src="{{ u|avatar_url:40 }}" height="20" width="20" class="rounded-circle"
                             alt="avatar" />
-                        <strong class="mr-1">{{ u.username }}</strong>
-                        {{ item.updated|naturaltime }}
+                        <strong>{{ u.username }}</strong>
+                        • {{ item.updated|naturaltime }}
                     </small>
                 </div>
             </div>

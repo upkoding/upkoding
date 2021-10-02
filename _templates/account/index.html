@@ -36,8 +36,7 @@
             {% if projects_pending_review %}
             {% include 'account/_pending_projects_card.html' with projects=projects_pending_review %}
             {% endif %}
-
-            {% include 'account/_messages_card.html' with events=events %}
+            {% include 'account/_notifications_card.html' with notifications=notifications %}
         </div>
     </div>
 </div>

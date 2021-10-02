@@ -14,7 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from stream_django.enrich import Enrich
 from upkoding.activity_feed import feed_manager
 
-from projects.models import UserProject, UserProjectEvent
+from projects.models import UserProject
 from .midtrans import is_payment_notification_valid
 from .models import ProAccessPurchase, MidtransPaymentNotification
 from .forms import (
@@ -53,17 +53,13 @@ class IndexView(LoginRequiredMixin, TemplateView):
                 .order_by('-updated')[:5]
 
         data['projects'] = UserProject.objects.filter(user=user) \
-            .order_by('-updated')[:6]
+            .order_by('-updated')[:10]
 
-        enricher = Enrich()
+        enricher = Enrich(('actor', 'object', 'target',))
         feed = feed_manager.get_notification_feed(user.id)
         activities = feed.get(limit=10)['results']
         data['notifications'] = enricher.enrich_aggregated_activities(
             activities)
-        print(data['notifications'])
-        data['events'] = UserProjectEvent.objects.filter(event_type=UserProjectEvent.TYPE_REVIEW_MESSAGE, user_project__user=user) \
-            .exclude(user=user) \
-            .order_by('-updated')[:6]
         return data
 
 

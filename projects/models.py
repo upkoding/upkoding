@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField
-from stream_django.activity import Activity
+from stream_django.activity import Activity, create_model_reference
 
 from account.models import User
 from codeblocks.models import CodeBlock
@@ -506,10 +506,18 @@ class UserProjectEvent(models.Model, Activity):
     def istype(self, event_type: int):
         return self.event_type == event_type
 
-    # START ==> properties and methods for getstream.io activity feed.
+    """
+    START ==> properties and methods for getstream.io activity feed.
+
+    actor = user
+    verb = event_type
+    object = user_project.project
+    target = user_project
+    foreign_id = self
+    """
     @property
     def activity_object_attr(self):
-        return self.user_project
+        return self.user_project.project
 
     @property
     def activity_verb(self):
@@ -519,13 +527,19 @@ class UserProjectEvent(models.Model, Activity):
     def activity_time(self):
         return self.created
 
+    @property
+    def activity_foreign_id(self):
+        return create_model_reference(self)
+
     @classmethod
     def activity_related_models(cls):
         return ['user_project', 'user']
 
     @property
     def extra_activity_data(self):
+        target = create_model_reference(self.user_project)
         return dict(
+            target=target,
             event_type=self.event_type,
             event_message=self.message)
     # END <== properties and methods for getstream.io activity feed.

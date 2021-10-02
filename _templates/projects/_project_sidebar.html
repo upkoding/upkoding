@@ -41,7 +41,7 @@
                                 <div class="media media-member mb-0">
                                     <img alt="{{ u.get_display_name }}" src="{{ u|avatar_url:64 }}" class="avatar" />
                                     <div class="media-body">
-                                        <h6 class="mb-0" data-filter-by="text">{{ u.username }}</h6>
+                                        <h6 class="mb-0 text-primary" data-filter-by="text">{{ u.username }}</h6>
                                         <span class="text-muted">{{ up.created|naturaltime }}</span>
                                     </div>
                                     {% if up.is_complete %}
@@ -55,6 +55,16 @@
                             {% endwith %}
                             {% endfor %}
                         </div>
+
+                        {% if activities %}
+                        {% load activity_tags %}
+                        <div class="py-2 pl-3 bg-light"><strong>AKTIVITAS</strong></div>
+                        <div class="list-group list-group-flush">
+                            {% for activity in activities %}
+                            {% render_activity activity 'challenge' %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

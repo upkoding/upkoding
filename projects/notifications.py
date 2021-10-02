@@ -87,7 +87,7 @@ class UserProjectEventNotification:
             .filter(user_project=self.user_project, subscribed=True) \
             .exclude(user=self.event_user)
 
-        notify = [self.challenge_feed]
+        notify = []
         emails = []
         for p in participants:
             to_user = p.user
@@ -121,7 +121,7 @@ class UserProjectEventNotification:
             feed_manager.add_activity(self.user_feed, activity)
             return
 
-        # add to approving user and user project owner feed
+        # add to approving user and notify user project owner
         activity = feed_manager.add_notify_to_activity(
             activity,
             feed_manager.get_notification_feed(user_project_owner.pk))
@@ -142,10 +142,12 @@ class UserProjectEventNotification:
         tpl = 'projects/emails/project_disapproved.html'
         user_project_owner = self.user_project.user
 
-        # only notify user
+        # add to disapproving user and notify user project owner
         owner_notification_feed = feed_manager.get_notification_feed(
             user_project_owner.pk)
-        feed_manager.add_activity(owner_notification_feed, self.activity)
+        activity = feed_manager.add_notify_to_activity(self.activity,
+                                                       owner_notification_feed)
+        feed_manager.add_activity(self.user_feed, activity)
 
         # check user notification settings
         if UserSetting.objects.email_notify_project_disapproved(user_project_owner):
@@ -154,3 +156,7 @@ class UserProjectEventNotification:
             subject = '[Proyek] Status proyek kamu diralat'
             send_mail(subject, msg, FROM, [
                       user_project_owner.email], fail_silently=True)
+
+
+def delete_activity(instance):
+    feed_manager.remove_activity_from_feed(instance)

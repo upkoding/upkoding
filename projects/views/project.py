@@ -9,6 +9,8 @@ from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, 
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
+from stream_django.enrich import Enrich
+from upkoding.activity_feed import feed_manager
 
 from account.models import User
 from projects.forms import UserProjectReviewRequestForm, UserProjectCodeSubmissionForm
@@ -98,6 +100,13 @@ class ProjectDetail(DetailView):
                             UserProject.STATUS_PENDING_REVIEW)
             ).order_by('-created')[:10]
         data['user_projects'] = user_projects
+
+        # activity
+        enricher = Enrich(('actor', 'target',))
+        feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
+        activities = feed.get(limit=6)['results']
+        data['activities'] = enricher.enrich_activities(activities)
+
         return data
 
     def post(self, request, slug, pk):
@@ -173,6 +182,12 @@ class ProjectDetailUser(DetailView):
                                 UserProject.STATUS_PENDING_REVIEW)) \
             .order_by('-created')[:10]
         data['user_projects'] = user_projects
+
+        # activity
+        enricher = Enrich(('actor', 'target',))
+        feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
+        activities = feed.get(limit=6)['results']
+        data['activities'] = enricher.enrich_activities(activities)
 
         # show completion form only when:
         # - requirements completed
