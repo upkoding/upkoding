@@ -1,0 +1,23 @@
+{% load base %}
+{% load humanize %}
+{% with activity0=activity.activities.0 %}
+{% with actor=activity0.actor object=activity0.object target=activity0.target actor_count=activity.actor_count %}
+<li class="list-group-item">
+    <div class="media align-items-center">
+        <ul class="avatars">
+            <li>
+                {% block icon %}
+                {% endblock %}
+            </li>
+            <li><img src="{{ actor|avatar_url:100 }}" width="50" height="50" class="avatar"></li>
+        </ul>
+        <div class="media-body">
+            <div>
+                {% block verb %}{% endblock %}
+            </div>
+            <span class="text-small">{{activity.updated_at|naturaltime}}</span>
+        </div>
+    </div>
+</li>
+{% endwith %}
+{% endwith %}

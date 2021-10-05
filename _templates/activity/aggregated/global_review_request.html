@@ -1,0 +1,10 @@
+{% extends 'activity/aggregated/global_base.html' %}
+
+{% block icon %}
+<div class="avatar bg-primary bg-info"><i class="material-icons">visibility</i></div>
+{% endblock %}
+
+{% block verb %}
+<a href="{{ actor.get_absolute_url }}"><span class="h6">{{ actor.username }}</span></a>
+meminta review atas <a href="{{ target.get_absolute_url }}">{{ object.title }}</a>
+{% endblock %}

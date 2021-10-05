@@ -1,5 +1,7 @@
 from django.views.generic.base import TemplateView
+from stream_django.enrich import Enrich
 
+from upkoding.activity_feed import feed_manager
 from projects.models import Project, UserProject
 
 
@@ -16,7 +18,10 @@ class Index(TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['featured_projects'] = Project.objects.featured()
-        # data['user_project_feeds'] = UserProject.objects\
-        #     .select_related('user', 'project')\
-        #     .filter(status__in=[UserProject.STATUS_IN_PROGRESS, UserProject.STATUS_COMPLETE])[:6]
+
+        enricher = Enrich(('actor', 'object', 'target'))
+        feed = feed_manager.get_global_challenge_feed()
+        activities = feed.get(limit=10)['results']
+        data['activities'] = enricher.enrich_aggregated_activities(
+            activities)
         return data

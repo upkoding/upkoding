@@ -16,7 +16,7 @@
                 <small>
                     {% block icon %}{% endblock %}
                     <a href="{{ activity0.target.get_absolute_url }}">{{ activity0.object.title }}</a> •
-                    {{activity0.time|naturaltime}}
+                    {{activity0.time|naturalday}}
                 </small>
             </div>
         </div>

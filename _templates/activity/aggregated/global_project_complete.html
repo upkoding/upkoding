@@ -1,0 +1,21 @@
+{% extends 'activity/aggregated/global_base.html' %}
+
+{% block icon %}
+<div class="avatar bg-primary bg-info"><i class="material-icons">check_circle</i></div>
+{% endblock %}
+
+{% block verb %}
+{% if object.has_codeblock %}
+<a href="{{ actor.get_absolute_url }}"><span class="h6">{{ actor.username }}</span></a>
+{% if actor_count > 1 %}
+{% with other_actor_count=actor_count|add:'-1' %}
+{% if other_actor_count == 1 %}dan seorang lainnya{% else %}dan {{ other_actor_count }} orang lainnya{% endif %}
+{% endwith%}
+{% endif %}
+menyelesaikan <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+
+{% else %}
+<a href="{{ actor.get_absolute_url }}"><span class="h6">{{ actor.username }}</span></a>
+menyetujui proyek <a href="{{ target.get_absolute_url }}">{{ object.title }}</a>
+{% endif %}
+{% endblock %}
