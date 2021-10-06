@@ -1,9 +1,10 @@
+from datetime import timedelta
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.db.models.deletion import CASCADE
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify, time
 from django.urls import reverse
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField
@@ -251,13 +252,11 @@ class UserProject(models.Model):
     STATUS_PENDING_REVIEW = 1
     STATUS_COMPLETE = 2
     STATUS_INCOMPLETE = 3
-    STATUS_ARCHIVED = 4
     STATUSES = [
         (STATUS_IN_PROGRESS, 'In Progress'),
         (STATUS_PENDING_REVIEW, 'Pending Review'),
         (STATUS_COMPLETE, 'Complete'),
         (STATUS_INCOMPLETE, 'Incomplete'),
-        (STATUS_ARCHIVED, 'Archived'),
     ]
 
     user = models.ForeignKey(
@@ -413,6 +412,14 @@ class UserProject(models.Model):
 
     def is_solution_editable_by(self, user):
         return self.user == user
+
+    def can_delete(self):
+        """
+        Deletable after 24hr.
+        This is to avoid user refresh the codeblock quota by canceling their project.
+        """
+        yesterday = now() - timedelta(days=1)
+        return self.created <= yesterday
 
     def can_run_codeblock(self, user):
         if not self.has_codeblock():

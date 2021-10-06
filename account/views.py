@@ -55,11 +55,14 @@ class IndexView(LoginRequiredMixin, TemplateView):
         data['projects'] = UserProject.objects.filter(user=user) \
             .order_by('-updated')[:10]
 
-        enricher = Enrich(('actor', 'object', 'target',))
-        feed = feed_manager.get_notification_feed(user.id)
-        activities = feed.get(limit=10)['results']
-        data['notifications'] = enricher.enrich_aggregated_activities(
-            activities)
+        try:
+            enricher = Enrich(('actor', 'object', 'target',))
+            feed = feed_manager.get_notification_feed(user.id)
+            activities = feed.get(limit=10)['results']
+            data['notifications'] = enricher.enrich_aggregated_activities(
+                activities)
+        except Exception as e:
+            log.error(e)
         return data
 
 

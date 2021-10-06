@@ -1,5 +1,5 @@
 import copy
-
+import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -15,6 +15,8 @@ from upkoding.activity_feed import feed_manager
 from account.models import User
 from projects.forms import UserProjectReviewRequestForm, UserProjectCodeSubmissionForm
 from projects.models import Project, UserProject, UserProjectEvent
+
+log = logging.getLogger(__file__)
 
 
 class ProjectList(ListView):
@@ -102,10 +104,13 @@ class ProjectDetail(DetailView):
         data['user_projects'] = user_projects
 
         # activity
-        enricher = Enrich(('actor', 'target',))
-        feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
-        activities = feed.get(limit=6)['results']
-        data['activities'] = enricher.enrich_activities(activities)
+        try:
+            enricher = Enrich(('actor', 'target',))
+            feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
+            activities = feed.get(limit=6)['results']
+            data['activities'] = enricher.enrich_activities(activities)
+        except Exception as e:
+            log.error(e)
 
         return data
 
@@ -184,10 +189,13 @@ class ProjectDetailUser(DetailView):
         data['user_projects'] = user_projects
 
         # activity
-        enricher = Enrich(('actor', 'target',))
-        feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
-        activities = feed.get(limit=6)['results']
-        data['activities'] = enricher.enrich_activities(activities)
+        try:
+            enricher = Enrich(('actor', 'target',))
+            feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
+            activities = feed.get(limit=6)['results']
+            data['activities'] = enricher.enrich_activities(activities)
+        except Exception as e:
+            log.error(e)
 
         # show completion form only when:
         # - requirements completed
@@ -305,9 +313,15 @@ class ProjectDetailUser(DetailView):
         return render(request, self.template_name, context)
 
     def _handle_delete(self, project, user_project):
-        user_project.delete()
-        messages.info(self.request, 'Tantangan telah dibatalkan.',
-                      extra_tags='warning')
+        if user_project.can_delete():
+            user_project.delete()
+            messages.info(self.request, 'Tantangan telah dibatalkan.',
+                          extra_tags='warning')
+            return HttpResponse(project.get_absolute_url())
+        else:
+            messages.info(self.request, 'Tantangan hanya bisa dibatalkan 24 jam setelah dimulai. Ayolah kamu pasti bisa!',
+                          extra_tags='danger')
+            return HttpResponse(user_project.get_absolute_url())
 
     @method_decorator(login_required)
     def post(self, request, slug, pk, username):
@@ -316,7 +330,6 @@ class ProjectDetailUser(DetailView):
             return HttpResponseForbidden()
 
         action = request.POST.get('action')
-        project_url = reverse('projects:detail', args=[slug, pk])
         project = self.get_object()
         user_project = get_object_or_404(
             UserProject, user=user, project=project)
@@ -328,9 +341,8 @@ class ProjectDetailUser(DetailView):
             return self._handle_update(project, user_project)
 
         if action == 'delete':
-            self._handle_delete(project, user_project)
-            return HttpResponse(project_url)
+            return self._handle_delete(project, user_project)
 
         if action == 'review_request':
             return self._handle_review_request(project, user_project)
-        return HttpResponseRedirect(project_url)
+        return HttpResponseRedirect(project.get_absolute_url())

@@ -29,17 +29,19 @@
                 <div class="mt-2 mb-5">
                     <span class="text-muted mr-1">Filter:</span>
                     <a href="{% url 'projects:list' %}?s=javascript"><span
-                            class="badge badge-info">javascript</span></a>
-                    <a href="{% url 'projects:list' %}?s=python"><span class="badge badge-info">python</span></a>
-                    <a href="{% url 'projects:list' %}?s=golang"><span class="badge badge-info">golang</span></a>
-                    <a href="{% url 'projects:list' %}?s=ruby"><span class="badge badge-info">ruby</span></a>
-                    <a href="{% url 'projects:list' %}?s=algoritma"><span class="badge badge-info">algoritma</span></a>
-                    <a href="{% url 'projects:list' %}?s=level:easy"><span class="badge badge-info">easy</span></a>
-                    <a href="{% url 'projects:list' %}?s=level:medium"><span class="badge badge-info">medium</span></a>
-                    <a href="{% url 'projects:list' %}?s=level:hard"><span class="badge badge-info">hard</span></a>
+                            class="badge badge-secondary">javascript</span></a>
+                    <a href="{% url 'projects:list' %}?s=python"><span class="badge badge-secondary">python</span></a>
+                    <a href="{% url 'projects:list' %}?s=golang"><span class="badge badge-secondary">golang</span></a>
+                    <a href="{% url 'projects:list' %}?s=ruby"><span class="badge badge-secondary">ruby</span></a>
+                    <a href="{% url 'projects:list' %}?s=algoritma"><span
+                            class="badge badge-secondary">algoritma</span></a>
+                    <a href="{% url 'projects:list' %}?s=level:easy"><span class="badge badge-secondary">easy</span></a>
+                    <a href="{% url 'projects:list' %}?s=level:medium"><span
+                            class="badge badge-secondary">medium</span></a>
+                    <a href="{% url 'projects:list' %}?s=level:hard"><span class="badge badge-secondary">hard</span></a>
                     <a href="{% url 'projects:list' %}?s=level:project"><span
-                            class="badge badge-info">project</span></a>
-                    <a href="{% url 'projects:list' %}?s=pricing:pro"><span class="badge badge-info">pro</span></a>
+                            class="badge badge-secondary">project</span></a>
+                    <a href="{% url 'projects:list' %}?s=pricing:pro"><span class="badge badge-secondary">pro</span></a>
                 </div>
 
                 {% if featured_projects %}
@@ -60,7 +62,7 @@
                     {% endif %}
                 </h6>
                 {% else %}
-                <h6 class="section-title mb-3 text-muted text-upper">SEMUA TANTANGAN</h6>
+                <h6 class="section-title mb-3 text-muted text-upper">SEMUA TANTANGAN & PROYEK</h6>
                 {% endif %}
 
                 <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-5">
