@@ -12,6 +12,7 @@ urlpatterns = [
     path('auths/', views.AuthenticationMethodFormView.as_view(), name='auths'),
     path('links/', views.LinksFormView.as_view(), name='links'),
     path('notifications/', views.NotificationFormView.as_view(), name='notifications'),
+    path('discord/', views.DiscordFormView.as_view(), name='discord'),
     path('pro/', views.ProStatusView.as_view(), name='pro'),
     path('pro/purchases/cancel/',
          views.purchase_cancel, name='pro_purchase_cancel'),

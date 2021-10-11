@@ -16,7 +16,7 @@ from upkoding.activity_feed import feed_manager
 
 from projects.models import UserProject
 from .midtrans import is_payment_notification_valid
-from .models import ProAccessPurchase, MidtransPaymentNotification
+from .models import ProAccessPurchase, MidtransPaymentNotification, UserSetting
 from .forms import (
     get_form_error,
     ProfileForm,
@@ -137,6 +137,19 @@ class NotificationFormView(LoginRequiredMixin, View):
                           extra_tags='success')
 
         return HttpResponseRedirect(reverse('account:notifications'))
+
+
+class DiscordFormView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        user = request.user
+        discord_token = UserSetting.objects.discord_access_token(user)
+        discord_token_status = UserSetting.objects.discord_access_token_status(
+            user)
+        return render(request, 'account/form_discord.html', {
+            'discord_token': f'{user.username}@{discord_token}',
+            'discord_token_status': discord_token_status,
+        })
 
 
 class ProStatusView(LoginRequiredMixin, View):

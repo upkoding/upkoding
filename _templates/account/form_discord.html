@@ -1,0 +1,40 @@
+{% extends 'account/base.html' %}
+{% load base %}
+{% load humanize %}
+
+{% block meta %}
+{% meta title='Discord Access Token' desc='Discord Access Token'%}
+{% endblock %}
+
+{% block breadcrumb %}Discord access token{% endblock %}
+
+{% block form %}
+<div class="row justify-content-center">
+    <div class="col col-lg-12">
+        <h4><i class="material-icons-x">discord</i> Discord Access Token</h4>
+        <p class="card-text text-muted mb-2 pt-2">UpKoding memiliki server Discord sebagai tempat kamu nongkrong dan
+            berdiskusi dengan teman-teman pengguna upkoding lainnya.</p>
+        <p class="card-text text-muted mb-2">Namun sebelum bisa aktif di Discord,
+            <strong>kamu wajib membuktikan bahwa kamu memiliki akun di upkoding.com</strong>
+            dengan melakukkan verifikasi, caranya:
+        </p>
+        <ol>
+            <li>Gabung di server Discord UpKoding: <a href="https://discord.gg/yaxjhTrFGf"
+                    target="_blank"><strong>https://discord.gg/yaxjhTrFGf</strong></a></li>
+            <li>DM <strong>UpKodingBot</strong> dengan command <code>/verifikasi</code> dan masukkan token dibawah.</li>
+            <li>Apabila verifikasi berhasil, kamu langsung diberikan akses untuk berdiskusi.</li>
+        </ol>
+        <div class="alert alert-danger"><strong>Token dibawah sifatnya rahasia dan hanya bisa dipakai sekali</strong>,
+            apabila orang
+            lain menggunakan token dibawah sebelum kamu maka orang itulah yang akan mendapat akses ke Discord.</div>
+        <p class="card-text">
+            Token kamu:
+        <pre><code class="language-bash">{{ discord_token }}</code></pre>
+        </p>
+        <p>Status token:
+        <pre><code class="language-json">{{ discord_token_status }}</code></pre>
+        </p>
+    </div>
+
+</div>
+{% endblock %}

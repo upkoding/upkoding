@@ -32,5 +32,6 @@ else:
         path('challenges/', include('projects.urls', namespace='projects')),
         path('coders/', include('coders.urls', namespace='coders')),
         path('mdeditor/', include('mdeditor.urls')),
+        path('discord/', include('discord.urls', namespace='discord')),
         path('', include('base.urls', namespace='base')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

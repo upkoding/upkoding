@@ -84,9 +84,9 @@ class EmailNotificationSettings(forms.Form):
     email_notify_project_disapproved = forms.BooleanField(
         label='Proyek saya tidak disetujui',
         required=False)
-    email_notify_forum_activity = forms.BooleanField(
-        label='Aktivitas di forum',
-        required=False)
+    # email_notify_forum_activity = forms.BooleanField(
+    #     label='Aktivitas di forum',
+    #     required=False)
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -95,15 +95,11 @@ class EmailNotificationSettings(forms.Form):
     def load(self):
         # load initial value from DB
         for name in self.fields:
-            if name == 'kind':
-                continue
             field = self.fields.get(name)
             field.initial = getattr(UserSetting.objects, name)(self.user)
 
     def save(self):
         for name in self.cleaned_data:
-            if name == 'kind':
-                continue
             value = self.cleaned_data.get(name)
             getattr(UserSetting.objects, name)(self.user, value)
 
