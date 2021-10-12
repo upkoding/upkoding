@@ -1,10 +1,7 @@
 import requests
 from django.core.management.base import BaseCommand, CommandError
 
-from discord.conf import APPLICATION_ID, BOT_TOKEN
-
-url = f'https://discord.com/api/v8/applications/{APPLICATION_ID}/commands'
-
+from discord.conf import COMMANDS_API_URL, BOT_REQUEST_HEADERS
 
 commands = [
     {
@@ -27,13 +24,11 @@ class Command(BaseCommand):
     help = 'Register all Discord commands'
 
     def handle(self, *args, **options):
-        headers = {
-            'Authorization': f'Bot {BOT_TOKEN}'
-        }
         for cmd in commands:
             name = cmd.get('name')
             try:
-                requests.post(url, headers=headers, json=cmd)
+                requests.post(COMMANDS_API_URL,
+                              headers=BOT_REQUEST_HEADERS, json=cmd)
                 self.stdout.write(self.style.SUCCESS(
                     f'Command `{name}` registered.'))
             except Exception as e:

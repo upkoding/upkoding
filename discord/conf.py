@@ -1,5 +1,14 @@
 from django.conf import settings
 
-APPLICATION_ID = getattr(settings, 'DISCORD_APPLICATION_ID', '896220464123359272')
-PUBLIC_KEY = getattr(settings,'DISCORD_PUBLIC_KEY', '4c3242976fde0839460093c083959fae1d001bb9c5f5cefee326d0f12faeedb0')
-BOT_TOKEN = getattr(settings, 'DISCORD_BOT_TOKEN', 'ODk2MjIwNDY0MTIzMzU5Mjcy.YWD8WQ.Y3wHcehwMguTU5G_MLjLjQIvf9g')
+APPLICATION_ID = getattr(settings, 'DISCORD_APPLICATION_ID', None)
+PUBLIC_KEY = getattr(settings, 'DISCORD_PUBLIC_KEY', None)
+BOT_TOKEN = getattr(settings, 'DISCORD_BOT_TOKEN', None)
+GUILD_ID = getattr(settings, 'DISCORD_GUILD_ID', None)
+UPKODERS_ROLE_ID = getattr(settings, 'DISCORD_UPKODERS_ROLE_ID', None)
+
+BOT_REQUEST_HEADERS = {
+    'Authorization': f'Bot {BOT_TOKEN}'
+}
+
+API_BASE_URL = 'https://discord.com/api/v8'
+COMMANDS_API_URL = f'{API_BASE_URL}/applications/{APPLICATION_ID}/commands'

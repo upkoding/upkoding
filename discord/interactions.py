@@ -1,7 +1,10 @@
 import json
 import logging
+import requests
+from django.utils.timezone import now
 from discord_interactions import InteractionResponseType
 from account.models import User, UserSetting
+from discord.conf import API_BASE_URL, GUILD_ID, UPKODERS_ROLE_ID, BOT_REQUEST_HEADERS
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +29,7 @@ def verifikasi(command, data):
 
     tokens = upkoding_token.split('@')
     if len(tokens) != 2:
-        raise Exception('Gagal! Format token tidak valid.')
+        raise Exception('Verifikasi gagal! Format token tidak valid.')
 
     username, token = tokens
     try:
@@ -44,18 +47,27 @@ def verifikasi(command, data):
         if status.get('verified'):
             raise Exception('token_already_verified')
 
-        # verified
-        # TODO: upgrade discord user role.
+        # upgrade roles
+        discord_user_id = discord_user.get('id')
+        set_role_url = f'{API_BASE_URL}/guilds/{GUILD_ID}/members/{discord_user_id}/roles/{UPKODERS_ROLE_ID}'
+        resp = requests.put(url=set_role_url, headers=BOT_REQUEST_HEADERS)
+        resp.raise_for_status()
+
+        # update token status
         verified_status = {
             'verified': True,
-            'user': discord_user
+            'timestamp': int(now().timestamp()),
+            'discord_user': {
+                'id': discord_user_id,
+                'username': discord_user.get('username')
+            }
         }
         UserSetting.objects.discord_access_token_status(
             user, json.dumps(verified_status))
     except Exception as e:
         log.warning(e)
         raise Exception(
-            'Gagal! Token tidak valid atau sudah pernah digunakan.')
+            'Verifikasi gagal! Token tidak valid atau sudah pernah digunakan.')
 
     return {
         'type': InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,

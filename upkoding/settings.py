@@ -150,6 +150,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# -- Mailer --
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_EMAIL_FROM = os.getenv(
     'DEFAULT_EMAIL_FROM', 'UpKoding <upkoding@example.com>')
@@ -158,13 +159,23 @@ ANYMAIL = {
     'MAILGUN_API_KEY': os.getenv('MAILGUN_API_KEY'),
     'MAILGUN_SENDER_DOMAIN': os.getenv('MAILGUN_SENDER_DOMAIN'),
 }
+
+# -- Judge0 --
 JUDGE0_API_KEY = os.getenv('JUDGE0_API_KEY')
 
+# -- Stream --
 STREAM_API_KEY = os.getenv('STREAM_API_KEY')
 STREAM_API_SECRET = os.getenv('STREAM_API_SECRET')
 # we want to send activity to Stream manually.
 STREAM_DISABLE_MODEL_TRACKING = True
 STREAM_FEED_MANAGER_CLASS = 'upkoding.activity_feed.FeedManager'
+
+# -- Discord --
+DISCORD_APPLICATION_ID = os.getenv('DISCORD_APPLICATION_ID')
+DISCORD_PUBLIC_KEY = os.getenv('DISCORD_PUBLIC_KEY')
+DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
+DISCORD_GUILD_ID = os.getenv('DISCORD_GUILD_ID')
+DISCORD_UPKODERS_ROLE_ID = os.getenv('DISCORD_UPKODERS_ROLE_ID')
 
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
