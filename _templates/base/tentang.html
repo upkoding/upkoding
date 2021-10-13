@@ -141,8 +141,18 @@
                         <i class="material-icons mr-2">telegram</i>
                         <div class="d-flex gap-2 w-100 justify-content-between">
                             <div>
-                                <h6 class="mb-0">Group Telegram</h6>
+                                <h6 class="mb-0">Group Telegram (umum)</h6>
                                 <p class="mb-0 opacity-75">https://t.me/upkoding</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'account:discord' %}"
+                        class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                        <i class="material-icons mr-2">discord</i>
+                        <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                                <h6 class="mb-0">Discord (members only)</h6>
+                                <p class="mb-0 opacity-75">https://www.upkoding.com{% url 'account:discord' %}</p>
                             </div>
                         </div>
                     </a>
