@@ -10,8 +10,9 @@ FROM = settings.DEFAULT_EMAIL_FROM
 
 
 class UserProjectEventNotification:
-    def __init__(self, event: UserProjectEvent):
+    def __init__(self, event: UserProjectEvent, is_sync: bool = False):
         self.event = event
+        self.is_sync = is_sync
         self.user_project = event.user_project
         self.project = self.user_project.project
         self.event_user = event.user
@@ -72,7 +73,7 @@ class UserProjectEventNotification:
         feed_manager.add_activity(self.user_feed, activity)
 
         # send emails
-        if emails:
+        if emails and not self.is_sync:
             send_mass_mail(emails, fail_silently=True)
 
     def _notify_project_message(self):
@@ -104,7 +105,7 @@ class UserProjectEventNotification:
         activity = feed_manager.add_notify_to_activity(self.activity, notify)
         feed_manager.add_activity(self.user_feed, activity)
 
-        if emails:
+        if emails and not self.is_sync:
             send_mass_mail(emails, fail_silently=True)
 
     def _notify_project_approved(self):
@@ -128,7 +129,7 @@ class UserProjectEventNotification:
         feed_manager.add_activity(self.user_feed, activity)
 
         # check user notification settings
-        if UserSetting.objects.email_notify_project_approved(user_project_owner):
+        if not self.is_sync and UserSetting.objects.email_notify_project_approved(user_project_owner):
             self.context.update({'to_user': user_project_owner})
             msg = render_to_string(tpl, self.context)
             subject = '[Proyek] Proyek kamu telah disetujui!'
@@ -150,7 +151,7 @@ class UserProjectEventNotification:
         feed_manager.add_activity(self.user_feed, activity)
 
         # check user notification settings
-        if UserSetting.objects.email_notify_project_disapproved(user_project_owner):
+        if not self.is_sync and UserSetting.objects.email_notify_project_disapproved(user_project_owner):
             self.context.update({'to_user': user_project_owner})
             msg = render_to_string(tpl, self.context)
             subject = '[Proyek] Status proyek kamu diralat'
