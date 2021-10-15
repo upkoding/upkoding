@@ -18,9 +18,15 @@
             {% endthumbnail %}
             <div class="card-body d-flex flex-column justify-content-between p-2">
                 {% with codeblock=project.codeblock %}
-                <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
-                    {{ project.title|title }}
-                </h5>
+                <div class="mb-2">
+                    <h5 class="card-title mb-1" style="font-size: 1.05rem;">
+                        {{ project.title|title }}
+                    </h5>
+                    <p class="card-text"
+                        style="color: #888 !important; line-height: 1.3em; font-size: 0.9rem; font-weight: 400;">
+                        {{ project.description_short|truncatechars:55 }}
+                    </p>
+                </div>
                 <div style="opacity: 0.6;">
                     {% if project.is_premium %}
                     <a href="{% url 'projects:list' %}?s=pricing:pro">
