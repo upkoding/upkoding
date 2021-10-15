@@ -78,7 +78,8 @@
                                     <span>Tantangan diposting oleh
                                         <a href="{{ project_owner.get_absolute_url }}">
                                             {{ project_owner.username }}</a>,
-                                        {{ object.created|naturalday }}.
+                                        {{ object.created|naturalday }} dengan poin
+                                        <span class="badge badge-secondary">{% if user_project %}{{ user_project.get_point_display }}{% else %}{{ object.get_point_display }}{% endif %}</span>
                                     </span>
                                 </div>
                                 <span>

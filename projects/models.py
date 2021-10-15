@@ -404,6 +404,8 @@ class UserProject(models.Model):
         return self.codeblock_id is not None
 
     def is_solution_viewable_by(self, user):
+        if user.is_staff:
+            return True
         if not self.has_codeblock() or self.user == user:
             return True
         if user.is_authenticated and user.is_pro_user():
@@ -411,7 +413,7 @@ class UserProject(models.Model):
         return False
 
     def is_solution_editable_by(self, user):
-        return self.user == user
+        return (self.user == user)
 
     def can_delete(self):
         """
