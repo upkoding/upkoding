@@ -24,6 +24,11 @@ def avatar_path(instance, filename):
 
 
 class User(AbstractUser):
+    TIME_ZONES = (
+        ('Asia/Jakarta', '(WIB) Waktu Indonesia Barat'),
+        ('Asia/Makassar', '(WITA) Waktu Indonesia Tengah'),
+        ('Asia/Jayapura', '(WIT) Waktu Indonesia Timur'),
+    )
     date_modified = models.DateTimeField(auto_now=True)
     avatar = ImageField(
         upload_to=avatar_path,
@@ -33,6 +38,8 @@ class User(AbstractUser):
     )
     point = models.IntegerField(default=0)
     description = models.TextField(blank=True, default='')
+    time_zone = models.CharField(
+        max_length=100, choices=TIME_ZONES, default='Asia/Jakarta')
 
     class Meta:
         ordering = ['-point']
@@ -299,6 +306,12 @@ class ProAccessPurchase(models.Model):
     def set_canceled(self):
         self.status = self.STATUS_ORDER_CANCELED
         self.save()
+
+    def set_gifted(self):
+        with transaction.atomic():
+            self.status = ProAccessPurchase.STATUS_ORDER_GIFTED
+            self.pro_access.extend_days(self.days)
+            self.save()
 
 
 class MidtransPaymentNotification(models.Model):

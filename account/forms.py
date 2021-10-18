@@ -42,7 +42,8 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['avatar', 'username', 'email', 'first_name', 'description']
+        fields = ['avatar', 'username', 'email',
+                  'first_name', 'description', 'time_zone']
 
     def is_valid(self):
         """
