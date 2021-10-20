@@ -1,6 +1,7 @@
 {% load base %}
 {% load humanize %}
 {% with activity0=activity.activities.0 %}
+{% if not activity0.not_enriched_data %}
 {% with actor=activity0.actor object=activity0.object target=activity0.target actor_count=activity.actor_count %}
 <li class="list-group-item">
     <div class="media align-items-center">
@@ -20,4 +21,5 @@
     </div>
 </li>
 {% endwith %}
+{% endif %}
 {% endwith %}

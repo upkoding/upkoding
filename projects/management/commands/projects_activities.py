@@ -72,4 +72,4 @@ class Command(BaseCommand):
                     f'[ERR] Activity {event.pk} not deleted. Err: {e}')
 
         self.stdout.write(self.style.WARNING(
-            f'Finish! {success_count} out of {total_count} event(s) successfully synced.'))
+            f'Finish! {success_count} out of {total_count} activities(s) successfully deleted.'))
