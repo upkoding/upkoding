@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from stream_django.enrich import Enrich
 
 from upkoding.activity_feed import feed_manager
-from projects.models import Project, UserProject
+from projects.models import Project
 
 log = logging.getLogger(__name__)
 
