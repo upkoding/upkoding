@@ -1,17 +1,22 @@
 makemigrations:
-	docker-compose run web python manage.py makemigrations
+	docker-compose run --rm web python manage.py makemigrations
 
 migrate:
-	docker-compose run web python manage.py migrate
+	docker-compose run --rm web python manage.py migrate
 
 createsuperuser:
-	docker-compose run web python manage.py createsuperuser
+	docker-compose run --rm web python manage.py createsuperuser
 
 test:
-	docker-compose run web python manage.py test
+	docker-compose run --rm web python manage.py test
 
 ssh:
-	docker-compose run web bash
+	docker-compose run --rm web bash
 
+# make runserver: only start `db` and `web` by default.
 runserver:
-	docker-compose up
+	docker-compose up db web
+
+# make runstatic: only needed when you want to make some changes to JS, SCSS or adding other assets.
+runstatic:
+	docker-compose up static

@@ -25,3 +25,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  static:
+    image: node:14-slim
+    working_dir: /static
+    command: sh -c "npm install && npm start"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./_static:/static
