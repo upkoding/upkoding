@@ -18,7 +18,7 @@ pip-compile:
 
 # make runserver: only start `db` and `web` by default.
 runserver:
-	docker-compose up db web
+	docker-compose up web
 
 # make runstatic: only needed when you want to make some changes to JS, SCSS or adding other assets.
 runstatic:

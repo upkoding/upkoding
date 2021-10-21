@@ -1,5 +1,5 @@
 # Docker-compose.yml version support, not internal version of this composition.
-version: "2.3"
+version: "3.8"
 services:
   db:
     image: postgres

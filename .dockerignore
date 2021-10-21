@@ -124,10 +124,10 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-upkoding-sa.json
 
 # Pyre type checker
 .pyre/
 
 media
 .DS_Store
+.git
