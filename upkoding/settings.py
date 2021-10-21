@@ -165,8 +165,8 @@ ANYMAIL = {
 JUDGE0_API_KEY = os.getenv('JUDGE0_API_KEY')
 
 # -- Stream --
-STREAM_API_KEY = os.getenv('STREAM_API_KEY')
-STREAM_API_SECRET = os.getenv('STREAM_API_SECRET')
+STREAM_API_KEY = os.getenv('STREAM_API_KEY', 'key')
+STREAM_API_SECRET = os.getenv('STREAM_API_SECRET', 'secret')
 # we want to send activity to Stream manually.
 STREAM_DISABLE_MODEL_TRACKING = True
 STREAM_FEED_MANAGER_CLASS = 'upkoding.activity_feed.FeedManager'
@@ -356,6 +356,6 @@ MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
 MIDTRANS_CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
 
 try:
-    from upkoding.local_settings import *
+    from upkoding.settings_local import *
 except ImportError:
     pass
