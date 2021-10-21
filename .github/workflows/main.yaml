@@ -48,7 +48,8 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           context: ./
           file: ./Dockerfile
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/upkoding:edge
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/upkoding:edge
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
