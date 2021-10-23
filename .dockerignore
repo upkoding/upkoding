@@ -10,7 +10,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -128,6 +127,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-media
+Dockerfile
+Makefile
+README.md
+docker-compose.yaml
+requirements.in
+screenshot.png
+media/
+node_modules/
 .DS_Store
 .git

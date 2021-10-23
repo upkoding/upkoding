@@ -128,5 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-media
+static/
+media/
+node_modules/
 .DS_Store
+.git
