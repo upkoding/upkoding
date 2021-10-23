@@ -1,3 +1,5 @@
+export DOCKER_BUILDKIT=1
+
 makemigrations:
 	docker-compose run --rm web python manage.py makemigrations
 
