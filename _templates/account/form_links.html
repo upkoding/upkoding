@@ -1,0 +1,18 @@
+{% extends 'account/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='Edit Links' %}
+{% endblock %}
+
+{% block breadcrumb %}Edit Links{% endblock %}
+
+{% block form %}
+<form method="POST">
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+    {% include 'base/form/_text.html' with field=field classes='mb-3' %}
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Simpan</button>
+</form>
+{% endblock %}

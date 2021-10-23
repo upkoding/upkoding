@@ -1,7 +1,64 @@
 from django import template
-from projects.models import UserProject, UserProjectEvent
+from projects.models import UserProjectEvent
 
 register = template.Library()
+
+
+@register.filter
+def is_solution_viewable_by(user_project, user):
+    """
+    Check whether user_project's solution is viewable by a user.
+    Usage:  {{ user_project|solution_viewable_by:user }}
+    """
+    return user_project.is_solution_viewable_by(user)
+
+
+@register.filter
+def is_solution_editable_by(user_project, user):
+    """
+    Check whether user_project's solution is editable by a user.
+    Usage:  {{ user_project|is_solution_editable_by:user }}
+    """
+    return user_project.is_solution_editable_by(user)
+
+
+@register.inclusion_tag('projects/templatetags/render_codeblock_readonly.html', takes_context=True)
+def render_codeblock_readonly(context, project, user_project=None):
+    codeblock = user_project.codeblock if user_project else project.codeblock
+    return {
+        'user': context.request.user,
+        'codeblock': codeblock,
+        'blocks': codeblock.get_blocks(),
+        'source_code': codeblock.source_code,
+        'completed': user_project.is_complete() if user_project else False,
+    }
+
+
+@register.inclusion_tag('projects/templatetags/render_codeblock_editable.html', takes_context=True)
+def render_codeblock_editable(context, project, user_project):
+    codeblock = user_project.codeblock
+    return {
+        'user': context.request.user,
+        'project': project,
+        'user_project': user_project,
+        'codeblock': codeblock,
+        'blocks': codeblock.get_blocks(),
+        'source_code': codeblock.source_code,
+        'completed': user_project.is_complete(),
+    }
+
+
+@register.inclusion_tag('projects/templatetags/render_codeblock_pro_only.html', takes_context=True)
+def render_codeblock_pro_only(context, project, user_project):
+    codeblock = user_project.codeblock
+    return {
+        'user': context.request.user,
+        'project': project,
+        'user_project': user_project,
+        'user_project_owner': user_project.user,
+        'codeblock': codeblock,
+        'completed': user_project.is_complete(),
+    }
 
 
 @register.inclusion_tag('projects/templatetags/render_requirements.html')
@@ -60,7 +117,11 @@ def render_timeline(context, user_project):
     """
     Render project's events timeline.
     """
-    events = UserProjectEvent.objects.filter(user_project=user_project).order_by('created')
+    events = UserProjectEvent.objects \
+        .select_related('user') \
+        .filter(user_project=user_project) \
+        .order_by('created')
+
     events_with_template = []
     for event in events:
         events_with_template.append({
@@ -71,28 +132,4 @@ def render_timeline(context, user_project):
         'user_project': user_project,
         'events': events_with_template,
         'user': context.request.user,
-    }
-
-
-@register.inclusion_tag('projects/templatetags/inprogress_projects.html')
-def render_inprogress_projects(project):
-    user_projects = UserProject.objects.filter(
-        project=project,
-        status__in=(UserProject.STATUS_IN_PROGRESS,
-                    UserProject.STATUS_PENDING_REVIEW,
-                    UserProject.STATUS_INCOMPLETE)
-    ).order_by('-created')[:5]
-    return {
-        'items': user_projects
-    }
-
-
-@register.inclusion_tag('projects/templatetags/completed_projects.html')
-def render_completed_projects(project):
-    user_projects = UserProject.objects.filter(
-        project=project,
-        status=UserProject.STATUS_COMPLETE
-    )[:5]
-    return {
-        'items': user_projects
     }

@@ -1,0 +1,150 @@
+// 
+// 
+// dropzone.scss
+//
+//
+
+.dropzone-previews{
+    width: 100%;
+}
+
+form.dropzone{
+    width: 100%;
+    margin-bottom: $spacer;
+    &.dz-drag-hover{
+        .dz-message{
+            background: $gray-200;
+            border-style: solid;
+        }
+    }
+}
+
+.dz-message{
+    text-align: center;
+    padding: $spacer;
+    display: block;
+    font-size: .875rem;
+    font-weight: $font-weight-bold;
+    opacity: 1;
+    cursor: pointer;
+    border-radius: $border-radius*2;
+    background: $white;
+    border: $border-width dashed $border-color;
+    transition: all .35s ease;
+    color: transparentize($body-color,.5);
+    &:hover{
+        background: $gray-200;
+    }
+}
+
+.dz-size{
+    text-transform: lowercase;
+    strong{
+        font-weight: $font-weight-normal;
+    }
+}
+
+/** Dropzone image preview **/
+
+.dz-file-representation{
+    img:not([src]){
+        display: none;
+    }
+    img[src] + i{
+        display: none;
+    }
+    img{
+        position: absolute;
+        object-fit: cover;
+    }
+}
+
+/** Dropzone inside a sidebar **/
+
+.sidebar{
+    form.dropzone{
+        padding: 0 $spacer;
+    }
+    .dz-message{
+        background: $gray-100;
+        padding: 1rem;
+    }
+}
+
+/** Dropzone Avatar show once uploaded **/
+
+.dz-preview{
+    .avatars{
+        li:last-child{
+            transition: opacity .35s ease;
+            opacity: 0;
+        }
+    }
+    &.dz-complete{
+        .avatars{
+            li:last-child{
+                opacity: 1;
+            }
+        }
+    }
+}
+
+/** Dropzone Progress Bar **/
+
+.dz-progress{
+    background: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0.1875rem;
+    border-radius: 0;
+    .progress-bar{
+        border-radius: 0;
+    }
+}
+
+.dz-processing{
+    overflow: hidden;
+    .dropdown{
+        transition: opacity .35s ease;
+        opacity: 0;
+    }
+    &.dz-complete{
+        overflow: visible;
+        .dz-progress{
+            display: none;
+        }
+        .dropdown{
+            opacity: 1;
+        }
+    }
+}
+
+/** Dropzone Loader **/
+
+.dz-loading{
+    opacity: 1;
+    transition: opacity .35s ease;
+    position: absolute;
+    left: 1.1875rem;
+}
+
+.dz-processing.dz-success, .dz-processing.dz-error{
+    .dz-loading{
+        opacity: 0;
+    }
+}
+
+/** Dropzone Cancel Button **/
+
+.dz-remove{
+    position: absolute;
+    right: $spacer;
+}
+
+.dz-processing.dz-complete{
+    .dz-remove{
+        display: none;
+    }
+}

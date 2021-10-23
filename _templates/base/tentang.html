@@ -1,0 +1,191 @@
+{% extends 'base/base.html' %}
+{% load base %}
+{% load static %}
+
+{% block meta %}
+{% meta title='Tentang UpKoding' desc='Tentang UpKoding, platform belajar coding interaktif Indonesia.'%}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <div class="mb-3 d-flex">
+                    <img alt="Pipeline" src="{% static 'assets/img/logo.png' %}" class="avatar avatar-lg mr-1" />
+                    <div>
+                        <span class="badge badge-info">{{ app_version }}</span>
+                    </div>
+                </div>
+                <h1>Tentang</h1>
+                <p class="lead">UpKoding mempunyai misi menjadi tempat belajar dan bermain bagi calon programmer hebat
+                    Indonesia.
+                    Merevolusi proses belajar dengan konsep bite-sized learning sekaligus memberikan ruang untuk
+                    mengasah skill
+                    dasar yang harus dimiliki programmer yaitu problem-solving.
+                </p>
+            </div>
+
+            <div class="accordion" id="accordion">
+                <div class="card">
+                    <div class="card-header" id="heading1">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-left" type="button" data-toggle="collapse"
+                                data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                                Apa itu bite-sized learning?
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion">
+                        <div class="card-body">
+                            <strong>Bite-sized learning</strong> adalah sebuah istilah dimana kita hanya belajar satu
+                            hal pada suatu waktu, menjadikan kita lebih fokus karena tidak dibanjiri dengan terlalu
+                            banyak informasi sekaligus.
+                            <br /><br />
+                            Kenapa itu penting? karena dalam belajar, fokus itu sangat penting, memahami apa yang
+                            kita lakukkan dan bagaimana sesuatu itu bekerja lebih penting daripada menghapal semua
+                            sintaknya.
+                            <br /><br />
+                            Maka dari itu di UpKoding setiap kelas dan tantangan akan fokus pada satu topic, ini untuk
+                            memastikan supaya kamu fokus pada satu hal pada suatu waktu.
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="heading2">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse"
+                                data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                Kenapa platform UpKoding open source?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
+                        <div class="card-body">
+                            Karena UpKoding ingin menjadi contoh, menunjukkan apa yang bisa dihasilkan oleh seorang
+                            programmer, hasil karya seorang programmer. Bagaimana setiap fitur di platform ini dibuat
+                            dan bagaimana dia bekerja, itu semua bisa dilihat di kode sumbernya dengan harapan semoga
+                            bisa bermanfaat bagi yang lain.
+                            <br /><br />
+                            UpKoding juga ingin menjadi contoh nyata bagaimana membuat produk dari NOL. Dari sebuah ide
+                            menjadi produk yang mudah-mudahan menginspirasi programmer lainnya untuk melakukkan hal
+                            serupa bahkan bisa menjadi peluang bisnis.
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="heading3">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse"
+                                data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                                Bagaimana cara saya membantu UpKoding?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion">
+                        <div class="card-body">
+                            Cukup dengan dimanfaatkan sebaik-baiknya, gunakan untuk belajar dan berlatih. Apabila
+                            memiliki Pro Access maka pelajari semua yang ingin dipelajari. Kalau satu
+                            saja pengguna UpKoding menjadi programmer sukses maka misi UpKoding tercapai.
+                            <br /><br />
+                            Cara lain untuk membantu UpKoding adalah dengan menjadi member PRO, ini akan membantu
+                            platform ini tetap berjalan dan teman-teman yang tidak memiliki Pro Access tetap bisa
+                            menggunakannya untuk belajar.
+                            <br /><br />
+                            Bisa juga dengan berkontribusi langsung pada <a href="https://github.com/upkoding/upkoding"
+                                target="_blank">codenya</a> atau bantu
+                            bagikan ke teman-teman lainnya apabila merasa layanan UpKoding bermanfaat.
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="heading4">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse"
+                                data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                                Kenapa ada Pro Access?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse4" class="collapse" aria-labelledby="heading4" data-parent="#accordion">
+                        <div class="card-body">
+                            UpKoding terbuka untuk siapa saja, kita menyediakan
+                            kelas, tantangan, group diskusi bahkan kode sumbernya 100% dibuka bagi yang ingin belajar
+                            dan berkontribusi.
+                            Untuk menjaganya tetap berjalan dan pengembangan lebih lanjut maka dia (upkoding.com) harus
+                            sustainable (minimal bisa menghidupi dirinya sendiri).
+                            <br /><br />
+                            Namun yang tidak kalah pentingnya adalah kita memberikan edukasi bahwa programmer jangan
+                            pernah takut untuk berinvestasi, ketika sudah mengeluarkan biaya untuk sesuatu maka
+                            manfaatkanlah sebaik-baiknya (jangan disia-siakan).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mt-3">
+                <div class="list-group">
+                    <a href="mailto:info@upkoding.com" class="list-group-item list-group-item-action d-flex gap-3 py-3"
+                        aria-current="true">
+                        <i class="material-icons mr-2">email</i>
+                        <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                                <h6 class="mb-0">Email</h6>
+                                <p class="mb-0 opacity-75">info[at]upkoding.com</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://t.me/upkoding" target="_blank"
+                        class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                        <i class="material-icons mr-2">telegram</i>
+                        <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                                <h6 class="mb-0">Group Telegram (umum)</h6>
+                                <p class="mb-0 opacity-75">https://t.me/upkoding</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'account:discord' %}"
+                        class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                        <i class="material-icons mr-2">discord</i>
+                        <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                                <h6 class="mb-0">Discord (members only)</h6>
+                                <p class="mb-0 opacity-75">https://www.upkoding.com{% url 'account:discord' %}</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://www.youtube.com/UpKoding" target="_blank"
+                        class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                        <i class="material-icons mr-2">play_circle_filled</i>
+                        <div class="d-flex gap-2 w-100 justify-content-between">
+                            <div>
+                                <h6 class="mb-0">Youtube</h6>
+                                <p class="mb-0 opacity-75">https://www.youtube.com/UpKoding</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card mt-3 text-center">
+                <div class="card-body">
+                    <figure>
+                        <blockquote class="blockquote">
+                            <p style="font-size: smaller;">Programmer itu harus praktek, banyak latihan dan membuat
+                                proyek! Mengikuti tutorial itu gampang, tetapi belajar sebenarnya dimulai ketika
+                                praktek dan membuat proyek sendiri.</p>
+                        </blockquote>
+                        <figcaption class="blockquote-footer">
+                            Eka Putra <cite title="Source Title">(Founder UpKoding)</cite>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

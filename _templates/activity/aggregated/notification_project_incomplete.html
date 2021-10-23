@@ -1,0 +1,4 @@
+{% extends 'activity/aggregated/notification_base.html' %}
+
+{% block verb %}<a href="{{ actor.get_absolute_url }}">{{ actor.username }}</a> batal menyetujui proyek kamu{% endblock %}
+{% block icon %}<span class="material-icons-x text-danger">error_outline</span>{% endblock %}

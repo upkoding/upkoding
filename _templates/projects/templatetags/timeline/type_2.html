@@ -1,0 +1,13 @@
+{% load humanize %}
+<div class="list-group-item">
+    <div class="d-flex w-100 justify-content-between">
+        <p class="mb-0">
+            {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
+            <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
+                {{ event_user.username }}
+            </a>
+            menyelesaikan semua tasks
+        </p>
+        <small>{{ event.created|naturaltime }}</small>
+    </div>
+</div>

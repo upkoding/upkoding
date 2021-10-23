@@ -1,0 +1,51 @@
+// 
+// 
+// navbar.scss
+//
+//
+
+.navbar.bg-white{
+  border-bottom: $border-width solid $border-color;
+}
+
+.navbar-nav{
+  .nav-link{
+    font-weight: 500;
+  }
+}
+
+.navbar-dark{
+  .navbar-nav{
+    > .nav-item{
+      > .nav-link, > .dropdown > .nav-link{
+        color: rgba(255,255,255,.9);
+      }
+    }
+  }
+  .nav-small{
+    .nav-link{
+      color: rgba(255,255,255,.65);
+      &:hover{
+        color: rgba(255,255,255,.9);
+      }
+    }
+  }
+}
+
+.navbar-toggler-icon{
+  background-image: none !important;
+  &:after{
+    content: 'menu';
+    font-family: 'Material Icons';
+    font-size: 2rem;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .navbar-collapse{
+    padding: $spacer/2 0;
+    hr{
+      margin: $spacer/1.5 0;
+    }
+  }
+}

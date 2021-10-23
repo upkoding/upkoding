@@ -1,0 +1,26 @@
+<div class="card mt-3">
+    <div class="card-header">
+        <i class="material-icons-x">timeline</i>
+        <strong>Timeline proyek</strong>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="list-group list-group-flush" id="timeline-events">
+            {% for event in events %}
+            {% include event.tpl with event=event.obj event_user=event.obj.user %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card-footer py-2">
+        {% if user == user_project.user and not user_project.is_in_progress %}
+        <!-- if project owner, show review form (message mode only) -->
+        {% include 'projects/templatetags/timeline/review_form.html' with fullmode=False %}
+        {% endif %}
+
+        {% if user.is_staff and user != user_project.user %}
+        <!-- if current user is staff and project waiting for review, show review form (full mode) -->
+        {% include 'projects/templatetags/timeline/review_form.html' with fullmode=True %}
+        {% endif %}
+    </div>
+</div>

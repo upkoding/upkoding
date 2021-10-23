@@ -1,6 +1,11 @@
+import logging
 from django.views.generic.base import TemplateView
+from stream_django.enrich import Enrich
 
-from projects.models import Project, UserProject
+from upkoding.activity_feed import feed_manager
+from projects.models import Project
+
+log = logging.getLogger(__name__)
 
 
 def render_template(name, content_type="text/html; charset=utf-8"):
@@ -15,13 +20,14 @@ class Index(TemplateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['projects'] = Project.objects.active()[:3]
-        data['user_projects_inprogress'] = UserProject.objects.filter(
-            status__in=(UserProject.STATUS_IN_PROGRESS,
-                        UserProject.STATUS_PENDING_REVIEW,
-                        UserProject.STATUS_INCOMPLETE)
-        ).order_by('-updated')[:5]
-        data['user_projects_completed'] = UserProject.objects.filter(
-            status=UserProject.STATUS_COMPLETE
-        ).order_by('-updated')[:5]
+        data['featured_projects'] = Project.objects.featured()
+
+        try:
+            enricher = Enrich(('actor', 'object', 'target'))
+            feed = feed_manager.get_global_challenge_feed()
+            activities = feed.get(limit=10)['results']
+            data['activities'] = enricher.enrich_aggregated_activities(
+                activities)
+        except Exception as e:
+            log.error(e)
         return data

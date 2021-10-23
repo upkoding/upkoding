@@ -1,0 +1,8 @@
+{% extends 'activity/challenge_base.html' %}
+{% block verb %}
+{% if actor == activity.target.user %}
+berhasil menyelesaikan
+{% else %}
+menyetujui proyeknya <span class="text-primary">{{ activity.target.user.username }}</span>
+{% endif %}
+{% endblock %}

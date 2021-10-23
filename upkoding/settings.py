@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+import json
 from pathlib import Path
 import dj_database_url
 import sentry_sdk
@@ -30,6 +31,7 @@ SECRET_KEY = os.getenv(
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
 AUTH_USER_MODEL = 'account.User'
+APP_VERSION = os.getenv('APP_VERSION', 'devel')
 
 # Application definition
 
@@ -39,6 +41,9 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig',
     'projects.apps.ProjectsConfig',
     'coders.apps.CodersConfig',
+    'codeblocks.apps.CodeblocksConfig',
+    'discord.apps.DiscordConfig',
+    # 'forum.apps.ForumConfig',
 
     # 3rd party apps
     'whitenoise.runserver_nostatic',
@@ -47,6 +52,8 @@ INSTALLED_APPS = [
     'markdownify.apps.MarkdownifyConfig',
     'mdeditor',
     'anymail',
+    'django_ace',
+    'stream_django',
 
     # django contribs
     'django.contrib.postgres',
@@ -69,7 +76,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'upkoding.middlewares.TimezoneMiddleware',
 ]
+if DEBUG:
+    MIDDLEWARE = [
+        'upkoding.middlewares.QueryCountDebugMiddleware',
+    ] + MIDDLEWARE
 
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',
@@ -83,7 +95,7 @@ ROOT_URLCONF = 'upkoding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / '_templates', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,13 +151,32 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# -- Mailer --
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_EMAIL_FROM = os.getenv('DEFAULT_EMAIL_FROM', 'upkoding@example.com')
+DEFAULT_EMAIL_FROM = os.getenv(
+    'DEFAULT_EMAIL_FROM', 'UpKoding <upkoding@example.com>')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'upkoding@example.com')
 ANYMAIL = {
     'MAILGUN_API_KEY': os.getenv('MAILGUN_API_KEY'),
     'MAILGUN_SENDER_DOMAIN': os.getenv('MAILGUN_SENDER_DOMAIN'),
 }
+
+# -- Judge0 --
+JUDGE0_API_KEY = os.getenv('JUDGE0_API_KEY')
+
+# -- Stream --
+STREAM_API_KEY = os.getenv('STREAM_API_KEY', 'key')
+STREAM_API_SECRET = os.getenv('STREAM_API_SECRET', 'secret')
+# we want to send activity to Stream manually.
+STREAM_DISABLE_MODEL_TRACKING = True
+STREAM_FEED_MANAGER_CLASS = 'upkoding.activity_feed.FeedManager'
+
+# -- Discord --
+DISCORD_APPLICATION_ID = os.getenv('DISCORD_APPLICATION_ID')
+DISCORD_PUBLIC_KEY = os.getenv('DISCORD_PUBLIC_KEY')
+DISCORD_BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
+DISCORD_GUILD_ID = os.getenv('DISCORD_GUILD_ID')
+DISCORD_UPKODERS_ROLE_ID = os.getenv('DISCORD_UPKODERS_ROLE_ID')
 
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
@@ -185,6 +216,10 @@ if not DEBUG:
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
+STATICFILES_DIRS = [
+    BASE_DIR / '_static/dist',
+]
+
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
 THUMBNAIL_FORCE_OVERWRITE = True
@@ -235,9 +270,8 @@ SITE_DOMAIN = os.getenv('SITE_DOMAIN')
 POINT_UNIT = 'UP'
 DEFAULT_METADATA = {
     'title': 'UpKoding',
-    'image': 'base/img/logo.png',
-    'description': 'Belajar Coding paling efektif adalah dengan membuat proyek.'
-    + ' UpKoding menyediakan ratusan ide-ide proyek yang kamu bisa buat sebagai latihan mengasah keahlian programming dan dapatkan point untuk setiap proyek yang kamu selesaikan.',
+    'image': 'assets/img/logo.png',
+    'description': 'UpKoding adalah platform belajar pemrograman dengan format bite-sized learning, belajar materi secukupnya, langsung uji dan praktekkan.',
 }
 
 GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
@@ -304,6 +338,7 @@ MARKDOWNIFY = {
             'href',
             'src',
             'alt',
+            'class',
         ],
         'MARKDOWN_EXTENSIONS': [
             'markdown.extensions.fenced_code',
@@ -312,7 +347,15 @@ MARKDOWNIFY = {
     }
 }
 
+PRICING_VERSION = 'v1'
+with open(BASE_DIR / f'upkoding/pricing/{PRICING_VERSION}.json') as pf:
+    PRICING = json.load(pf)
+
+MIDTRANS_IS_PRODUCTION = os.getenv('MIDTRANS_IS_PRODUCTION', 'False') == 'True'
+MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
+MIDTRANS_CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
+
 try:
-    from upkoding.local_settings import *
+    from upkoding.settings_local import *
 except ImportError:
     pass

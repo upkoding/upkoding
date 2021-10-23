@@ -1,0 +1,44 @@
+// 
+// 
+// breadcrumb.scss
+//
+//
+
+.breadcrumb{
+  margin: 0;
+}
+
+.breadcrumb-item{
+  display: flex;
+  align-items: center;
+  font-size: .875rem;
+  a{
+    font-weight: 500;
+  }
+  + .breadcrumb-item{
+    &:before{
+      font-family: 'Material Icons';
+      height: 1rem;
+      position: relative;
+      bottom: 2px;
+    }
+  }
+}
+
+.breadcrumb-bar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &.navbar{
+    padding: $spacer/2 $spacer;
+  }
+  &.sticky-top{
+    z-index: 1019;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .breadcrumb-bar{
+    min-height: 3.5625rem;
+  }
+}

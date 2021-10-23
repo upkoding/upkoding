@@ -1,0 +1,39 @@
+{% load base %}
+{% load humanize %}
+{% load sorl_thumbnail %}
+{% with project=user_project.project %}
+<div class="card h-100">
+    <div class="progress">
+        <div class="progress-bar bg-{{ user_project.get_color_class }}" role="progressbar"
+            style="width: {{ user_project.requirements_completed_percent|safe }}%"
+            aria-valuenow="{{ user_project.requirements_completed_percent|safe }}" aria-valuemin="0"
+            aria-valuemax="100"></div>
+    </div>
+    <div class="card-body d-flex w-100 justify-content-start">
+        {% thumbnail project.cover "160x160" crop="center" as im %}
+        <img src="{{ im.url }}" width="80" height="80" class="mr-2 rounded" alt="{{ p.title|title }}">
+        {% endthumbnail %}
+
+        <div class="d-block w-100">
+            <div class="card-title mb-2">
+                <a href="{{ user_project.get_absolute_url }}" class="stretched-link" title="{{ project.title|title }}">
+                    <h6>{{ project.title|title }}</h6>
+                </a>
+            </div>
+            <div class="card-meta d-flex w-100 justify-content-start">
+                {% with codeblock=project.codeblock %}
+                <div class="d-flex align-items-center">
+                    {% if codeblock %}
+                    <span class="badge badge-info mr-1">{{codeblock.get_language_display}}</span>
+                    {% else %}
+                    <!-- <i class="material-icons mr-1">science</i> -->
+                    <span class="badge badge-secondary mr-1">project</span>
+                    {% endif %}
+                </div>
+                {% endwith %}
+                <span class="text-small">{{ user_project.updated|naturaltime }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endwith %}

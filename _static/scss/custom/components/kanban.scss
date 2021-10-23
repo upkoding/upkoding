@@ -1,0 +1,133 @@
+// 
+// 
+// kanban.scss
+//
+//
+
+.container-kanban{
+  height: calc(100vh - 7.1875rem);
+  display: flex;
+  flex-direction: column;
+}
+
+@include media-breakpoint-up(lg) {
+  .container-kanban{
+    .container-fluid{
+      padding-left: $spacer*2;
+      padding-right: $spacer*2;
+    }
+  }
+  .layout-nav-side{
+    .container-kanban{
+      height: calc(100vh - 3.5625rem);
+    }
+  }
+}
+
+.kanban-board{
+  flex: 1;
+  white-space: nowrap;
+  overflow-x: scroll;
+  display: flex;
+  user-select: none;
+  > .kanban-col{
+    user-select: none;
+    flex: 1 0 auto;
+    width: calc(100vw - 24px);
+    max-height: 100%;
+    padding-right: $spacer/2;
+    padding-bottom: $spacer/2;
+    outline: none !important;
+    .card-list{
+      user-select: none;
+      max-height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+    .card-list-body{
+      min-height: 1rem;
+    }
+    .card-list-header{
+      display: block;
+      position: relative;
+      .dropdown{
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+    .card-list-body{
+      user-select: none;
+      overflow-y: scroll;
+      @extend .no-scroll-bars;
+    }
+    .card-list-footer{
+      padding-top: $spacer/2;
+      .btn-link{
+        padding: 0;
+      }
+    }
+  }
+  &:focus{
+    outline: none;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .kanban-board{
+    > .kanban-col{
+      max-width: $spacer*13;
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .container-kanban{
+    .page-header{
+      h1{
+        font-size: $h4-font-size;
+        margin: 0;
+      }
+      > div:last-child{
+        display: none !important;
+      }
+    }
+  }
+}
+
+// Draggable styles
+
+.draggable--is-dragging{
+  cursor: grabbing !important;
+  .card-kanban *, .card-list{
+    cursor: grabbing;
+  }
+}
+
+.card-kanban{
+  user-select: none;
+  outline: none !important;
+  cursor: grab;
+}
+
+.card-kanban.draggable-mirror{
+  min-width: 268px;
+  margin-bottom: 0;
+}
+
+.draggable-mirror{
+  z-index: 2;
+}
+
+.draggable-source--is-dragging{
+  opacity: .25;
+  &:nth-last-child(2){
+    margin-bottom: 0;
+  }
+}
+
+.draggable--original{
+  margin: 0 !important;
+}

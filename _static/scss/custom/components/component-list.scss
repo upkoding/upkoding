@@ -1,0 +1,42 @@
+// 
+// 
+// component-list.scss
+//
+// Used only on the 'components' page of the template, can be excluded in production
+
+.component-snippet, .component-demo{
+  margin-top: $spacer*2;
+  pre{
+    max-height: 322px;
+  }
+}
+
+.component-classes{
+  margin-top: $spacer*2;
+  dl{
+    border-radius: $border-radius;
+    border: $border-width solid $border-color;
+    border-bottom: none;
+  }
+
+  dt,dd{
+    margin: 0;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+    p{
+      margin: 0;
+    }
+    border-bottom: $border-width solid $border-color;
+  }
+
+  dt{
+    border-right: $border-width solid $border-color;
+  }
+}
+
+.component-snippet + .alert{
+  margin-top: $spacer/2;
+  p{
+    margin: 0;
+  }
+}

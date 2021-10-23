@@ -1,0 +1,33 @@
+{% load base %}
+{% load humanize %}
+{% with activity0=activity.activities.0 %}
+{% if not activity0.not_enriched_data %}
+{% with actor=activity0.actor %}
+<div class="list-group-item list-group-item-action" {% if activity.is_read %}style="opacity: 0.6"{% endif %}>
+    <div class="d-flex w-100 justify-content-between">
+        <div class="d-flex justify-content-start">
+            <img src="{{ actor|avatar_url:100 }}" width="50" height="50" class="mr-2 avatar">
+            <div>
+                <h6 class="mb-0">
+                    {% block verb %}{% endblock %}
+                </h6>
+                {% if activity0.event_message %}
+                <div class="mt-1 text-muted">"{{ activity0.event_message|truncatechars:120 }}"</div>
+                {% endif %}
+                <small>
+                    {% block icon %}{% endblock %}
+                    <a href="{{ activity0.target.get_absolute_url }}">{{ activity0.object.title }}</a> •
+                    {{activity0.time|naturalday}}
+                </small>
+            </div>
+        </div>
+        <small>
+            <a href="{{ activity0.target.get_absolute_url }}">
+                lihat<span class="material-icons-x">arrow_right</span>
+            </a>
+        </small>
+    </div>
+</div>
+{% endwith %}
+{% endif %}
+{% endwith %}

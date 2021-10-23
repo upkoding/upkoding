@@ -1,3 +1,5 @@
+import uuid
+import json
 from django.db import models
 
 USER_SETTING_TYPE_BOOL = 0  # True/False
@@ -15,7 +17,7 @@ USER_SETTING_TYPES = (
 
 class UserSettingManager(models.Manager):
 
-    def __get_setting(self, user, key, default):
+    def get_setting(self, user, key, default=None):
         try:
             setting = self.get(user=user, key=key)
             if setting.type == USER_SETTING_TYPE_BOOL:
@@ -68,23 +70,45 @@ class UserSettingManager(models.Manager):
     def email_notify_project_message(self, user, value: bool = None):
         key = 'email_notify_project_message'
         if value is None:
-            return self.__get_setting(user, key, True)
+            return self.get_setting(user, key, True)
         self.__set_bool(user, key, value)
 
     def email_notify_project_approved(self, user, value: bool = None):
         key = 'email_notify_project_approved'
         if value is None:
-            return self.__get_setting(user, key, True)
+            return self.get_setting(user, key, True)
         self.__set_bool(user, key, value)
 
     def email_notify_project_disapproved(self, user, value: bool = None):
         key = 'email_notify_project_disapproved'
         if value is None:
-            return self.__get_setting(user, key, True)
+            return self.get_setting(user, key, True)
         self.__set_bool(user, key, value)
 
     def email_notify_project_review_request(self, user, value: bool = None):
         key = 'email_notify_project_review_request'
         if value is None:
-            return self.__get_setting(user, key, True)
+            return self.get_setting(user, key, True)
         self.__set_bool(user, key, value)
+
+    def email_notify_forum_activity(self, user, value: bool = None):
+        key = 'email_notify_forum_activity'
+        if value is None:
+            return self.get_setting(user, key, True)
+        self.__set_bool(user, key, value)
+
+    def discord_access_token(self, user):
+        # readonly.
+        key = 'discord_access_token'
+        token = self.get_setting(user, key, None)
+        if token:
+            return token
+        initial_token = str(uuid.uuid4())
+        self.__set_string(user, key, initial_token)
+        return initial_token
+
+    def discord_access_token_status(self, user, value: str = None):
+        key = 'discord_access_token_status'
+        if value is None:
+            return self.get_setting(user, key, json.dumps({'verified': False}))
+        self.__set_string(user, key, value)

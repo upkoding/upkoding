@@ -1,0 +1,13 @@
+{% load base %}
+{% load humanize %}
+{% with actor=activity.actor %}
+<a class="list-group-item list-group-item-action" href="{{ activity.target.get_absolute_url }}">
+    <div class="media media-member mb-0">
+        <img alt="{{ actor.get_display_name }}" src="{{ actor|avatar_url:64 }}" class="avatar" />
+        <div class="media-body">
+            <h6 class="mb-0" data-filter-by="text"><span class="text-primary">{{ actor.username }}</span> {% block verb %}{% endblock %}</h6>
+            <span class="text-muted">{{ activity.time|naturaltime }}</span>
+        </div>
+    </div>
+</a>
+{% endwith %}

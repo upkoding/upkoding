@@ -1,0 +1,80 @@
+{% if editable and form %}
+<div class="card mt-3">
+    <div class="card-header">
+        <i class="material-icons-x">reviews</i>
+        <strong>Review Form</strong>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form.hidden_fields %}
+        {{ field }}
+        {% endfor %}
+
+        <div class="card-body">
+            {% if user_project.require_demo_url %}
+            <div class="mb-2">
+                <label for="demo_url" class="form-label">
+                    <strong>
+                        <i class="material-icons-x">link</i>
+                        URL Proyek
+                    </strong>
+                </label>
+
+                {% with invalid=form.errors.demo_url %}
+                <input type="text" name="demo_url" maxlength="250"
+                    class="form-control {% if invalid %}is-invalid{% endif %}" id="id_demo_url"
+                    value="{{ form.demo_url.value }}">
+                {% if invalid %}
+                <div class="invalid-feedback">
+                    URL demo proyek tidak boleh kosong!
+                </div>
+                {% else %}
+                <small class="text-muted">URL proyek live atau demo. contoh:
+                    https://codepen.io/aexcode/pen/vYyQxoK</small>
+                {% endif %}
+                {% endwith %}
+            </div>
+            {% endif %}
+
+            {% if user_project.require_sourcecode_url %}
+            <div class="mb-2">
+                <label for="sourcecode_url" class="form-label">
+                    <strong><i class="material-icons-x">link</i>
+                        URL kode sumber proyek
+                    </strong>
+                </label>
+                {% with invalid=form.errors.sourcecode_url %}
+                <input type="text" name="sourcecode_url" maxlength="250"
+                    class="form-control {% if invalid %}is-invalid{% endif %}" id="id_sourcecode_url"
+                    value="{{ form.sourcecode_url.value }}">
+                {% if invalid %}
+                <div class="invalid-feedback">
+                    URL kode sumber proyek tidak boleh kosong!
+                </div>
+                {% else %}
+                <small class="text-muted">Bisa di Github, GitLab atau Bitbucket. contoh:
+                    https://github.com/upkoding/upkoding
+                </small>
+                {% endif %}
+                {% endwith %}
+            </div>
+            {% endif %}
+
+            <div>
+                <label for="note" class="form-label">Catatan (optional)</label>
+                <textarea name="note" cols="40" rows="3" class="form-control"
+                    id="id_note">{{ form.note.value }}</textarea>
+                <small class="text-muted">Catatan untuk reviewer atau kesan dan pesan selama mengerjakan proyek ini, apa
+                    yang dipelajari dll.</small>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end">
+            {% if user_project.is_in_progress %}
+            <button type="submit" class="btn btn-success">Minta Review</button>
+            {% else %}
+            <button type="submit" class="btn btn-success">Update</button>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endif %}

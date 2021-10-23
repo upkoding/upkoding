@@ -1,0 +1,45 @@
+{% extends 'account/base.html' %}
+{% load base %}
+{% load sorl_thumbnail %}
+
+{% block meta %}
+{% meta title='Edit Profil' %}
+{% endblock %}
+
+{% block breadcrumb %}Edit Profil{% endblock %}
+
+{% block form %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="media mb-4">
+        {{ user|avatar_img:70 }}
+        <div class="media-body ml-3">
+            <div class="custom-file custom-file-naked d-block mb-1">
+                <input type="file" name="avatar" class="custom-file-input d-none" id="avatar-file" accept="image/*">
+                <label class="custom-file-label position-relative" for="avatar-file">
+                    <span class="btn btn-primary">
+                        Upload photo
+                    </span>
+                </label>
+            </div>
+            <small>Untuk tampilan terbaik gunakan photo ukuran minimal 256 x 256 pixels (.jpg atau .png)</small>
+
+            {% if user.avatar %}
+            <div class="form-group mt-2">
+                <div class="custom-control custom-checkbox custom-checkbox-switch">
+                    <input type="checkbox" class="custom-control-input" name="avatar-clear" id="avatar-clear">
+                    <label class="custom-control-label" for="avatar-clear">Hapus photo</label>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% for field in form.visible_fields %}
+    {% if field.name != 'avatar' %}
+    {% include 'base/form/_text.html' with field=field %}
+    {% endif %}
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Simpan</button>
+</form>
+{% endblock %}

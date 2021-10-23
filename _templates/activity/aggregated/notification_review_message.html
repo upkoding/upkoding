@@ -1,0 +1,4 @@
+{% extends 'activity/aggregated/notification_base.html' %}
+
+{% block verb %}Pesan dari <a href="{{ actor.get_absolute_url }}">{{ actor.username }}</a>{% endblock %}
+{% block icon %}<span class="material-icons-x text-primary">chat</span>{% endblock %}

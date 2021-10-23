@@ -1,0 +1,40 @@
+{% load humanize %}
+{% load markdownify %}
+<div class="list-group-item">
+    <div class="d-flex w-100 justify-content-between">
+        <p class="mb-0">
+            <strong>
+                {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
+                <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
+                    {{ event_user.username }}
+                </a>
+                meminta review
+            </strong>
+        </p>
+        <small>{{ event.created|naturaltime }}</small>
+    </div>
+
+    {% if user_project.has_details %}
+    <p class="mb-1">
+    <ul class="list-group mt-3 mb-2">
+        {% if user_project.demo_url %}
+        <li class="list-group-item d-flex w-100 justify-content-between bg-light">Demo <a
+                href="{{ user_project.demo_url }}" target="_blank" class="project-url">
+                {{ user_project.demo_url }}
+            </a>
+        </li>
+        {% endif %}
+        {% if user_project.sourcecode_url %}
+        <li class="list-group-item d-flex w-100 justify-content-between bg-light">Kode Sumber <a
+                href="{{ user_project.sourcecode_url }}" target="_blank" class="project-url">
+                {{ user_project.sourcecode_url }}
+            </a>
+        </li>
+        {% endif %}
+        {% if user_project.note %}
+        <li class="list-group-item bg-light text-dark">{{ user_project.note|markdownify }}</li>
+        {% endif %}
+    </ul>
+    </p>
+    {% endif %}
+</div>

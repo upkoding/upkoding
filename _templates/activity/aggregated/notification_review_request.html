@@ -1,0 +1,4 @@
+{% extends 'activity/aggregated/notification_base.html' %}
+
+{% block verb %}<a href="{{ actor.get_absolute_url }}">{{ actor.username }}</a> meminta review{% endblock %}
+{% block icon %}<span class="material-icons-x text-primary">visibility</span>{% endblock %}

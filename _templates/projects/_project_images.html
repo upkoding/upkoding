@@ -1,0 +1,15 @@
+{% if images %}
+{% load sorl_thumbnail %}
+<div class="images mt-4 simpleLightbox">
+    <div class="d-flex justify-content-start">
+        {% for img in images %}
+        {% thumbnail img.image "100x100" crop="center" as im %}
+        <a href="{{ img.image.url }}" {%if img.title %}title="{{ img.title }}" {% endif %}target="_blank"
+            rel="noopener noreferrer" class="mr-2">
+            <img src="{{ im.url }}" class="rounded img-fluid" alt="Image {%if img.title %}{{ img.title }}{% endif %}" />
+        </a>
+        {% endthumbnail %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

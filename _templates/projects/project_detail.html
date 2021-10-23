@@ -1,0 +1,98 @@
+{% extends 'projects/base.html' %}
+
+{% load base %}
+{% load markdownify %}
+{% load humanize %}
+{% load projects %}
+
+{% block meta %}{% meta object=object %}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-bar navbar bg-white sticky-top">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Tantangan</a></li>
+            {% block breadcrumb_item %}
+            <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}
+                {% if object.is_premium %}
+                <span class="badge badge-warning ml-1 mt-1">PRO</span>
+                {% endif %}
+            </li>
+            {% endblock %}
+        </ol>
+    </nav>
+
+    {% block breadcrumb_action %}
+    <div class="dropdown">
+        {% if my_project %}
+        <a href="{{ my_project.get_absolute_url }}" class="btn btn-success">
+            {% if my_project.is_complete %}Lihat{% else %}Lanjutkan{% endif %}
+            <i class="material-icons-x">play_arrow</i>
+        </a>
+        {% else %}
+        {% if not object.is_archived %}
+        <form method="POST">
+            {% csrf_token %}
+            <button class="btn btn-{% if object.is_premium %}warning{% else %}primary{% endif %}">
+                Kerjakan <i class="material-icons-x">play_arrow</i>
+            </button>
+        </form>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% endblock %}
+</div>
+
+<div class="content-container">
+    <div class="challenge-module">
+        <div class="challenge-module-top">
+            <div class="challenge-module-body">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-11 col-xl-10">
+                            <div class="page-header">
+                                <h1>{{ object.title|title }}</h1>
+                                <p class="lead mb-0">{{ object.description_short }}</p>
+                            </div>
+
+                            {% include 'base/_messages.html' %}
+
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-body">
+                                    {{ object.description|markdownify }}
+
+                                    {% include 'projects/_project_images.html' with images=project.images.all %}
+                                </div>
+                            </div>
+
+                            {% block challenge %}
+                            {% if object.has_codeblock %}
+                            {% render_codeblock_readonly object %}
+                            {% else %}
+                            {% render_requirements object %}
+                            {% endif %}
+                            {% endblock %}
+
+                            <div class="d-flex justify-content-between text-small mt-2">
+                                <div class="d-flex align-items-center">
+                                    <span>Tantangan diposting oleh
+                                        <a href="{{ project_owner.get_absolute_url }}">
+                                            {{ project_owner.username }}</a>,
+                                        {{ object.created|naturalday }} dengan poin
+                                        <span class="badge badge-secondary">{% if user_project %}{{ user_project.get_point_display }}{% else %}{{ object.get_point_display }}{% endif %}</span>
+                                    </span>
+                                </div>
+                                <span>
+                                    {% render_tags object 'secondary' %}
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'projects/_project_sidebar.html' with user_projects=user_projects user_project_owner=user_project_owner %}
+</div>
+{% endblock %}

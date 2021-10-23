@@ -1,0 +1,71 @@
+// 
+// 
+// filter-list.scss
+//
+//
+
+[class*='filter-list']{
+    &:after{
+        pointer-events: none;
+        content: 'No matching results';
+        border-radius: $border-radius*2;
+        display: flex;
+        background: $gray-200;
+        justify-content: center;
+        align-items: center;
+        font-size: .875rem;
+        font-weight: $font-weight-bold;
+        color: transparentize($body-color,.5);
+        height: 0;
+        opacity: 0;
+        transition: opacity .35s ease;
+    }
+    &:empty{
+        &:after{
+            opacity: 1;
+            height: 192px;
+        }
+    }
+    &.card-list-body{
+        &:after{
+            background: none;
+        }
+        &:empty{
+            &:after{
+                height: 72px;
+            }
+        }
+    }
+}
+
+.sidebar{
+    [class*='filter-list']{
+        &:after{
+            margin: 0 $spacer;
+        }
+    }
+}
+
+.chat-module-body{
+    &[class*='filter-list']{
+        &:empty{
+            width: 100%;
+            padding-right: 0;
+            &:after{
+                height: calc(100% - .75rem) !important;
+                margin: 0;
+            }
+        }
+    }
+}
+
+.row{
+    &[class*='filter-list']{
+        &:empty{
+            &:after{
+                width: 100%;
+                margin: 0 $spacer/2;
+            }
+        }
+    }
+}

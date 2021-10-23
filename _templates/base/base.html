@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="id">
+{% load static %}
+{% load base %}
+
+<head>
+    {% block meta %}{% meta %}{% endblock %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'assets/favicon/site.webmanifest' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.13.0/devicon.min.css">
+    <link href="{% static 'assets/css/theme.css' %}" rel="stylesheet" type="text/css" media="all" />
+    {% block extrastyle %}{% endblock %}
+
+    {% if ga_tracking_id %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_tracking_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', '{{ ga_tracking_id }}');
+    </script>
+    {% endif %}
+</head>
+
+<body>
+    <div class="layout layout-nav-side">
+        <div class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
+
+            <a class="navbar-brand" href="{% url 'base:index' %}">
+                <img alt="Pipeline" src="{% static 'assets/img/logo-white.png' %}" class="avatar avatar-lg" />
+            </a>
+
+            <div class="d-flex align-items-center">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                    aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                {% if user.is_authenticated %}
+                <div class="d-block d-lg-none ml-2">
+                    <div class="dropdown">
+                        <a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ user|avatar_img:35 }}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            {% include 'base/_user_menu.html' %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="collapse navbar-collapse flex-column" id="navbar-collapse">
+                <ul class="navbar-nav d-lg-block">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'projects:list' %}"><i
+                                class="material-icons-x mr-1 text-info">extension</i>
+                            Tantangan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'base:classrooms' %}"><i
+                                class="material-icons-x mr-1 text-info">widgets</i> Kelas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'coders:list' %}"><i
+                                class="material-icons-x mr-1 text-info">people</i>
+                            Koders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'base:pro' %}"><i
+                                class="material-icons-x mr-1 text-info">spa</i>
+                            PRO</a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="d-none d-lg-block w-100">
+                    <ul class="nav nav-small flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ statuspage_url }}" target="_blank"
+                                rel="noopener noreferrer">Status</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/upkoding/upkoding" target="_blank"
+                                rel="noopener noreferrer">Github</a>
+                        </li>
+                        {% if user.is_authenticated and user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <hr>
+                </div>
+                {% if not user.is_authenticated %}
+                <div class="d-block w-100">
+                    <div class="mt-2">
+                        <a href="{% url 'account:login' %}" class="btn btn-info btn-block">
+                            Login / Register
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="d-none d-lg-block">
+                <div class="dropup">
+                    <a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ user|avatar_img:35 }}
+                    </a>
+                    <div class="dropdown-menu">
+                        {% include 'base/_user_menu.html' %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="main-container {% block main_container_classes %}{% endblock %}">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000"
+        style="position: absolute; bottom: 0; right: 20px;" id="toast-main">
+        <div class="toast-header">
+            <strong class="mr-auto toast-main-title">Notifikasi</strong>
+            <small class="toast-main-time d-none">11 mins ago</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body toast-main-text">
+            Hello, world! This is a toast message.
+        </div>
+    </div>
+
+    <!-- Required vendor scripts (Do not remove) -->
+    <script type="text/javascript" src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/bootstrap.js' %}"></script>
+
+    <!-- Optional Vendor Scripts (Remove the plugin script here and comment initializer script out of index.js if site does not use that feature) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"
+        integrity="sha512-axJX7DJduStuBB8ePC8ryGzacZPr3rdLaIDZitiEgWWk2gsXxEFlm4UW0iNzj2h3wp5mOylgHAzBzM4nRSvTZA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"
+        integrity="sha512-xCfKr8zIONbip3Q1XG/u5x40hoJ0/DtP1bxyMEi0GWzUFoUffE+Dfw1Br8j55RRt9qG7bGKsh+4tSb1CvFHPSA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>window.csrfmiddlewaretoken = '{{ csrf_token }}';</script>
+
+    {% block extrascript %}{% endblock %}
+
+    <!-- Autosize - resizes textarea inputs as user types -->
+    <!-- <script type="text/javascript" src="{% static 'assets/js/autosize.min.js' %}"></script> -->
+    <!-- Flatpickr (calendar/date/time picker UI) -->
+    <!-- <script type="text/javascript" src="{% static 'assets/js/flatpickr.min.js' %}"></script> -->
+    <!-- Shopify Draggable - drag, drop and sort items on page -->
+    <!-- <script type="text/javascript" src="{% static 'assets/js/draggable.bundle.legacy.js' %}"></script> -->
+    <!-- <script type="text/javascript" src="{% static 'assets/js/swap-animation.js"></script> -->
+    <!-- Dropzone - drag and drop files onto the page for uploading -->
+    <!-- <script type="text/javascript" src="{% static 'assets/js/dropzone.min.js' %}"></script> -->
+    <!-- List.js - filter list elements -->
+    <!-- <script type="text/javascript" src="{% static 'assets/js/list.min.js' %}"></script> -->
+
+    <!-- Required theme scripts (Do not remove) -->
+    <script type="text/javascript" src="{% static 'assets/js/theme.js' %}"></script>
+
+</body>
+
+</html>

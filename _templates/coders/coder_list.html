@@ -1,0 +1,121 @@
+{% extends 'base/base.html' %}
+
+{% load base %}
+{% load sorl_thumbnail%}
+
+{% block meta %}
+{% meta title='Koders' desc='UpKoding adalah platform dari coders untuk para coders, belajar dan bermain bersama.'%}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="material-icons text-info mr-2 h1">people</i>
+                    <h1 class="h1 mb-0">Koders</h1>
+                </div>
+                <p class="lead">UpKoding adalah platform dari coder untuk coder, belajar, bermain dan maju bersama.
+                    {% if not user.is_authenticated %}
+                    Belum punya akun? yuk
+                    <a href="{% url 'account:login' %}">daftar disini</a>.
+                    {% endif %}
+                </p>
+            </div>
+            <hr>
+            <div class="tab-content pt-2">
+                <div class="tab-pane fade show active" id="members" role="tabpanel"
+                    data-filter-list="content-list-body">
+                    <div class="content-list">
+                        <!-- <div class="row content-list-head mb-4">
+                            <div class="col-auto">
+                                <h3>Para coder</h3>
+                                <button class="btn btn-round" data-toggle="modal" data-target="#user-invite-modal">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </div>
+                            <form class="col-md-auto">
+                                <div class="input-group input-group-round">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="material-icons">filter_list</i>
+                                        </span>
+                                    </div>
+                                    <input type="search" class="form-control filter-list-input"
+                                        placeholder="Filter members" aria-label="Filter Members">
+                                </div>
+                            </form>
+                        </div> -->
+                        <!--end of content list head-->
+                        <div class="content-list-body row">
+
+                            {% if object_list %}
+                            {% for coder in object_list %}
+                            <div class="col-4 mb-2">
+                                <a class="media media-member" href="{{ coder.get_absolute_url }}">
+                                    {{ coder|avatar_img:70 }}
+                                    <div class="media-body">
+                                        <h6 class="mb-0" data-filter-by="text">{{ coder.get_display_name|title }}</h6>
+                                        <span data-filter-by="text" class="text-body">
+                                            @{{ coder.username }}
+                                            {% if coder.point > 0 %}
+                                            <span class="badge badge-secondary">{{ coder.get_point_display}}</span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <!--end of content list-->
+                </div>
+            </div>
+            <form class="modal fade" id="user-invite-modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Undang Teman</h5>
+                            <button type="button" class="close btn btn-round" data-dismiss="modal" aria-label="Close">
+                                <i class="material-icons">close</i>
+                            </button>
+                        </div>
+                        <!--end of modal head-->
+                        <div class="modal-body">
+                            <p>Undang temanmu bergabung di UpKoding dan dapatkan <i>10UP</i>
+                                ketika dia bergabung.</p>
+                            <p>Dan apabila dia upgrade ke Pro Access maka kamu akan mendapatkan <i>1 bulan Pro
+                                    Access</i>, gratis!</p>
+                            <div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="material-icons">email</i>
+                                        </span>
+                                    </div>
+                                    <input type="email" class="form-control"
+                                        placeholder="Masukkan alamat email temanmu..."
+                                        aria-label="Recipient email address">
+                                </div>
+                                <!-- <div class="text-right text-small mt-2">
+                                    <a href="#" role="button">Add another recipient</a>
+                                </div> -->
+                            </div>
+                        </div>
+                        <!--end of modal body-->
+                        <div class="modal-footer">
+                            <button role="button" class="btn btn-primary" type="submit">
+                                Kirim undangan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% include 'base/_pagination.html' with page_obj=page_obj %}
+</div>
+{% endblock %}

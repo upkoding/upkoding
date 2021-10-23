@@ -1,0 +1,42 @@
+{% load sorl_thumbnail %}
+{% load projects %}
+{% load humanize %}
+<div class="col col-12 mb-3" {% if project.is_archived %}style="opacity: 0.5;" {% endif %}>
+    <div class="card h-100 {{ classes }}">
+        <span class="badge badge-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99;">
+            <i class="material-icons-x">person</i> {{ project.taken_count|intcomma }}
+        </span>
+        <span class="badge badge-{{ project.get_level_color }}"
+            style="position: absolute; top: 10px; right: 10px; z-index: 99;">
+            {{ project.get_level_display }}
+        </span>
+
+        <a href="{{ project.get_absolute_url }}" class="link-card"
+            title="{{ project.title|title }}{% if project.is_premium %} (PRO){% endif %}">
+            {% thumbnail project.cover "640x274" crop="center" as im %}
+            <img src="{{ im.url }}" class="card-img-top">
+            {% endthumbnail %}
+            <div class="card-body d-flex flex-column justify-content-between p-2">
+                {% with codeblock=project.codeblock %}
+                <div class="mb-2">
+                    <h5 class="card-title mb-1" style="font-size: 1.05rem;">
+                        {{ project.title|title }}
+                    </h5>
+                    <p class="card-text"
+                        style="color: #888 !important; line-height: 1.3em; font-size: 0.9rem; font-weight: 400;">
+                        {{ project.description_short|truncatechars:55 }}
+                    </p>
+                </div>
+                <div style="opacity: 0.6;">
+                    {% if project.is_premium %}
+                    <a href="{% url 'projects:list' %}?s=pricing:pro">
+                        <span class="badge badge-secondary">pro</span>
+                    </a>
+                    {% endif %}
+                    {% render_tags project 'secondary' %}
+                </div>
+                {% endwith %}
+            </div>
+        </a>
+    </div>
+</div>

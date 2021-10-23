@@ -1,0 +1,21 @@
+{% load humanize %}
+{% load markdownify %}
+<div class="list-group-item">
+    <div class="d-flex w-100 justify-content-between">
+        <p class="mb-0 text-success">
+            <strong>
+                {% include 'projects/templatetags/timeline/avatar.html' with u=event_user %}
+                <a href="{{ event_user.get_absolute_url }}" title="{{ event_user.get_display_name }}">
+                    {{ event_user.username }}
+                </a>
+                menyetujui proyek ini <i class="material-icons-x">check</i>
+            </strong>
+        </p>
+        <small>{{ event.created|naturaltime }}</small>
+    </div>
+    {% if event.message %}
+    <div class="mt-2 mb-1 text-dark">
+        {{ event.message|markdownify }}
+    </div>
+    {% endif %}
+</div>

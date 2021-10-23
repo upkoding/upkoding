@@ -1,0 +1,36 @@
+# Docker-compose.yml version support, not internal version of this composition.
+version: "3.8"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: upkoding
+      POSTGRES_DB: upkoding
+      POSTGRES_PASSWORD: upkoding
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    environment:
+      DATABASE_URL: postgres://upkoding:upkoding@db:5432/upkoding
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  static:
+    image: node:14-slim
+    working_dir: /static
+    command: sh -c "npm install && npm start"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./_static:/static

@@ -1,0 +1,119 @@
+// 
+// 
+// modals.scss
+//
+//
+
+@include media-breakpoint-up(md) {
+  .modal-lg{
+    .modal-body{
+      padding: 2.25rem;
+    }
+    .modal-header{
+      padding: 1.25rem 2.25rem;
+    }
+  }
+}
+
+.modal-header{
+  background: theme-color('primary');
+  color: $white;
+  align-items: center;
+  padding: $spacer/1.5 $spacer;
+  .modal-title{
+    color: $white;
+  }
+  .close{
+    margin: 0;
+    background: rgba(255,255,255,.25);
+    text-shadow: none;
+    i{
+      color: $white;
+    }
+    &:hover{
+      background: rgba(255,255,255,.3);
+    }
+  }
+}
+
+.modal-footer{
+  padding: $spacer/2 $spacer;
+  background: $gray-200;
+  border-radius: 0 0 $border-radius $border-radius;
+}
+
+.modal-backdrop.show{
+  opacity: .65;
+}
+
+.modal-content{
+  > .nav-tabs{
+    border-radius: 0;
+    padding: .25rem .875rem;
+  }
+}
+
+.modal-body{
+  .form-group.row{
+    margin-right: 0;
+  }
+}
+
+/** Task Modals **/
+
+.modal-task{
+  .page-header{
+    padding-top: 0;
+  }
+  h1{
+    font-size: $h2-font-size;
+  }
+  h3{
+    font-size: $h4-font-size;
+  }
+  .modal-footer{
+    padding-top: 0;
+  }
+  .close{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+  .card-note{
+    font-size: .875rem;
+    .card-body, .card-header{
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+}
+
+.modal{
+  .dropdown-menu{
+    position: absolute !important;
+    &.dropdown-menu-right{
+      right: 0;
+    }
+  }
+}
+
+.modal{
+  .draggable-mirror{
+    opacity: 0;
+  }
+  .draggable-source--is-dragging{
+    display: flex !important;
+    opacity: .25;
+  }
+}
+
+/** Manage Users Modal **/
+
+.users-manage{
+  .avatars{
+    .avatar{
+      width: $spacer*1.75;
+      height: $spacer*1.75;
+    }
+  }
+}

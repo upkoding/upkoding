@@ -1,0 +1,28 @@
+// 
+// 
+// dropdowns.scss
+//
+//
+
+.dropdown-toggle{
+  &:after{
+    opacity: .5;
+    transform: scaleX(.8);
+  }
+}
+
+.dropdown-menu{
+  box-shadow: $dropdown-box-shadow;
+  font-size: .875rem;
+  padding-left: $dropdown-padding-y;
+  padding-right: $dropdown-padding-y;
+}
+
+.dropdown-item{
+  border-radius: $border-radius;
+  font-weight: 500;
+}
+
+.dropdown-divider{
+  margin: .5rem 0;
+}

@@ -1,0 +1,21 @@
+{% load humanize %}
+<div class="d-flex pt-3 position-relative">
+    <a href="{{ topic.get_absolute_url }}" class="avatar flex-shrink-0 me-2 stretched-link"
+        title="Topik: {{ topic.title }}">
+        <img src="{{ topic.image_url }}" height="32" width="32" class="bd-placeholder-img rounded"
+            alt="{{ topic.title }} image" />
+    </a>
+    <div class="pb-3 mb-0 small lh-sm w-100">
+        <div class="d-flex justify-content-between link-dark">
+            <strong style="font-size: 1rem; font-weight: 500; margin-top: -3px; margin-bottom: 2px;">
+                {{ topic.title }}
+            </strong>
+        </div>
+        <span class="text-muted text-grey-dark" style="font-size: 13px;">
+            {{ topic.thread_count }} pertanyaan
+        </span>
+        <!-- <span class="text-muted" style="color: #999 !important; float: right; font-size: 13px;">
+            {{ topic.updated|naturalday }}
+        </span> -->
+    </div>
+</div>

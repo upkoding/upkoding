@@ -1,0 +1,37 @@
+// 
+// 
+// list-group.scss
+//
+//
+
+.list-group-activity{
+  .h6{
+    margin: 0;
+  }
+  span{
+    margin-right: $spacer/6;
+  }
+  .avatars{
+    margin-right: $spacer/2;
+    display: flex;
+    align-items: center;
+    > li:first-child{
+      position: relative;
+      z-index: 2;
+    }
+  }
+}
+
+.list-group:not(.list-group-flush){
+  &.flex-column-reverse{
+    .list-group-item{
+      &:last-child{
+        border-radius: $border-radius*2 $border-radius*2 0 0;
+        border-bottom: none;
+      }
+      &:first-child{
+        border-radius: 0 0 $border-radius*2 $border-radius*2;
+      }
+    }
+  }
+}

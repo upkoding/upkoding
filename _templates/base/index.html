@@ -1,0 +1,170 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load activity_tags %}
+
+{% block content%}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <section class="pt-4 pt-lg-5">
+                <div class="mb-3 d-flex">
+                    <img alt="Pipeline" src="{% static 'assets/img/logo.png' %}" class="avatar avatar-lg mr-1" />
+                    <div>
+                        <span class="badge badge-info">{{ app_version }}</span>
+                    </div>
+                </div>
+                <h1 class="display-4 mb-3">Belajar coding menyenangkan!</h1>
+                <p class="lead">
+                    UpKoding ingin membuat belajar pemrograman menyenangkan dengan format bite-sized learning,
+                    belajar materi secukupnya, langsung uji dan praktekkan dengan proyek atau problem solving.
+                </p>
+
+            </section>
+            <section class="pt-5">
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
+                    {% if featured_projects %}
+                    {% for project in featured_projects %}
+                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{% url 'projects:list' %}" class="btn btn-lg btn-info">
+                        Semua tantangan
+                        <i class="material-icons-x">east</i>
+                    </a>
+                </div>
+
+                {% if activities %}
+                <div class="py-2 bg-light mt-4"><strong>AKTIVITAS UPKODERS</strong></div>
+                <ol class="list-group list-group-activity">
+                    {% for activity in activities %}
+                    {% render_activity activity 'global' %}
+                    {% endfor %}
+                </ol>
+                {% endif %}
+
+            </section>
+            <section class="py-4 py-lg-5">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-info mr-2 h1">widgets</i>
+                    <h2 class="h1 mb-0">Kelas</h2>
+                </div>
+                <p class="lead mb-4">
+                    Belajar berbagai topik pemrograman, menyiapkan kamu kuat secara fundamental sebelum
+                    menghadapi tantangan yang sesungguhnya.
+                </p>
+
+                {% include 'base/classrooms_features.html' %}
+
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
+                    <div class="col col-12 mb-3">
+                        <div class="card h-100 shadow-lg">
+                            <img src="{% static 'assets/img/class-web.jpg' %}" class="card-img-top">
+                            <div class="card-body d-flex flex-column justify-content-between p-2">
+                                <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
+                                    Belajar Membuat Website
+                                </h5>
+                                <div style="opacity: 0.5;">
+                                    <span class="badge badge-secondary">contoh</span>
+                                    <span class="badge badge-secondary">kelas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-12 mb-3">
+                        <div class="card h-100 shadow-lg">
+                            <img src="{% static 'assets/img/class-javascript.jpg' %}" class="card-img-top">
+                            <div class="card-body d-flex flex-column justify-content-between p-2">
+                                <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
+                                    Fundamental Javascript
+                                </h5>
+                                <div style="opacity: 0.5;">
+                                    <span class="badge badge-secondary">contoh</span>
+                                    <span class="badge badge-secondary">kelas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-12 mb-3">
+                        <div class="card h-100 shadow-lg">
+                            <img src="{% static 'assets/img/class-python.jpg' %}" class="card-img-top">
+                            <div class="card-body d-flex flex-column justify-content-between p-2">
+                                <h5 class="card-title" style="font-size: 1.05rem; line-height: 1.5;">
+                                    Fundamental Python
+                                </h5>
+                                <div style="opacity: 0.5;">
+                                    <span class="badge badge-secondary">contoh</span>
+                                    <span class="badge badge-secondary">kelas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-2">
+                    <p class="text-muted">
+                        <span class="material-icons-x">schedule</span> Coming soon! Kelas akan segera hadir di upkoding.com.
+                    </p>
+                </div>
+
+            </section>
+            <section class="py-3 py-lg-3">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-info mr-2 h1">spa</i>
+                    <h2 class="h1 mb-0">Pro Access</h2>
+                </div>
+                <p class="lead">
+                    Dapatkan manfaat penuh dari platform UpKoding. Akses semua kelas, tantangan dan semua
+                    fitur premium tanpa batasan.
+                </p>
+                <div class="text-center">
+                    <img src="{% static 'assets/img/undraw_freelancer.svg' %}" style="max-width: 480px;" />
+                </div>
+
+                <div class="container mt-4" id="icon-grid">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2">
+                        <div class="col d-flex align-items-start mb-3">
+                            <i class="material-icons mr-2 text-info">check_circle</i>
+                            <div>
+                                <h5 class="mb-0">Akses semua Kelas</h5>
+                                <p class="text-muted">Ikuti semua kelas gratis dan premium.</p>
+                            </div>
+                        </div>
+                        <div class="col d-flex align-items-start mb-3">
+                            <i class="material-icons mr-2 text-info">check_circle</i>
+                            <div>
+                                <h5 class="mb-0">Akses semua tantangan</h5>
+                                <p class="text-muted">Libas semua tantangan gratis dan premium.</p>
+                            </div>
+                        </div>
+                        <div class="col d-flex align-items-start mb-3">
+                            <i class="material-icons mr-2 text-info">check_circle</i>
+                            <div>
+                                <h5 class="mb-0">Tanpa batasan</h5>
+                                <p class="text-muted">Eksekusi code tanpa quota, intip code peserta lain.</p>
+                            </div>
+                        </div>
+                        <div class="col d-flex align-items-start mb-3">
+                            <i class="material-icons mr-2 text-info">check_circle</i>
+                            <div>
+                                <h5 class="mb-0">Belajar sepuasnya</h5>
+                                <p class="text-muted">Belajar sepuasnya from zero to hero.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'base:pro' %}" class="btn btn-lg btn-info">
+                        Dapatkan Pro Access
+                        <i class="material-icons-x">east</i>
+                    </a>
+                </div>
+
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

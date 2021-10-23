@@ -1,0 +1,45 @@
+<div class="card mt-3">
+    <div class="card-header">
+        <i class="devicon-{{codeblock.get_language_display}}-plain mr-1"></i> <strong>Upgrade ke PRO untuk melihat
+            solusi dari <a href="{{ user_project_owner.get_absolute_url }}">
+                {{ user_project_owner.username }}</a>
+        </strong>
+    </div>
+    <div class="bg-dark text-center p-3">
+        <a href="{% url 'base:pro'%}" class="btn btn-lg btn-warning mt-3">
+            <i class="material-icons-x mr-1">spa</i>
+            Get Pro Access!
+        </a>
+        <small class="d-block text-center text-muted mt-2 mb-2">
+            Lihat solusi peserta lainnya, akses semua kelas dan tantangan premium.
+        </small>
+    </div>
+
+    {% if codeblock.expected_output %}
+    <div class="alert alert-primary rounded-0 border-0 m-0 p-3">
+        <div><i class="material-icons-x mr-1">info</i>Buatlah program diatas menghasilkan output berikut:</div>
+        <pre class="rounded mt-1"><code class="language-bash">{{ codeblock.expected_output }}</code></pre>
+    </div>
+    {% else %}
+    <div class="alert alert-primary rounded-0 border-0 m-0 p-3">
+        <p><i class="material-icons-x mr-1">info</i>Buatlah program diatas berjalan tanpa error.</p>
+    </div>
+    {% endif %}
+
+    {% if completed %}
+    <div class="alert alert-success d-flex rounded-0 border-0 mb-0" role="alert">
+        <div>
+            <i class="material-icons-x">check_circle</i>
+            Tantangan ini berhasil diselesaikan!
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-secondary d-flex rounded-0 border-0 mb-0" role="alert">
+        <div>
+            <i class="material-icons-x">timer</i>
+            Tantangan ini masih dikerjakan.
+        </div>
+    </div>
+    {% endif %}
+
+</div>

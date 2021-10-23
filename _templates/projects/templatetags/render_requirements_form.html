@@ -1,0 +1,40 @@
+{% if requirements %}
+<div class="card">
+    <div class="card-header">
+        <i class="material-icons-x">checklist</i>
+        <strong>Project requirements</strong>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update" />
+
+        <div class="list-group list-group-flush">
+            {% for req in requirements %}
+            <div class="list-group-item list-group-item-action" aria-current="true">
+                <div class="d-flex w-100 justify-content-start ml-3">
+                    <input {% if req.complete %}checked{% endif %} {% if not editable %}disabled{% endif %}
+                        class="form-check-input me-2" type="checkbox" name="reqs" id="reqs-{{ forloop.counter0 }}"
+                        value="{{ forloop.counter0 }}">
+                    <h6 class="mb-0" style="margin-top: 3px;">{{ req.title }}</h6>
+                </div>
+                {% if req.desc %}
+                <div class="ml-3"><small class="text-muted">{{ req.desc }}</small></div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if editable %}
+        <div class="card-footer d-flex justify-content-end">
+            <button type="submit" class="btn btn-outline-{{ user_project.get_color_class }}">Update Progress</button>
+        </div>
+        {% endif %}
+    </form>
+    
+    <div class="card-footer p-2">
+        <small class="text-muted"><i class="material-icons-x">help_outline</i> Requirements adalah fitur/syarat yang harus
+            dipenuhi sebelum proyek kamu dinyatakan selesai.</small>
+    </div>
+</div>
+{% endif %}

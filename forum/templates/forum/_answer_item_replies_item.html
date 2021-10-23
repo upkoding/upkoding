@@ -1,0 +1,28 @@
+{% load base %}
+{% load humanize %}
+{% load markdownify %}
+
+{% with answer_user=answer.user %}
+<div id="answer-{{ answer.pk }}" x-ref="answer_{{ answer.pk }}" class="list-group-item list-group-item-light p-3">
+    <div class="d-flex w-100 justify-content-between">
+        <h6 class="mb-1" style="font-size: 0.9rem;">
+            <img src="{{ answer_user|avatar_url:40 }}" height="20" width="20" class="rounded-circle me-1"
+                alt="avatar" />
+            {{ answer_user.username }}
+
+            <span class="dropdown ms-2">
+                <a href="#" id="dropdownMenuLink_{{ answer.pk }}" data-bs-toggle="dropdown" aria-expanded="false"><i
+                        class="bi bi-three-dots"></i></a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink_{{ answer.pk }}">
+                    <li><a class="dropdown-item" href="javascript:;" style="color: red;" @click="deleteAnswer"
+                            data-id="{{ answer.pk }}" data-parent="{{ answer.parent.pk }}">Hapus</a></li>
+                </ul>
+            </span>
+        </h6>
+        <small class="text-muted" style="font-size: 0.8rem; color: #999 !important;">
+            {{answer.created|naturalday}}
+        </small>
+    </div>
+    <p class="mt-2 mb-1 text-muted" style="font-size: 0.9rem">{{ answer.message|markdownify }}</p>
+</div>
+{% endwith %}

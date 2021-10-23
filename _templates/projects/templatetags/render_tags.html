@@ -1,0 +1,7 @@
+{% if tags %}
+{% for tag in tags %}
+<a href="{% url 'projects:list' %}?s={{ tag }}">
+    <span class="badge badge-{{ color }}">{{ tag }}</span>
+</a>
+{% endfor %}
+{% endif %}

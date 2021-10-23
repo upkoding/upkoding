@@ -57,7 +57,7 @@ coverage.xml
 
 # Django stuff:
 *.log
-local_settings.py
+settings_local.py
 db.sqlite3
 db.sqlite3-journal
 
@@ -124,9 +124,12 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-upkoding-sa.json
 
 # Pyre type checker
 .pyre/
 
-media
+static/
+media/
+node_modules/
+.DS_Store
+.git

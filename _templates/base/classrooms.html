@@ -1,0 +1,45 @@
+{% extends 'base/base.html' %}
+{% load base %}
+{% load static %}
+
+{% block meta %}
+{% meta title='Kelas Pemrograman' desc='Belajar berbagai topik pemrograman, menyiapkan kamu kuat secara fundamental sebelum menghadapi tantangan yang sesungguhnya.' %}
+{% endblock %}
+
+{% block header_mb %}mb-5{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="material-icons text-info mr-2 h1">widgets</i>
+                    <h1 class="h1 mb-0">Kelas</h1>
+                </div>
+                <p class="lead">Belajar berbagai topik pemrograman, menyiapkan kamu kuat secara fundamental sebelum
+                    menghadapi tantangan yang sesungguhnya.
+                </p>
+            </div>
+
+            <div class="row justify-content-md-center mb-5">
+                <div class="col col-lg-12">
+                    <div class="text-center my-4">
+                        <img src="{% static 'assets/img/undraw_designer.svg' %}" style="max-width: 300px;" />
+                    </div>
+
+                    <div class="card card-note">
+                        <div class="card-body">
+                            Saat ini <strong>kelas</strong> masih dalam pengembangan, kamu bisa ikuti perkembangannya <a
+                                href="https://github.com/upkoding/upkoding" target="_blank">disini</a> dan kalau
+                            ada ide, saran dan masukkan bisa via <a href="">Discord</a> ya.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {% include 'base/classrooms_features.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}

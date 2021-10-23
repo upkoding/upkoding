@@ -1,15 +1,17 @@
-from django.db import models
-from django.db.models import Q
-from django.db.models.deletion import CASCADE
-from django.template.defaultfilters import slugify
-from django.urls import reverse
+from datetime import timedelta
 from django.conf import settings
-from django.utils.timezone import now
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
+from django.db import models
+from django.db.models.deletion import CASCADE
+from django.template.defaultfilters import slugify, time
+from django.urls import reverse
+from django.utils.timezone import now
 from sorl.thumbnail import ImageField
+from stream_django.activity import Activity, create_model_reference
 
 from account.models import User
+from codeblocks.models import CodeBlock
 from .managers import ProjectManager, PROJECT_SEARCH_VECTORS
 
 
@@ -38,23 +40,46 @@ class Project(models.Model):
     STATUS_PENDING = 1
     STATUS_ACTIVE = 2
     STATUS_DELETED = 3
+    STATUS_ARCHIVED = 4
     STATUSES = [
         (STATUS_DRAFT, 'Draft'),
         (STATUS_PENDING, 'Pending'),
         (STATUS_ACTIVE, 'Active'),
         (STATUS_DELETED, 'Deleted'),
+        (STATUS_ARCHIVED, 'Archived'),
     ]
+
+    # dificulty levels and its point
+    LEVEL_EASY = 1
+    LEVEL_MEDIUM = 2
+    LEVEL_HARD = 3
+    LEVEL_PROJECT = 99  # (backward compat with legacy project)
+    LEVELS = [
+        (LEVEL_EASY, 'easy'),
+        (LEVEL_MEDIUM, 'medium'),
+        (LEVEL_HARD, 'hard'),
+        (LEVEL_PROJECT, 'project'),
+    ]
+    POINT_EASY = 1
+    POINT_MEDIUM = 5
+    POINT_HARD = 10
 
     user = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
         related_name='projects')
+    level = models.PositiveIntegerField(choices=LEVELS, default=LEVEL_EASY)
     slug = models.SlugField(max_length=150, blank=True)
     title = models.CharField('Judul', max_length=100)
     description_short = models.CharField(
         'Deskripsi Pendek', max_length=100, default='')
     description = models.TextField('Deskripsi')
+    codeblock = models.OneToOneField(
+        CodeBlock,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True)
     requirements = models.JSONField('Requirements', blank=True, null=True)
     cover = ImageField(
         upload_to=project_cover_path,
@@ -64,6 +89,7 @@ class Project(models.Model):
     point = models.IntegerField(default=0)
     tags = models.CharField('Tags', max_length=50, blank=True, default='')
     is_featured = models.BooleanField(default=False)
+    is_premium = models.BooleanField(default=False)
     status = models.PositiveSmallIntegerField(
         'Status', choices=STATUSES, default=STATUS_DRAFT)
 
@@ -87,13 +113,24 @@ class Project(models.Model):
         indexes = [
             models.Index(fields=['slug'], name='project_slug_idx'),
             models.Index(fields=['status'], name='project_status_idx'),
+            models.Index(fields=['level'], name='project_level_idx'),
+            models.Index(fields=['is_premium'], name='project_is_premium_idx'),
             GinIndex(fields=['search_vector'],
                      name='project_search_vector_idx'),
         ]
-        ordering = ['-created']
+        ordering = ['-pk']
 
     def __str__(self, *args, **kwargs):
         return self.title
+
+    def get_level_color(self):
+        colors = {
+            self.LEVEL_PROJECT: 'dark',
+            self.LEVEL_EASY:  'success',
+            self.LEVEL_MEDIUM: 'warning',
+            self.LEVEL_HARD: 'danger',
+        }
+        return colors.get(self.level)
 
     def save(self, *args, **kwargs):
         # set slug
@@ -106,6 +143,15 @@ class Project(models.Model):
                 tag.strip().lower()
                 for tag in self.tags.split(',')])
 
+        # set point based on level
+        if self.level != self.LEVEL_PROJECT:
+            if self.level == self.LEVEL_EASY:
+                self.point = self.POINT_EASY
+            elif self.level == self.LEVEL_MEDIUM:
+                self.point = self.POINT_MEDIUM
+            elif self.level == self.LEVEL_HARD:
+                self.point = self.POINT_HARD
+
         # set search_vector on update
         # TODO: update this asynchronously (using PubSub / Cloud Task)
         if self.pk:
@@ -114,6 +160,12 @@ class Project(models.Model):
 
     def is_active(self):
         return self.status == self.STATUS_ACTIVE
+
+    def is_archived(self):
+        return self.status == self.STATUS_ARCHIVED
+
+    def has_codeblock(self):
+        return self.codeblock_id is not None
 
     def get_absolute_url(self):
         return reverse('projects:detail', args=[self.slug, str(self.pk)])
@@ -133,12 +185,16 @@ class Project(models.Model):
         self.completed_count = models.F('completed_count') - 1
         self.save()
 
+    def has_codeblock(self):
+        return self.codeblock_id is not None
+
     def assign_to(self, user):
         """
         Returns `UserProject` instance and created (bool).
         - If user already pick this project, return that one instead of creating new one
           since user can only work on the same project once.
         - If user never pick this project, create new `UserProject`.
+        - If project have CodeBlock, copy the codeblock and assign to `UserProject`
         - Add project creator to the UserProjectParticipant so we can notify them for event in this project.
         - Last, we increment the taken count.
         """
@@ -151,17 +207,26 @@ class Project(models.Model):
                 'require_demo_url': self.require_demo_url,
                 'require_sourcecode_url': self.require_sourcecode_url,
             })
+
         if created:
+            # assign codeblock if any
+            user_codeblock = None
+            if self.codeblock:
+                user_codeblock = self.codeblock
+                user_codeblock.pk = None
+                user_codeblock.save()
+                obj.codeblock = user_codeblock
+                obj.save()
+
             # add project creator as participant
             UserProjectParticipant.objects.get_or_create(
-                user_project=obj, user=self.user
-            )
+                user_project=obj, user=self.user)
             # add user who working on the project as participant
             UserProjectParticipant.objects.get_or_create(
                 user_project=obj, user=user)
             # inc taken count
             self.inc_taken_count()
-        return (obj, created)
+        return obj, created
 
 
 class ProjectImage(models.Model):
@@ -202,6 +267,11 @@ class UserProject(models.Model):
         Project,
         on_delete=models.CASCADE,
         related_name='user_projects')
+    codeblock = models.OneToOneField(
+        CodeBlock,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True)
     requirements = models.JSONField('Requirements', blank=True, null=True)
     requirements_completed_percent = models.DecimalField(
         default=0.0, decimal_places=2, max_digits=5)  # max value: 100.00
@@ -240,6 +310,7 @@ class UserProject(models.Model):
                 fields=['user', 'project'],
                 name='unique_user_project')
         ]
+        ordering = ['-pk']
 
     def __str__(self):
         return '{} - {} ({})'.format(self.user.username, self.project.slug, self.point)
@@ -273,19 +344,17 @@ class UserProject(models.Model):
             return True
         return False
 
-    @ staticmethod
+    @staticmethod
     def requirements_to_progress(requirements):
         """
         Returns progress in percent.
         """
-        reqs_progress_percent = 0.0
         reqs_progress = sum(
             map(lambda r: 1 if 'complete' in r else 0, requirements))
-        reqs_progress_percent = (
-            reqs_progress/len(requirements)) * 100.0
+        reqs_progress_percent = (reqs_progress / len(requirements)) * 100.0
         return float(format(reqs_progress_percent, '.2f'))
 
-    @ staticmethod
+    @staticmethod
     def requirements_diff(before, after):
         """
         Return the differences between before and after requirements
@@ -301,7 +370,7 @@ class UserProject(models.Model):
                 become_complete.append(req_before.get('title'))
             if req_before.get('complete') and not req_after.get('complete'):
                 become_incomplete.append(req_before.get('title'))
-        return (progress_before, progress_after, become_complete, become_incomplete)
+        return progress_before, progress_after, become_complete, become_incomplete
 
     def calculate_progress(self):
         """
@@ -331,15 +400,84 @@ class UserProject(models.Model):
     def has_details(self):
         return self.demo_url or self.sourcecode_url or self.note
 
+    def has_codeblock(self):
+        return self.codeblock_id is not None
+
+    def is_solution_viewable_by(self, user):
+        if user.is_staff:
+            return True
+        if not self.has_codeblock() or self.user == user:
+            return True
+        if user.is_authenticated and user.is_pro_user():
+            return True
+        return False
+
+    def is_solution_editable_by(self, user):
+        return (self.user == user)
+
+    def can_delete(self):
+        """
+        Deletable after 24hr.
+        This is to avoid user refresh the codeblock quota by canceling their project.
+        """
+        yesterday = now() - timedelta(days=1)
+        return self.created <= yesterday
+
+    def can_run_codeblock(self, user):
+        if not self.has_codeblock():
+            return False
+        if self.user != user:
+            return False
+
+        codeblock = self.codeblock
+        is_pro_user = user.is_pro_user()
+
+        # PRO user always can run codes
+        if is_pro_user:
+            return True
+
+        # if this is premium project, but user not PRO -> disallow!
+        if self.project.is_premium and not is_pro_user:
+            return False
+
+        # If never run 3 times OR not the first-or-last run of 3 -> allow!
+        mod = codeblock.run_count % 3
+        if (codeblock.run_count < 3) or (mod != 0):
+            return True
+
+        # free user can only run the code 3 times in 24hr
+        if codeblock.last_run:
+            breaktime = 60 * 60 * 24  # 24hr
+            sec_since_last_run = (now() - codeblock.last_run).total_seconds()
+            if sec_since_last_run >= breaktime:
+                return True
+        return False
+
+    def set_complete(self):
+        self.status = UserProject.STATUS_COMPLETE
+        # backward compat with legacy project
+        self.requirements_completed_percent = 100.0
+        # backward compat with legacy project
+        self.requirements_completed_percent_max = 100.0
+        self.save()
+
+        # add point to user
+        self.user.add_point(self.point)
+
+        # increment completed count on project
+        self.project.inc_completed_count()
+
     def add_event(self, event_type, **kwargs):
-        UserProjectEvent(
+        event = UserProjectEvent(
             user_project=self,
             user=kwargs.get('user', self.user),
             event_type=event_type,
-            message=kwargs.get('message', '')).save()
+            message=kwargs.get('message', ''))
+        event.save()
+        return event
 
 
-class UserProjectEvent(models.Model):
+class UserProjectEvent(models.Model, Activity):
     TYPE_PROJECT_START = 0
     TYPE_PROGRESS_UPDATE = 1
     TYPE_PROGRESS_COMPLETE = 2
@@ -348,13 +486,13 @@ class UserProjectEvent(models.Model):
     TYPE_PROJECT_COMPLETE = 11
     TYPE_PROJECT_INCOMPLETE = 12
     TYPES = [
-        (TYPE_PROJECT_START, 'Project start'),
-        (TYPE_PROGRESS_UPDATE, 'Progress update'),
-        (TYPE_PROGRESS_COMPLETE, 'Progress complete'),
-        (TYPE_REVIEW_REQUEST, 'Review request'),
-        (TYPE_REVIEW_MESSAGE, 'Review message'),
-        (TYPE_PROJECT_COMPLETE, 'Project complete'),
-        (TYPE_PROJECT_INCOMPLETE, 'Project incomplete'),
+        (TYPE_PROJECT_START, 'project_start'),
+        (TYPE_PROGRESS_UPDATE, 'progress_update'),
+        (TYPE_PROGRESS_COMPLETE, 'progress_complete'),
+        (TYPE_REVIEW_REQUEST, 'review_request'),
+        (TYPE_REVIEW_MESSAGE, 'review_message'),
+        (TYPE_PROJECT_COMPLETE, 'project_complete'),
+        (TYPE_PROJECT_INCOMPLETE, 'project_incomplete'),
     ]
 
     user_project = models.ForeignKey(
@@ -376,6 +514,44 @@ class UserProjectEvent(models.Model):
 
     def istype(self, event_type: int):
         return self.event_type == event_type
+
+    """
+    START ==> properties and methods for getstream.io activity feed.
+
+    actor = user
+    verb = event_type
+    object = user_project.project
+    target = user_project
+    foreign_id = self
+    """
+    @property
+    def activity_object_attr(self):
+        return self.user_project.project
+
+    @property
+    def activity_verb(self):
+        return self.get_event_type_display()
+
+    @property
+    def activity_time(self):
+        return self.created
+
+    @property
+    def activity_foreign_id(self):
+        return create_model_reference(self)
+
+    @classmethod
+    def activity_related_models(cls):
+        return ['user_project', 'user']
+
+    @property
+    def extra_activity_data(self):
+        target = create_model_reference(self.user_project)
+        return dict(
+            target=target,
+            event_type=self.event_type,
+            event_message=self.message)
+    # END <== properties and methods for getstream.io activity feed.
 
 
 class UserProjectParticipant(models.Model):

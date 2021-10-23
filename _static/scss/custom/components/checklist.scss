@@ -1,0 +1,162 @@
+// 
+// 
+// checklist.scss
+//
+//
+
+.checklist{
+  position: relative;
+  .form-group{
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    > .checklist-reorder, > .custom-control{
+      display: inline-block;
+    } 
+  }
+  .row{
+    margin-bottom: .75rem;
+    outline: none;
+    > .form-group > .checklist-reorder > i{
+      cursor: grab;
+    }
+  }
+  .custom-checkbox .custom-control-input:checked ~ .custom-control-label ~ span ~ .checklist-strikethrough{
+    width: calc(100% - 1.875rem);
+    opacity: .25;
+  }
+  label{
+    user-select: none;
+  }
+  .draggable-source--is-dragging{
+    opacity: 0;
+  }
+  &.draggable-container--is-dragging + .drop-to-delete{
+    height: $spacer*2.5;
+    opacity: 1;
+  }
+}
+
+.checklist{
+  .custom-checkbox{
+    label + div{
+      display: inline-block;
+      max-width: calc(100% - 2.25rem);
+      position: relative;
+      input[type="text"]{
+        color: $body-color;
+        max-width: 100%;
+        border: none;
+        padding: 0;
+        background: none;
+        &:not(:focus){
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        &:focus{
+          outline: none;
+        }
+      }
+    }
+    input:checked{
+      + label + div .checklist-strikethrough{
+        width: 100%;
+      }
+    }
+  }
+}
+
+.checklist-reorder{
+  transition: opacity .2s ease;
+  margin-right: .875rem;
+  opacity: .2;
+  i{
+    font-size: 1.25rem;
+    position: relative;
+    top: 3px;
+  }
+}
+
+.checklist{
+  .row{
+    &:hover, &.draggable-mirror{
+      .checklist-reorder{
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.draggable-mirror{
+  z-index: $zindex-popover !important;
+}
+
+.checklist-strikethrough{
+  height: 12px;
+  background: linear-gradient(90deg, saturate($indigo,90) 0%, lighten($indigo,20%) 3%, $indigo 60%, lighten($indigo,20%) 100%);
+  border-radius: 2px 3px 2px 2px;
+  mix-blend-mode: multiply;
+  transform: skewX(-10deg);
+  opacity: .3;
+  width: 0;
+  transition: width .35s ease-in-out, opacity .25s ease-in-out;
+  position: absolute;
+  margin-left: 0;
+  top: 35%;
+  pointer-events: none;
+}
+
+@include media-breakpoint-down(md) {
+  .checklist{
+    .custom-control-input:checked + label{
+      text-decoration: line-through;
+    }
+  }
+}
+
+.drop-to-delete{
+  margin-top: $spacer;
+  transition: height .25s linear, background-color .25s linear, opacity .25s linear;
+  border: $border-width dashed $border-color;
+  opacity: 0;
+  height: 0;
+  border-radius: $border-radius*2;
+  z-index: $zindex-fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $white;
+  .draggable-source--is-dragging{
+    display: none;
+  }
+  .row{
+    display: none;
+  }
+  i{
+    transition: opacity .25s linear, color .25s linear;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    opacity: 0.5;
+    &:after{
+      content: 'Drag here to delete';
+      font-family: $font-family-base;
+      font-size: .875rem;
+      font-weight: $font-weight-bold;
+      margin-left: .5rem;
+    }
+  }
+  &.draggable-container--over{
+    background: $red;
+    border-style: solid;
+    i{
+      color: $white;
+      opacity: 1;
+      &:after{
+        content: 'Drop to delete';
+      }
+    }
+  }
+}

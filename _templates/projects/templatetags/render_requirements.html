@@ -1,0 +1,26 @@
+{% if requirements %}
+<div class="card">
+    <div class="card-header">
+        <i class="material-icons-x">checklist</i>
+        <strong>Project requirements</strong>
+    </div>
+
+    <div class="list-group list-group-flush">
+        {% for req in requirements %}
+        <div class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-start">
+                <i class="material-icons mr-1">radio_button_unchecked</i>
+                <h6 class="mb-0" style="margin-top: 3px;">{{ req.title }}</h6>
+            </div>
+            {% if req.desc %}
+            <div class="ml-3"><small class="text-muted pl-1">{{ req.desc }}</small></div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="card-footer p-2">
+        <small class="text-muted"><i class="material-icons-x">help_outline</i> Requirements adalah fitur/syarat yang harus
+            dipenuhi sebelum proyek kamu dinyatakan selesai.</small>
+    </div>
+</div>
+{% endif %}
