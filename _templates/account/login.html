@@ -13,15 +13,15 @@
         <div class="col col-lg-8">
             <div class="text-center">
                 <h2>Selamat datang! &#x1f44b;</h2>
-                <p class="lead">Silahkan masuk dengan salah satu akun berikut ini.</p>
+                <p class="lead">Masuk atau daftar dengan salah satu akun berikut ini.</p>
                 <div class="d-grid gap-3 col-8 mx-auto">
 
                     {% include 'base/_messages.html' %}
-                    
+
                     <a href="{% url 'account:social:begin' 'github' %}{% if next %}?next={{ next }}{% endif %}"
-                        class="btn btn-lg btn-block btn-primary"><i class="bi bi-github mr-2"></i> Github</a>
+                        class="btn btn-lg btn-block btn-primary">Github</a>
                     <a href="{% url 'account:social:begin' 'google-oauth2' %}{% if next %}?next={{ next }}{% endif %}"
-                        class="btn btn-lg btn-block btn-danger"><i class="bi bi-google mr-2"></i> Google</a>
+                        class="btn btn-lg btn-block btn-danger">Google</a>
                     <!-- <a href="{% url 'account:social:begin' 'facebook' %}{% if next %}?next={{ next }}{% endif %}"
                         class="btn btn-lg  btn-block btn-primary"><i class="bi bi-facebook mr-2"></i>Facebook</a> -->
                 </div>
