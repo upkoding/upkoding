@@ -18,7 +18,8 @@ CMD ["python","manage.py","runserver", "0.0.0.0:8000"]
 
 # production
 FROM base as prod
-COPY --from=static_builder /static_builder/dist ./_static/
+WORKDIR /app
+COPY --from=static_builder /static_builder/dist /app/_static/dist
 RUN python3 manage.py collectstatic --noinput
 
 ARG app_version
