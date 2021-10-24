@@ -17,6 +17,9 @@ COPY _static/ .
 RUN npm install && npm run build
 
 # production
+# built to run on Digital Ocean App Platform:
+# - DO default port: 8080
+# - DO worker temp dir: /dev/shm
 FROM base as prod
 WORKDIR /app
 COPY --from=staticfiles /staticfiles/dist /app/_static/dist
@@ -26,4 +29,4 @@ ARG app_version
 ENV APP_VERSION=${app_version}
 ENV APP_WORKERS 3
 ENV PORT 8080
-CMD exec gunicorn --bind :$PORT --workers $APP_WORKERS upkoding.wsgi:application
+CMD exec gunicorn --bind :$PORT --workers $APP_WORKERS --worker-tmp-dir=/dev/shm upkoding.wsgi:application
