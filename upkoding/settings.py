@@ -194,6 +194,9 @@ if not DEBUG:
 
     EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
     PREPEND_WWW = os.getenv('PREPEND_WWW', 'False') == 'True'
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
+    if os.getenv('IS_BEHIND_PROXY'):
+        SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
     sentry_sdk.init(
         dsn=os.getenv('SENTRY_DSN'),
