@@ -19,15 +19,13 @@ class CodeBlock(models.Model):
     """
     NUM_BLOCKS = 5
 
-    LANG_NODEJS = Judge0.LANG_NODE12
-    LANG_PYTHON = Judge0.LANG_PYTHON3
-    LANG_GO = Judge0.LANG_GO113
-    LANG_RUBY = Judge0.LANG_RUBY2
     LANGS = [
-        (LANG_NODEJS, 'javascript'),
-        (LANG_PYTHON, 'python'),
-        (LANG_GO, 'go'),
-        (LANG_RUBY, 'ruby')
+        (Judge0.LANG_NODE12, 'javascript'),
+        (Judge0.LANG_PYTHON3, 'python'),
+        (Judge0.LANG_GO113, 'go'),
+        (Judge0.LANG_RUBY2, 'ruby'),
+        (Judge0.LANG_JAVA, 'java'),
+        (Judge0.LANG_PHP7, 'php')
     ]
 
     STATUS_ACTIVE = 0
@@ -38,7 +36,7 @@ class CodeBlock(models.Model):
     ]
 
     language = models.PositiveSmallIntegerField(
-        'Language', choices=LANGS, default=LANG_NODEJS)
+        'Language', choices=LANGS, default=Judge0.LANG_NODE12)
 
     # block 1
     block_1_title = models.CharField(
@@ -106,8 +104,11 @@ class CodeBlock(models.Model):
     def __str__(self) -> str:
         return f'#{self.pk} {self.get_language_display()}'
 
-    def get_custom_language_display(self):
-        if self.language == self.LANG_GO:
+    def get_ace_language_display(self):
+        """
+        Language display that match ace editor.
+        """
+        if self.language == Judge0.LANG_GO113:
             return 'golang'
         return self.get_language_display()
 

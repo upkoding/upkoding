@@ -78,7 +78,7 @@
     var editor = ace.edit("codeblock-editor");
     editor.setFontSize(14);
     editor.setTheme("ace/theme/chrome");
-    editor.session.setMode("ace/mode/{{user_project.codeblock.get_custom_language_display}}");
+    editor.session.setMode("ace/mode/{{user_project.codeblock.get_ace_language_display}}");
 </script>
 {% endif %}
 {% endblock %}

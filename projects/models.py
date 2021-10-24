@@ -415,11 +415,15 @@ class UserProject(models.Model):
     def is_solution_editable_by(self, user):
         return (self.user == user)
 
-    def can_delete(self):
+    def is_deletable_by(self, user):
         """
         Deletable after 24hr.
         This is to avoid user refresh the codeblock quota by canceling their project.
+
+        exception for staff and pro user.
         """
+        if user.is_staff or user.is_pro_user():
+            return True
         yesterday = now() - timedelta(days=1)
         return self.created <= yesterday
 

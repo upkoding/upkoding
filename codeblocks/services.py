@@ -6,9 +6,12 @@ import json
 class Judge0:
     # languages
     LANG_GO113 = 60
+    LANG_JAVA = 62
     LANG_NODE12 = 63
+    LANG_PHP7 = 68
     LANG_PYTHON3 = 71
     LANG_RUBY2 = 72
+
 
     # statuses
     STATUS_ACCEPTED = 3

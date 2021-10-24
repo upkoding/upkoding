@@ -312,8 +312,8 @@ class ProjectDetailUser(DetailView):
         context['review_request_form'] = form
         return render(request, self.template_name, context)
 
-    def _handle_delete(self, project, user_project):
-        if user_project.can_delete():
+    def _handle_delete(self, user, project, user_project):
+        if user_project.is_deletable_by(user):
             user_project.delete()
             messages.info(self.request, 'Tantangan telah dibatalkan.',
                           extra_tags='warning')
@@ -341,7 +341,7 @@ class ProjectDetailUser(DetailView):
             return self._handle_update(project, user_project)
 
         if action == 'delete':
-            return self._handle_delete(project, user_project)
+            return self._handle_delete(user, project, user_project)
 
         if action == 'review_request':
             return self._handle_review_request(project, user_project)

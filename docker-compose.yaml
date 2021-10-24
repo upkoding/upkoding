@@ -19,6 +19,7 @@ services:
       target: dev
     environment:
       DATABASE_URL: postgres://upkoding:upkoding@db:5432/upkoding
+      # DATABASE_URL: postgresql://upkoding_user:TIoNEvIGUNdOmuStanKStISTOC@upkoding-postgresql-sgp1-do-user-543596-0.b.db.ondigitalocean.com:25060/upkoding_db?sslmode=require
     ports:
       - "8000:8000"
     volumes:
