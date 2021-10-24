@@ -194,7 +194,6 @@ if not DEBUG:
 
     EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
     PREPEND_WWW = os.getenv('PREPEND_WWW', 'False') == 'True'
-    SECURE_SSL_REDIRECT = True
 
     sentry_sdk.init(
         dsn=os.getenv('SENTRY_DSN'),
