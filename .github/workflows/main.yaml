@@ -1,4 +1,4 @@
-name: On Main push and PR (Unit tests, runnable test & build :edge image)
+name: On Main and PR
 
 on:
   push:
@@ -31,6 +31,17 @@ jobs:
 
       - name: Compose down
         run: docker-compose down
+
+      - name: Test prod build
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: ./
+          file: ./Dockerfile
+          target: prod
+          tags: upkoding-test-build
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       # - name: Login to ghcr
       #   if: github.event_name != 'pull_request'
