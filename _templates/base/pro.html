@@ -18,6 +18,12 @@
                 <p class="lead">Dapatkan manfaat penuh dari platform UpKoding. Akses semua kelas, tantangan dan semua
                     fitur premium tanpa batasan.
                 </p>
+                <div class="alert alert-info">
+                    <p><strong>🙌  PERHATIAN 🙌<br><br>Selama UpKoding berlabel BETA (versi saat ini <code>{{ app_version }}</code>), 
+                            semua fitur premium bisa digunakan secara gratis. Silahkan request Pro Access dengan tombol
+                            "Mulai Sekarang" dibawah.</strong>
+                    </p>
+                </div>
             </div>
             <div class="card mb-3">
                 <div class="card-body">
@@ -76,20 +82,20 @@
                 </div>
             </div>
 
-            <div class="row row-cols-1 row-cols-md-2 mb-3 text-center">
+            <div class="row row-cols-1 row-cols-md-1 mb-3 text-center">
                 {% for plan in plans %}
                 <div class="col">
-                    <div class="card mb-4 rounded-3 {% if plan.id == 'PRO90' %}border-info{% endif %}">
-                        <div class="card-header py-3 {% if plan.id == 'PRO90' %} bg-info border-info{% endif %}">
+                    <div class="card mb-4 rounded-3 {% if plan.id == 'PRO30_BETA' %}border-info{% endif %}">
+                        <div class="card-header py-3 {% if plan.id == 'PRO30_BETA' %}bg-info border-info{% endif %}">
                             <h4 class="my-0 fw-normal">{{plan.name}}</h4>
                         </div>
                         <div class="card-body">
-                            <h1 class="card-title pricing-card-title">{{plan.price_display}}</h1>
+                            <h1>{{plan.price_display}}</h1>
                             <ul class="list-unstyled mt-3 mb-4">
                                 <li class="text-muted">{{ plan.description }}</li>
                             </ul>
                             <a href="{% url 'account:pro' %}?plan={{plan.id}}"
-                                class="w-100 btn btn-lg {% if plan.id == 'PRO90' %}btn-info{% else %}btn-outline-info{% endif %}">Mulai
+                                class="w-100 btn btn-lg {% if plan.id == 'PRO30_BETA' %}btn-info{% else %}btn-outline-info{% endif %}">Mulai
                                 Sekarang</a>
                         </div>
                     </div>
@@ -97,12 +103,12 @@
                 {% endfor %}
             </div>
 
-            <div class="card" role="alert">
+            <!-- <div class="card" role="alert">
                 <div class="card-body text-center text-muted">
                     <i class="material-icons-x">verified_user</i> Pembayaran secara aman diproses oleh <a
                         href="https://midtrans.com/id/security" target="_blank">Midtrans</a>.
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

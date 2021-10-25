@@ -126,6 +126,11 @@ class ProAccessPurchaseForm(forms.Form):
             raise forms.ValidationError(
                 'Maaf, paket yang dipilih tidak valid!')
 
+        # TODO: remove this after beta
+        if self.user.is_pro_user():
+            raise forms.ValidationError(
+                'Pro Access bisa diperpanjang setelah periode saat ini sudah habis.')
+
         # make sure user doesn't have PENDING purchase
         if not ProAccessPurchase.can_create(self.user):
             raise forms.ValidationError(
@@ -134,7 +139,7 @@ class ProAccessPurchaseForm(forms.Form):
 
         return cleaned_data
 
-    def purchase_access(self):
+    def purchase_access(self, is_beta: bool = False):
         with transaction.atomic():
             pro_access, _ = ProAccess.objects.get_or_create(user=self.user)
             plan = pricing.get_plan(self.cleaned_data.get('plan_id'))
@@ -146,6 +151,11 @@ class ProAccessPurchaseForm(forms.Form):
                 price=plan.price,
             )
             pro_access_purchase.save()
+
+            # TODO: remove this after beta
+            if is_beta:
+                pro_access_purchase.set_gifted()
+
 
 
 class ProAccessPurchaseActionForm(forms.Form):

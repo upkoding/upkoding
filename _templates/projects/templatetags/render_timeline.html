@@ -15,12 +15,12 @@
     <div class="card-footer py-2">
         {% if user == user_project.user and not user_project.is_in_progress %}
         <!-- if project owner, show review form (message mode only) -->
-        {% include 'projects/templatetags/timeline/review_form.html' with fullmode=False %}
+        {% include 'projects/templatetags/timeline/review_form.html' %}
         {% endif %}
 
         {% if user.is_staff and user != user_project.user %}
         <!-- if current user is staff and project waiting for review, show review form (full mode) -->
-        {% include 'projects/templatetags/timeline/review_form.html' with fullmode=True %}
+        {% include 'projects/templatetags/timeline/review_form.html' %}
         {% endif %}
     </div>
 </div>

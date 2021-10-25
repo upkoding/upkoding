@@ -183,9 +183,12 @@ class ProStatusView(LoginRequiredMixin, View):
         user = request.user
         form = ProAccessPurchaseForm(user, request.POST)
         if form.is_valid():
-            form.purchase_access()
-            messages.info(self.request, 'Order telah dibuat, silahkan lanjutkan dengan pembayaran.',
+            # TODO: update this after beta
+            form.purchase_access(is_beta=True)
+            messages.info(self.request, 'Pro Access sudah aktif, happy coding!',
                           extra_tags='success')
+            # messages.info(self.request, 'Order telah dibuat, silahkan lanjutkan dengan pembayaran.',
+            #               extra_tags='success')
             return HttpResponseRedirect(reverse('account:pro'))
 
         error_message = get_form_error(form)

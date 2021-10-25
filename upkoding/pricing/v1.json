@@ -1,18 +1,10 @@
 [
   {
-    "id": "PRO30",
-    "name": "Pro Access 1 Bulan",
+    "id": "PRO30_BETA",
+    "name": "Pro Access 1 Bulan (beta)",
     "access_days": 30,
-    "price": 49000,
-    "price_display": "Rp. 49rb",
-    "description": "Unlimited access selama 30 hari."
-  },
-  {
-    "id": "PRO90",
-    "name": "Pro Access 3 Bulan",
-    "access_days": 90,
-    "price": 129000,
-    "price_display": "Rp. 129rb",
-    "description": "Hemat 12%, unlimited access selama 90 hari."
+    "price": 0,
+    "price_display": "GRATIS",
+    "description": "Akses tidak terbatas selama 30 hari, bisa diperpanjang dan gratis selama Beta."
   }
 ]

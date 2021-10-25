@@ -3,7 +3,7 @@
 {% with activity0=activity.activities.0 %}
 {% if not activity0.not_enriched_data %}
 {% with actor=activity0.actor %}
-<div class="list-group-item list-group-item-action" {% if activity.is_read %}style="opacity: 0.6"{% endif %}>
+<div class="list-group-item list-group-item-action" {% if activity.is_read %}style="opacity: 0.6" {% endif %}>
     <div class="d-flex w-100 justify-content-between">
         <div class="d-flex justify-content-start">
             <img src="{{ actor|avatar_url:100 }}" width="50" height="50" class="mr-2 avatar">
@@ -21,11 +21,6 @@
                 </small>
             </div>
         </div>
-        <small>
-            <a href="{{ activity0.target.get_absolute_url }}">
-                lihat<span class="material-icons-x">arrow_right</span>
-            </a>
-        </small>
     </div>
 </div>
 {% endwith %}

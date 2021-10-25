@@ -38,6 +38,10 @@ pre[class*="language-"] {
   overflow: auto;
 }
 
+.project-description pre[class*="language-"] {
+  margin: 1em auto;
+}
+
 pre.no-round {
   border-radius: 0 !important;
 }
