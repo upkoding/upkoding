@@ -2,65 +2,29 @@
 
 ![Screenshot Awal](https://raw.githubusercontent.com/upkoding/upkoding/main/screenshot.png)
 
-Platform UpKoding menyediakan wadah buat para programmer/calon programmer Indonesia untuk belajar, berlatih, berdiskusi serta saling mendukung dan memotivasi satu sama lain.
+UpKoding ingin membuat belajar pemrograman menyenangkan dengan format bite-sized learning, belajar materi secukupnya, langsung uji dan praktekkan dengan proyek atau problem solving.
 ## Development
 
-Untuk pengembangan di local maka pengetahuan Django sangat diperlukan paling tidak sudah bisa menjalankan sampai di `./manage.py runserver`.
+Cara yang paling mudah yaitu dengan menggunakan Docker dan Docker compose, beberapa perintah penting sudah disediakan melalui `Makefile`.
 
-Proyek ini memiliki fitur pencarian menggunakan fitur Full Text Search yg dimiliki PostgreSQL, jadi untuk di local juga harus menggunakan Postgres sebagai databasenya. Cara yang paling gampang yaitu menggunakan Docker imagenya postgres.
+Kemudian jalankan perintah berikut secara berurutan:
+```bash
+# 1. jalankan DB migration
+make migrate
 
-**Caranya, download dulu Docker imagenya Postgres:**
+# 2. buat admin / superuser, masukkan informasi yang diminta
+make createsuperuser
 
-```
-$ docker pull postgres
-```
+# 3. build static files
+make buildstatic
 
-**Start Postgres:**
-
-```
-docker run -it --rm --name dev-postgres \
--e POSTGRES_PASSWORD=password \
--v /Users/eka/Documents/postgres-data/:/var/lib/postgresql/data \
--p 5432:5432 postgres
-```
-Perhatikan kita menaruh datanya di hardisknya kita (`/Users/eka/Documents/postgres-data/`) bukan didalam imagenya, jadi ketika server DB kita matikan maka data tetap ada, dan kalau di start lagi maka akan me-load data yang sama.
-
-**Setup database proyek:**
-
-Langkah ini cukup sekali. Pertama pastikan DB server jalan dengan command docker diatas, setelah itu kita login ke Postgres.
-```
-# Masuk kedalam server
-$ docker exec -it dev-postgres bash
-
-# Login ke Postgres (dari dalam server)
-$ psql -h localhost -U postgres
-
-# Buat database dan user (disini nama DB nya `upkoding` dan usernya juga `upkoding` sesuai dengan settings.py)
-CREATE DATABASE upkoding;
-CREATE USER upkoding WITH PASSWORD 'upkoding';
-ALTER ROLE upkoding SET client_encoding TO 'utf8';
-ALTER ROLE upkoding SET timezone TO 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE upkoding TO upkoding;
-```
-Setelah itu bisa keluar dari Postgres dengan `\q`+ Enter. Dan `CTRL+C` untuk keluar dari server.
-
-**Django DB migration:**
-
-Masih dengan server yang masih berjalan, jalankan perintah berikut di terminal lainnya.
-```
-# migrate
-$ ./manage.py migrate
-
-# buat super user
-$ ./manage.py createsuperuser
-
-# jalankan server
-$ ./manage.py runserver
+# 4. jalankan proyek
+make runserver
 ```
 
 **Start developing & login ke admin:**
 
-Kalau semua lancar maka, kita akan melihat websitenya jalan di `http://localhost:8000`. Untuk login ke admin tinggal buka `http://localhost:8000/admin` dan login dengan username dan password yang sama pada saat kita bikin superuser.
+Kalau semua lancar maka, kita akan melihat websitenya jalan di `http://localhost:8000`. Untuk login ke admin tinggal buka `http://localhost:8000/admin` (gunakan username dan password yang sama pada saat kita buat superuser).
 
 > Apabila ada yang kurang jelas, ketemu bug, feature request bisa kita diskusikan lewat github **Issue** atau **Discussion**.
 ## Teknologi
@@ -71,49 +35,25 @@ Platform ini dibuat dengan [Framework Django](https://www.djangoproject.com), da
 
 Kode proyek selalu terbuka dan siapa saja bisa bergabung dan memanfaatkannya secara gratis, tapi untuk menjaga platform tetap berjalan dan mendukung pengembangannya pastinya perlu tenaga dan biaya (infrastruktur/maintenance/support).
 
-Untuk itu bagi siapapun yang berkenan untuk mendukung bisa dengan cara berikut ini:
+Untuk itu bagi siapapun yang berkenan bisa mendukung dengan cara berikut ini:
 
 - Bantu mengembangkan
 - Bagikan ke media sosial, referensikan ke teman
 - Jadi sponsor (perusahaan atau perorangan)
+- Jadi member Pro Access di [upkoding.com](https://www.upkoding.com/)
 - Sponsor perorangan via [Saweria](https://saweria.co/upkoding) atau [Paypal](https://www.paypal.com/paypalme/UpKoding)
 
-## Latar Belakang
-
-Saya banyak mendengar keluh-kesah teman-teman kita yang belajar pemrograman baik itu dari komentar2 di [Youtube Channel UpKoding](https://youtube.com/c/UpKoding) ataupun dari [Group Telegram UpKoding](https://t.me/upkoding). Salah satu yang saya tangkap adalah banyak yang menemui kendala ketika belajar baik itu karena hilangnya motivasi, kurangnya dukungan ataupun tidak ada sistem support yang memotivasi mereka untuk tetap belajar.
-
-Dan yang saya selalu tekankan kepada mereka adalah, cara terbaik belajar pemrograman adalah dengan membuat proyek nyata. Mengaplikasikan teori yang dipelajari dengan proyek nyata. Akhirnya tercetuslah ide bagaimana caranya supaya terdapat sebuah platform yang bisa jadi tempat nongkrong, tempat mencari support, tempat belajar dan tempat meningkatkan skill pemrograman yang aktif dan interaktif.
-
-Akhirnya saya mulailah proyek ini, berikut fitur utama yang ada di pikiran saya saat ini:
-
-- **Proyek**, tempat teman-teman memilih proyek yang akan dikerjakan ataupun mensubmit ide proyek buat dikerjakan sama teman-teman pengguna lainnya.
-- **Coders**, disini kita bisa melihat profile para coders (pengguna), proyek yang dikerjakan, proyek yang disubmit dan diskusi yang diikuti.
-- **Diskusi**, disinilah tempat mereka berdiskusi, sharing, bertanya dan berinteraksi dengan pengguna lainnya. Saya ingin forum ini bisa menjadi Stack Overflow nya Indonesia :)
-
-Nanti setiap interaksi (menyelesaikan proyek, mensubmit proyek, bertanya dan menjawab pertanyaan di forum) yang dilakukkan akan mendapatkan poin.
 
 ## Lisensi
 
+Proyek ini berlisensi **AGPL-3.0 License**.
 ```
-MIT License
-
-Copyright (c) 2021 UpKoding
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Permissions of this strongest copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. When a modified version is used to provide a service over a network, the complete source code of the modified version must be made available.
 ```
+
+Yang artinya:
+```
+Siapa saja boleh mempergunakan, memodifikasi dan mendistribusikan proyek ini tetapi harus tetap menggunakan lisensi yang sama dan kode sumber harus selalu dibuka secara penuh seperti yang dilakukkan pengembang dengan upkoding.com.
+```
+
+Lebih detail mengenai lisensi ini bisa dibaca [disini](https://github.com/upkoding/upkoding/blob/main/LICENSE).
