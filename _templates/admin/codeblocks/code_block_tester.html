@@ -32,19 +32,19 @@
         <table style="width: 100%;">
             {% csrf_token %}
             <tr>
-                <td>Challenge tips</td>
+                <td>Tips</td>
                 <td>
                     <p>Dalam membuat code challenge, bisa dipertimbangkan hal berikut:</p>
                     <ul>
                         <li><strong>Correctness test</strong>, bisa menggunakan <strong>assert</strong> untuk mengecek
                             nilai sebuah
                             variable benar atau output sebuah fungsi sudah sesuai.</li>
-                        <li><strong>Output test</strong>, gunakan <strong>expected output</strong> untuk mengecek apakah
-                            output program
-                            benar.</li>
-                        <li>Perhatikan apakah challenge yang kita buat bisa di bypass oleh user apa tidak.</li>
-                        <li>Pada saat membuat codeblock, tentukan mana yang tidak boleh diedit user (readonly) dan mana
-                            yang tidak.</li>
+                        <li><strong>Output test</strong>, gunakan <strong>expected output</strong> untuk membuat
+                            challenge yang mengecek output program.</li>
+                        <li>Perhatikan <strong>apakah challenge bisa di bypass</strong> oleh user apa
+                            tidak.</li>
+                        <li>Pada saat membuat codeblock, tentukan <strong>mana yang boleh diedit user</strong> dan mana
+                            yang tidak (readonly).</li>
                     </ul>
                 </td>
             </tr>
