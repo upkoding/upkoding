@@ -20,6 +20,7 @@ from django.contrib.staticfiles.urls import static
 from django.conf import settings
 
 from base.views import render_template
+from codeblocks.views import AdminCodeBlockTester
 
 if settings.MAINTENANCE_MODE:
     urlpatterns = [
@@ -28,6 +29,7 @@ if settings.MAINTENANCE_MODE:
 else:
     urlpatterns = [
         path('admin/', admin.site.urls),
+        path('admin/codeblocks/tester', AdminCodeBlockTester.as_view(), name='admin_codeblocks_tester'),
         path('account/', include('account.urls', namespace='account')),
         path('challenges/', include('projects.urls', namespace='projects')),
         path('coders/', include('coders.urls', namespace='coders')),

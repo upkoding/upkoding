@@ -202,7 +202,7 @@ class CodeBlock(models.Model):
             'last_run': self.last_run.timestamp(),
         }
 
-    def run_source_code(self, stdin: str = None):
+    def run_source_code(self, stdin: str = None, save: bool = True):
         result, err = judge0_client.submit(
             language_id=self.language,
             source_code=self.source_code,
@@ -215,4 +215,5 @@ class CodeBlock(models.Model):
         }
         self.run_count = models.F('run_count') + 1
         self.last_run = now()
-        self.save()
+        if save:
+            self.save()

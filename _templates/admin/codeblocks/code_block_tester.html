@@ -1,0 +1,70 @@
+{% extends 'admin/base_site.html' %}
+
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrahead %}{{ block.super }}
+<script src="{% url 'admin:jsi18n' %}"></script>
+{{ media }}
+<script src="{% static 'django_ace/ace/ace.js' %}"></script>
+<script src="{% static 'django_ace/widget.js' %}"></script>
+<script src="{% static 'django_ace/ace/mode-json.js' %}"></script>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'django_ace/widget.css' %}">
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} change-form{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='codeblocks' %}">Codeblocks</a>
+    &rsaquo; Tester
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <form method="post" novalidate>
+        <table style="width: 100%;">
+            {% csrf_token %}
+            <tr>
+                <td>Challenge tips</td>
+                <td>
+                    <p>Dalam membuat code challenge, bisa dipertimbangkan hal berikut:</p>
+                    <ul>
+                        <li><strong>Correctness test</strong>, bisa menggunakan <strong>assert</strong> untuk mengecek
+                            nilai sebuah
+                            variable benar atau output sebuah fungsi sudah sesuai.</li>
+                        <li><strong>Output test</strong>, gunakan <strong>expected output</strong> untuk mengecek apakah
+                            output program
+                            benar.</li>
+                        <li>Perhatikan apakah challenge yang kita buat bisa di bypass oleh user apa tidak.</li>
+                        <li>Pada saat membuat codeblock, tentukan mana yang tidak boleh diedit user (readonly) dan mana
+                            yang tidak.</li>
+                    </ul>
+                </td>
+            </tr>
+
+            {% if run_result %}
+            <tr>
+                <td>Run result</td>
+                <td>
+                    <pre><code>{{ run_result }}</code></pre>
+                </td>
+            </tr>
+            {% endif %}
+            {{ form.as_table }}
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+                    <input type="submit" value="Test" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{% endblock %}
