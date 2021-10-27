@@ -1,6 +1,5 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% load activity_tags %}
 
 {% block content%}
 <div class="container">
@@ -36,14 +35,7 @@
                     </a>
                 </div>
 
-                {% if activities %}
-                <div class="py-2 bg-light mt-4"><strong>AKTIVITAS UPKODERS</strong></div>
-                <ol class="list-group list-group-activity">
-                    {% for activity in activities %}
-                    {% render_activity activity 'global' %}
-                    {% endfor %}
-                </ol>
-                {% endif %}
+                <div id="global-activities" data-url="{% url 'base:index' %}?partial=activities"></div>
 
             </section>
             <section class="py-4 py-lg-5">
@@ -105,7 +97,8 @@
 
                 <div class="text-center mt-2">
                     <p class="text-muted">
-                        <span class="material-icons-x">schedule</span> Coming soon! Kelas akan segera hadir di upkoding.com.
+                        <span class="material-icons-x">schedule</span> Coming soon! Kelas akan segera hadir di
+                        upkoding.com.
                     </p>
                 </div>
 

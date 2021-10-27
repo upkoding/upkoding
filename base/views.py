@@ -1,4 +1,6 @@
 import logging
+from django.http.response import HttpResponse
+from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from stream_django.enrich import Enrich
 
@@ -14,20 +16,22 @@ def render_template(name, content_type="text/html; charset=utf-8"):
     """
     return TemplateView.as_view(template_name=name, content_type=content_type)
 
-
 class Index(TemplateView):
     template_name = 'base/index.html'
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['featured_projects'] = Project.objects.featured()
-
-        try:
-            enricher = Enrich(('actor', 'object', 'target'))
-            feed = feed_manager.get_global_challenge_feed()
-            activities = feed.get(limit=10)['results']
-            data['activities'] = enricher.enrich_aggregated_activities(
-                activities)
-        except Exception as e:
-            log.error(e)
         return data
+
+    def get(self, request):
+        if request.GET.get('partial') == 'activities':
+            try:
+                enricher = Enrich(('actor', 'object', 'target'))
+                feed = feed_manager.get_global_challenge_feed()
+                activities = feed.get(limit=10)['results']
+                enriched = enricher.enrich_aggregated_activities(activities)
+                return render(request, 'base/_activities.html', {'activities': enriched})
+            except Exception as e:
+                return HttpResponse()
+        return super().get(request)

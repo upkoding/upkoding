@@ -1,0 +1,11 @@
+{% if activities %}
+{% load activity_tags %}
+<div class="py-2 pl-3 bg-light"><strong>AKTIVITAS</strong></div>
+<div class="list-group list-group-flush">
+    {% for activity in activities %}
+    {% if not activity.not_enriched_data %}
+    {% render_activity activity 'challenge' %}
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}

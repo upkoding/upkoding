@@ -1,0 +1,12 @@
+{% load activity_tags %}
+{% if notifications %}
+<div class="list-group list-group-flush">
+    {% for activity in notifications %}
+    {% render_activity activity 'notification' %}
+    {% endfor %}
+</div>
+{% else %}
+<div class="card-body">
+    <span class="text-muted">Tidak ada notifikasi.</span>
+</div>
+{% endif %}

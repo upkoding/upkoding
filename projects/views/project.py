@@ -102,17 +102,21 @@ class ProjectDetail(DetailView):
                             UserProject.STATUS_PENDING_REVIEW)
             ).order_by('-created')[:10]
         data['user_projects'] = user_projects
-
-        # activity
-        try:
-            enricher = Enrich(('actor', 'target',))
-            feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
-            activities = feed.get(limit=6)['results']
-            data['activities'] = enricher.enrich_activities(activities)
-        except Exception as e:
-            log.error(e)
-
         return data
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('partial') == 'activities':
+            # activity
+            try:
+                project = self.get_object()
+                enricher = Enrich(('actor', 'target',))
+                feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
+                activities = feed.get(limit=6)['results']
+                enriched = enricher.enrich_activities(activities)
+                return render(request, 'projects/_activities.html', {'activities': enriched})
+            except Exception:
+                return HttpResponse()
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, slug, pk):
         user = request.user

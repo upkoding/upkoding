@@ -55,16 +55,22 @@ class IndexView(LoginRequiredMixin, TemplateView):
         data['projects'] = UserProject.objects.filter(user=user) \
             .order_by('-updated')[:10]
 
-        try:
-            enricher = Enrich(('actor', 'object', 'target',))
-            feed = feed_manager.get_notification_feed(user.id)
-            activities = feed.get(limit=10)['results']
-            data['notifications'] = enricher.enrich_aggregated_activities(
-                activities)
-        except Exception as e:
-            log.error(e)
+
         return data
 
+    def get(self, request):
+        user = self.request.user
+        if request.GET.get('partial') == 'notifications':
+            try:
+                enricher = Enrich(('actor', 'object', 'target',))
+                feed = feed_manager.get_notification_feed(user.id)
+                activities = feed.get(limit=10)['results']
+                enriched = enricher.enrich_aggregated_activities(activities)
+            except Exception:
+                enriched = []
+            finally:
+                return render(request, 'account/_notifications_card_content.html', {'notifications': enriched})
+        return super().get(request)
 
 class ProfileFormView(LoginRequiredMixin, View):
     def __render(self, request, form,):

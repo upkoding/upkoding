@@ -1,0 +1,7 @@
+{% load activity_tags %}
+<div class="py-2 bg-light mt-4"><strong>AKTIVITAS UPKODERS</strong></div>
+<ol class="list-group list-group-activity">
+    {% for activity in activities %}
+    {% render_activity activity 'global' %}
+    {% endfor %}
+</ol>

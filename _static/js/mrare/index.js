@@ -10,6 +10,7 @@ import lightbox from "./lightbox";
 import "./upkoding/codeblock";
 import "./upkoding/project-review-form";
 import "./upkoding/cancel-challenge";
+import "./upkoding/activities";
 
 (() => {
   if (typeof $ === "undefined") {
