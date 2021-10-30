@@ -32,7 +32,7 @@ class ProjectList(ListView):
             elif search_query == 'level:hard':
                 return Project.objects.active().filter(level=Project.LEVEL_HARD)
             elif search_query == 'level:project':
-                return Project.objects.active().filter(level=Project.LEVEL_PROJECT).order_by('-pk','status')
+                return Project.objects.active().filter(level=Project.LEVEL_PROJECT).order_by('-pk', 'status')
             elif search_query == 'pricing:pro':
                 return Project.objects.active().filter(is_premium=True)
             else:

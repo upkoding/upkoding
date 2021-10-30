@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'coders.apps.CodersConfig',
     'codeblocks.apps.CodeblocksConfig',
+    'roadmaps.apps.RoadmapsConfig',
     'discord.apps.DiscordConfig',
     # 'forum.apps.ForumConfig',
 
