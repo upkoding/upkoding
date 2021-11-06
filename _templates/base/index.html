@@ -23,7 +23,7 @@
                 <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
                     {% if featured_projects %}
                     {% for project in featured_projects %}
-                    {% include 'projects/_project_list_item.html' with project=project classes='shadow-lg' %}
+                    {% include 'projects/_project_list_item.html' with project=project full=True classes='shadow-lg' %}
                     {% endfor %}
                     {% endif %}
                 </div>
@@ -46,7 +46,7 @@
                     <h2 class="h1 mb-0">Roadmaps</h2>
                 </div>
                 <p class="lead mb-4">
-                    Belajar pemrograman secara terstuktur dengan melewati setiap tantangan yang disusun
+                    Belajar pemrograman secara terstruktur dengan menyelesaikan setiap tantangan yang disusun
                     sesuai topik dan tingkat kesulitannya.
                 </p>
 
