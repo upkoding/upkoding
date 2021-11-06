@@ -38,9 +38,31 @@
                 <div id="global-activities" data-url="{% url 'base:index' %}?partial=activities"></div>
 
             </section>
+
+            {% if show_roadmaps %}
             <section class="py-4 py-lg-5">
                 <div class="d-flex align-items-center mb-3">
-                    <i class="material-icons text-info mr-2 h1">widgets</i>
+                    <i class="material-icons text-info mr-2 h1">near_me</i>
+                    <h2 class="h1 mb-0">Roadmaps</h2>
+                </div>
+                <p class="lead mb-4">
+                    Belajar pemrograman secara terstuktur dengan melewati setiap tantangan yang disusun
+                    sesuai topik dan tingkat kesulitannya.
+                </p>
+
+                <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-2 g-5 mt-4">
+                    {% if roadmaps %}
+                    {% for roadmap in roadmaps %}
+                    {% include 'roadmaps/_roadmap_list_item.html' with roadmap=roadmap classes='shadow-lg' %}
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <section class="py-4 py-lg-5">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-info mr-2 h1">category</i>
                     <h2 class="h1 mb-0">Kelas</h2>
                 </div>
                 <p class="lead mb-4">
@@ -101,8 +123,8 @@
                         upkoding.com.
                     </p>
                 </div>
-
             </section>
+
             <section class="py-3 py-lg-3">
                 <div class="d-flex align-items-center mb-3">
                     <i class="material-icons text-info mr-2 h1">spa</i>

@@ -4,7 +4,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.db.models.deletion import CASCADE
-from django.template.defaultfilters import slugify, time
+from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils.timezone import now
 from sorl.thumbnail import ImageField

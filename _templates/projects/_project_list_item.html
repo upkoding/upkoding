@@ -2,14 +2,25 @@
 {% load projects %}
 {% load humanize %}
 <div class="col col-12 mb-3" {% if project.is_archived %}style="opacity: 0.5;" {% endif %}>
-    <div class="card h-100 {{ classes }}">
-        <span class="badge badge-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99;">
-            <i class="material-icons-x">person</i> {{ project.taken_count|intcomma }}
+    <div class="card h-100 {{ classes }} {% if user.is_authenticated %}fetch-completion-status{% endif %}"
+        data-id="{{ project.pk }}">
+        {% if full %}
+        <div class="project-stats-{{ project.pk }}">
+            <span class="badge badge-dark" style="position: absolute; top: 10px; left: 10px; z-index: 99;">
+                <i class="material-icons-x">person</i> {{ project.taken_count|intcomma }}
+            </span>
+            <span class="badge badge-{{ project.get_level_color }}"
+                style="position: absolute; top: 10px; right: 10px; z-index: 99;">
+                {{ project.get_level_display }}
+            </span>
+        </div>
+        {% endif %}
+
+        <span class="avatar project-completed-{{ project.pk }} d-none"
+            style="position: absolute; top: -15px; right: -15px; z-index: 99;">
+            <i class="material-icons text-success" style="font-size: 2rem;">check_circle</i>
         </span>
-        <span class="badge badge-{{ project.get_level_color }}"
-            style="position: absolute; top: 10px; right: 10px; z-index: 99;">
-            {{ project.get_level_display }}
-        </span>
+
 
         <a href="{{ project.get_absolute_url }}" class="link-card"
             title="{{ project.title|title }}{% if project.is_premium %} (PRO){% endif %}">
@@ -20,13 +31,14 @@
                 {% with codeblock=project.codeblock %}
                 <div class="mb-2">
                     <h5 class="card-title mb-1" style="font-size: 1.05rem;">
-                        {{ project.title|title }}
+                        {{ project.title }}
                     </h5>
                     <p class="card-text"
                         style="color: #888 !important; line-height: 1.3em; font-size: 0.9rem; font-weight: 400;">
                         {{ project.description_short|truncatechars:55 }}
                     </p>
                 </div>
+                {% if full %}
                 <div style="opacity: 0.6;">
                     {% if project.is_premium %}
                     <a href="{% url 'projects:list' %}?s=pricing:pro">
@@ -35,6 +47,7 @@
                     {% endif %}
                     {% render_tags project 'secondary' %}
                 </div>
+                {% endif %}
                 {% endwith %}
             </div>
         </a>

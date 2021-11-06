@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+
+{% load base %}
+{% load humanize %}
+
+{% block meta %}{% meta object=object %}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-bar navbar bg-white sticky-top">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'roadmaps:list' %}">Roadmaps</a></li>
+            {% block breadcrumb_item %}
+            <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}</li>
+            {% endblock %}
+        </ol>
+    </nav>
+</div>
+
+<div class="content-container">
+    <div class="challenge-module">
+        <div class="challenge-module-top">
+            <div class="challenge-module-body">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-11 col-xl-10">
+                            <div class="page-header">
+                                <h1>{{ object.title|title }}</h1>
+                                <p class="lead mb-0">{{ object.description }}</p>
+                            </div>
+
+                            {% for topic in topics %}
+                            <div class="card shadow-lg mb-4">
+                                <div class="card-header">
+                                    <strong class="text-dark">{{ forloop.counter }}. {{ topic.title|upper }}</strong>
+                                </div>
+                                <div class="card-body">
+                                    {{ topic.description }}
+                                    <hr>
+                                    <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 mt-3">
+                                        {% for content in topic.contents.all %}
+                                        {% include 'projects/_project_list_item.html' with project=content.content_object classes='shadow-sm' %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

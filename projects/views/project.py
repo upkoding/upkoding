@@ -5,10 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
+from django.views.generic.base import View
 from stream_django.enrich import Enrich
 from upkoding.activity_feed import feed_manager
 
@@ -32,7 +33,7 @@ class ProjectList(ListView):
             elif search_query == 'level:hard':
                 return Project.objects.active().filter(level=Project.LEVEL_HARD)
             elif search_query == 'level:project':
-                return Project.objects.active().filter(level=Project.LEVEL_PROJECT).order_by('-pk','status')
+                return Project.objects.active().filter(level=Project.LEVEL_PROJECT).order_by('-pk', 'status')
             elif search_query == 'pricing:pro':
                 return Project.objects.active().filter(is_premium=True)
             else:
@@ -106,7 +107,7 @@ class ProjectDetail(DetailView):
 
     def get(self, request, *args, **kwargs):
         if request.GET.get('partial') == 'activities':
-            # activity
+            # activities
             try:
                 project = self.get_object()
                 enricher = Enrich(('actor', 'target',))
@@ -116,6 +117,23 @@ class ProjectDetail(DetailView):
                 return render(request, 'projects/_activities.html', {'activities': enriched})
             except Exception:
                 return HttpResponse()
+
+        if request.GET.get('partial') == 'completed':
+            # current user status
+            data = {'completed': False}
+            try:
+                user = request.user
+                if not user.is_authenticated():
+                    raise Exception('not authenticated')
+
+                project = self.get_object()
+                user_project = UserProject.objects.get(
+                    project=project, user=request.user)
+                data['complete'] = user_project.is_complete()
+            except Exception:
+                pass
+            return JsonResponse(data)
+
         return super().get(request, *args, **kwargs)
 
     def post(self, request, slug, pk):
@@ -350,3 +368,17 @@ class ProjectDetailUser(DetailView):
         if action == 'review_request':
             return self._handle_review_request(project, user_project)
         return HttpResponseRedirect(project.get_absolute_url())
+
+
+class ProjectStatuses(View):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        user = request.user
+        ids_str = set(request.GET.get('ids').split(','))
+        ids = [int(id) for id in ids_str]  # dedupe
+        user_projects = UserProject.objects \
+            .filter(project_id__in=ids, user=user)
+        statuses = [dict(id=up.project_id, complete=up.is_complete())
+                    for up in user_projects]
+        return JsonResponse(dict(statuses=statuses))

@@ -55,6 +55,13 @@
             </div>
             <div class="collapse navbar-collapse flex-column" id="navbar-collapse">
                 <ul class="navbar-nav d-lg-block">
+                    {% if show_roadmaps %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'roadmaps:list' %}"><i
+                                class="material-icons-x mr-1 text-info">near_me</i>
+                            Roadmaps <span class="badge badge-warning">new</span></a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'projects:list' %}"><i
                                 class="material-icons-x mr-1 text-info">extension</i>
@@ -62,7 +69,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'base:classrooms' %}"><i
-                                class="material-icons-x mr-1 text-info">widgets</i> Kelas
+                                class="material-icons-x mr-1 text-info">category</i> Kelas
                         </a>
                     </li>
                     <li class="nav-item">

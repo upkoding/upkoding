@@ -13,4 +13,5 @@ def upkoding(request: HttpRequest):
         'ga_tracking_id': settings.GOOGLE_ANALYTICS_TRACKING_ID,
         'statuspage_url': settings.STATUSPAGE_URL,
         'plans': pricing.plans,
+        'show_roadmaps': settings.SHOW_ROADMAPS,
     }

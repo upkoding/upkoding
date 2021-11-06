@@ -1,0 +1,22 @@
+{% load sorl_thumbnail %}
+{% load humanize %}
+<div class="col col-12 mb-3">
+    <div class="card h-100 {{ classes }}">
+        <a href="{{ roadmap.get_absolute_url }}" class="link-card" title="{{ roadmap.title|title }}">
+            {% thumbnail roadmap.cover "640x274" crop="center" as im %}
+            <img src="{{ im.url }}" class="card-img-top">
+            {% endthumbnail %}
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="mb-2">
+                    <h3 class="card-title mb-2">
+                        {{ roadmap.title|title }}
+                    </h3>
+                    <p class="card-text"
+                        style="color: #888 !important; line-height: 1.3em; font-size: 1rem; font-weight: 400;">
+                        {{ roadmap.description }}
+                    </p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

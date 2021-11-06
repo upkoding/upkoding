@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='Roadmap Belajar Pemrograman' desc='Belajar pemrograman secara terstuktur dengan melewati setiap tantangan yang disusun sesuai topik dan tingkat kesulitannya.'%}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="material-icons text-info mr-2 h1">near_me</i>
+                    <h1 class="h1 mb-0">Roadmaps</h1>
+                </div>
+                <p class="lead">Belajar pemrograman secara terstuktur dengan melewati setiap tantangan yang disusun
+                    sesuai topik dan tingkat kesulitannya.
+                </p>
+            </div>
+            <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-2 g-5 mt-4">
+                {% if object_list %}
+                {% for roadmap in object_list %}
+                {% include 'roadmaps/_roadmap_list_item.html' with roadmap=roadmap classes='shadow-lg' %}
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
