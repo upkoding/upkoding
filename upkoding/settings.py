@@ -280,7 +280,7 @@ DEFAULT_METADATA = {
 GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
 STATUSPAGE_URL = 'https://stats.uptimerobot.com/ElMQmFWXKD'
 MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
-SHOW_ROADMAPS = os.getenv('SHOW_ROADMAPS_LINK', 'False') == 'True'
+SHOW_ROADMAPS = os.getenv('SHOW_ROADMAPS', 'False') == 'True'
 
 MDEDITOR_CONFIGS = {
     'default': {
