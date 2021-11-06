@@ -11,6 +11,7 @@ import "./upkoding/codeblock";
 import "./upkoding/project-review-form";
 import "./upkoding/cancel-challenge";
 import "./upkoding/activities";
+import "./upkoding/completed-check";
 
 (() => {
   if (typeof $ === "undefined") {

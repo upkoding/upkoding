@@ -32,6 +32,7 @@ else:
         path('admin/codeblocks/tester', AdminCodeBlockTester.as_view(), name='admin_codeblocks_tester'),
         path('account/', include('account.urls', namespace='account')),
         path('challenges/', include('projects.urls', namespace='projects')),
+        path('roadmaps/', include('roadmaps.urls', namespace='roadmaps')),
         path('coders/', include('coders.urls', namespace='coders')),
         path('mdeditor/', include('mdeditor.urls')),
         path('discord/', include('discord.urls', namespace='discord')),

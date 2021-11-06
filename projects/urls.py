@@ -9,5 +9,6 @@ urlpatterns = [
          project.ProjectDetailUser.as_view(), name='detail_user'),
     path('<slug:slug>-<int:pk>/', project.ProjectDetail.as_view(), name='detail'),
     path('<int:pk>/review', review.ProjectReview.as_view(), name='review'),
+    path('statuses/', project.ProjectStatuses.as_view(), name='statuses'),
     path('', project.ProjectList.as_view(), name='list'),
 ]

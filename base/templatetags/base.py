@@ -5,6 +5,7 @@ from django.conf import settings
 
 from account.models import User
 from projects.models import Project
+from roadmaps.models import Roadmap
 
 register = template.Library()
 
@@ -90,12 +91,11 @@ def meta(context, **kwargs):
         obj = kwargs.get('object')
         if isinstance(obj, User):
             meta_url = obj.get_absolute_url()
-            meta_title = 'Profil dari {} (@{})'.format(
-                obj.get_display_name(), obj.username)
+            meta_title = 'Profil dari {}'.format(obj.get_display_name())
             meta_image = obj.avatar_url(640)
             meta_desc = obj.description
 
-        if isinstance(obj, Project):
+        if isinstance(obj, Project) or isinstance(obj, Roadmap):
             meta_title = obj.title if (
                 not 'title' in kwargs) else kwargs.get('title')
             meta_image = obj.cover.url if obj.cover else ''

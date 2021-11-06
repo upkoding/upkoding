@@ -19,7 +19,7 @@ class ProjectImageInlineAdmin(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'level', 'status', 'is_premium', 'is_featured', 'codeblock',
+    list_display = ('id', 'title', 'user', 'level', 'status', 'is_premium', 'is_featured', 'codeblock',
                     'taken_count', 'completed_count', 'created',)
     list_display_links = ('title',)
     list_filter = ('status', 'level', 'is_premium', 'is_featured')

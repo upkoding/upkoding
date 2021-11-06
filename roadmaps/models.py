@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.timezone import now
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -30,6 +31,8 @@ class Roadmap(models.Model):
         blank=True,
         null=True
     )
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         indexes = [
@@ -39,6 +42,12 @@ class Roadmap(models.Model):
 
     def __str__(self, *args, **kwargs):
         return self.title
+
+    def is_active(self):
+        return self.status == self.STATUS_ACTIVE
+
+    def get_absolute_url(self):
+        return reverse('roadmaps:detail', args=[self.slug])
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -63,6 +72,8 @@ class RoadmapTopic(models.Model):
     status = models.PositiveSmallIntegerField(
         choices=STATUSES, default=STATUS_INACTIVE)
     order = models.PositiveSmallIntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         indexes = [
@@ -74,6 +85,9 @@ class RoadmapTopic(models.Model):
 
     def __str__(self, *args, **kwargs):
         return self.title
+
+    def is_active(self):
+        return self.status == self.STATUS_ACTIVE
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -88,6 +102,8 @@ class RoadmapTopicContent(models.Model):
     content_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'content_id')
     order = models.PositiveSmallIntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         indexes = [
@@ -97,4 +113,4 @@ class RoadmapTopicContent(models.Model):
         ordering = ['order']
 
     def __str__(self, *args, **kwargs):
-        return f'{self.roadmap_topic} ({self.content_type}:{self.content_id})'
+        return f'{self.roadmap_topic} ({self.content_object})'
