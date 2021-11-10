@@ -59,7 +59,7 @@
 
                             <div class="card shadow-sm mb-3">
                                 <div class="card-body project-description">
-                                    {{ object.description|markdownify }}
+                                    {{ object.description|markdownify:"full" }}
 
                                     {% include 'projects/_project_images.html' with images=project.images.all %}
                                 </div>

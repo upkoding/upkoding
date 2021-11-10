@@ -37,7 +37,6 @@ class ProfileForm(forms.ModelForm):
                                  label='Nama *')
     description = forms.CharField(required=True,
                                   label='Tentang *',
-                                  help_text="Format = Markdown",
                                   widget=forms.Textarea())
 
     class Meta:

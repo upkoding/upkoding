@@ -15,7 +15,7 @@
     </div>
     {% if event.message %}
     <div class="mt-2 mb-1 text-dark">
-        {{ event.message|markdownify }}
+        {{ event.message|markdownify:"codes" }}
     </div>
     {% endif %}
 </div>

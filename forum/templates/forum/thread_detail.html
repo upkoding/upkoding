@@ -25,7 +25,7 @@
                         {% include 'forum/_thread_form.html' with thread=thread %}
                         {% else %}
                         <h1 class="display-6 mb-4" style="font-weight: 500; font-size: 1.8rem">{{ thread.title }}</h1>
-                        {{ thread.description|markdownify }}
+                        {{ thread.description|markdownify:"codes" }}
                         {% endif %}
                     </div>
                 </div>

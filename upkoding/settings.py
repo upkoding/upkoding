@@ -315,6 +315,33 @@ MDEDITOR_CONFIGS = {
 MARKDOWNIFY = {
     'default': {
         'WHITELIST_TAGS': [
+            'b',
+            'strong',
+            'p'
+        ]
+    },
+    'codes': {
+        'WHITELIST_TAGS': [
+            'b',
+            'strong',
+            'p',
+            'code',
+            'pre',
+            'ul',
+            'li',
+            'ol',
+            'hr',
+        ],
+        'WHITELIST_ATTRS': [
+            'class',
+        ],
+        'MARKDOWN_EXTENSIONS': [
+            'markdown.extensions.fenced_code',
+            'markdown.extensions.extra',
+        ]
+    },
+    'full': {
+        'WHITELIST_TAGS': [
             'a',
             'abbr',
             'acronym',

@@ -18,6 +18,6 @@
     </form>
     {% else %}
     <!-- display mode -->
-    {{ answer.message|markdownify }}
+    {{ answer.message|markdownify:"codes" }}
     {% endif %}
 </div>
