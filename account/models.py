@@ -42,6 +42,9 @@ class User(AbstractUser):
     time_zone = models.CharField(
         max_length=100, choices=TIME_ZONES, default='Asia/Jakarta')
 
+    # to keep track of verified email
+    verified_email = models.EmailField(blank=True, default='')
+
     class Meta:
         ordering = ['-point']
 
@@ -83,17 +86,14 @@ class User(AbstractUser):
         except Exception:
             return False
 
-    def is_email_verification_required(self):
-        """
-        To avoid sending email to wrong address we need to verify them.
-        If user.email same as UserSocialAuth.uid, no need verification.
-        """
+    def is_email_verified(self):
         if not self.email:
-            return False
+            return True
+        return self.email.lower() == self.verified_email.lower()
 
-        auths = UserSocialAuth.objects.filter(user=self,
-                                              uid=self.email.lower())
-        return len(auths) == 0
+        # auths = UserSocialAuth.objects.filter(user=self,
+        #                                       uid=self.email.lower())
+        # return len(auths) == 0
 
     @staticmethod
     def get_active_staffs(exclude_user=None):
@@ -105,21 +105,29 @@ class Link(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='link')
     github = models.URLField(
-        'Github', max_length=200, blank=True, default='')
+        'Github', max_length=200, blank=True, default='',
+        help_text='Format: https://github.com/upkoding')
     gitlab = models.URLField(
-        'GitLab', max_length=200, blank=True, default='')
+        'GitLab', max_length=200, blank=True, default='',
+        help_text='Format: https://gitlab.com/upkoding')
     bitbucket = models.URLField(
-        'Bitbucket', max_length=200, blank=True, default='')
+        'Bitbucket', max_length=200, blank=True, default='',
+        help_text='Format: https://bitbucket.org/upkoding/')
     linkedin = models.URLField(
-        'LinkedIn', max_length=200, blank=True, default='')
+        'LinkedIn', max_length=200, blank=True, default='',
+        help_text='Format: https://www.linkedin.com/in/upkoding/')
     facebook = models.URLField(
-        'Facebook', max_length=200, blank=True, default='')
+        'Facebook', max_length=200, blank=True, default='',
+        help_text='Format: https://www.facebook.com/upkoding')
     twitter = models.URLField(
-        'Twitter', max_length=200, blank=True, default='')
+        'Twitter', max_length=200, blank=True, default='',
+        help_text='Format: https://twitter.com/upkoding')
     youtube = models.URLField(
-        'Youtube', max_length=200, blank=True, default='')
+        'Youtube', max_length=200, blank=True, default='',
+        help_text='Format: https://www.youtube.com/c/upkoding')
     website = models.URLField(
-        'Website', max_length=200, blank=True, default='')
+        'Website', max_length=200, blank=True, default='',
+        help_text='Format: https://www.upkoding.com')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

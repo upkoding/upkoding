@@ -9,10 +9,13 @@
 {% block breadcrumb %}Edit Profil{% endblock %}
 
 {% block form %}
-{% if verify_email %}
-<div class="alert alert-warning mb-3" role="alert">
-    <div class="mb-2">Alamat email <strong>{{ user.email }}</strong> perlu diverifikasi.</div>
-    <input class="btn btn-success" type="button" value="Verifikasi sekarang">
+{% if not user.is_email_verified %}
+<div class="alert alert-warning border-warning mb-3" role="alert">
+    <form method="POST" action="?email_verification=1">
+        {% csrf_token %}
+        <div class="mb-2">Alamat email <strong>{{ user.email }}</strong> perlu diverifikasi.</div>
+        <input class="btn btn-success" type="submit" value="Verifikasi Sekarang">
+    </form>
 </div>
 {% endif %}
 

@@ -49,7 +49,8 @@ class ProfileForm(BootstrapFormErrorMixin, forms.ModelForm):
                              validators=USERNAME_VALIDATORS,
                              help_text="Minimum 3 karakter (huruf, angka dan _ diperbolehkan)")
     email = forms.EmailField(required=True,
-                             label='Alamat Email *')
+                             label='Alamat Email *',
+                             help_text="Email untuk notifikasi, pengumuman dan transaksi lainnya")
     first_name = forms.CharField(required=True,
                                  label='Nama *')
     description = forms.CharField(required=True,

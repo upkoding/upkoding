@@ -23,7 +23,7 @@ def user_details(strategy, details, backend, user=None, *args, **kwargs):
     if strategy.setting('NO_DEFAULT_PROTECTED_USER_FIELDS') is True:
         protected = ()
     else:
-        protected = ('username', 'id', 'pk', 'email', 'password',
+        protected = ('username', 'id', 'pk', 'email', 'verified_email', 'password',
                      'is_active', 'is_staff', 'is_superuser',)
 
     protected = protected + \
