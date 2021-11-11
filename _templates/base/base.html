@@ -95,7 +95,10 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="https://github.com/upkoding/upkoding" target="_blank"
-                                rel="noopener noreferrer">Github</a>
+                                rel="noopener noreferrer">GitHub</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'base:contributors' %}">Kontributor</a>
                         </li>
                         {% if user.is_authenticated and user.is_staff %}
                         <li class="nav-item">

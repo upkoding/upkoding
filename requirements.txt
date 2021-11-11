@@ -95,6 +95,8 @@ pytz==2021.3
     #   django
     #   stream-django
     #   stream-python
+pyyaml==6.0
+    # via -r requirements.in
 requests==2.26.0
     # via
     #   django-anymail

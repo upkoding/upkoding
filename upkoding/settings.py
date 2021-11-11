@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
-import json
+import yaml
 from pathlib import Path
 import dj_database_url
 import sentry_sdk
@@ -378,9 +378,13 @@ MARKDOWNIFY = {
     }
 }
 
-PRICING_VERSION = 'v1'
-with open(BASE_DIR / f'upkoding/pricing/{PRICING_VERSION}.json') as pf:
-    PRICING = json.load(pf)
+with open(BASE_DIR / f'upkoding/pricing/v1.yaml') as file:
+    PRICING = yaml.load(file, Loader=yaml.FullLoader)
+
+with open(BASE_DIR / f'contributors.yaml') as file:
+    CONTRIBUTORS = yaml.load(file, Loader=yaml.FullLoader)
+
+print(CONTRIBUTORS)
 
 MIDTRANS_IS_PRODUCTION = os.getenv('MIDTRANS_IS_PRODUCTION', 'False') == 'True'
 MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')

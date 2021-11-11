@@ -3,6 +3,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from stream_django.enrich import Enrich
+from django.conf import settings
 
 from upkoding.activity_feed import feed_manager
 from projects.models import Project
@@ -38,3 +39,12 @@ class Index(TemplateView):
             except Exception as e:
                 return HttpResponse()
         return super().get(request)
+
+
+class Contributors(TemplateView):
+    template_name = 'base/contributors.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['contributors'] = settings.CONTRIBUTORS
+        return data

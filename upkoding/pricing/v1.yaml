@@ -1,0 +1,6 @@
+- id: PRO30_BETA
+  name: Pro Access
+  access_days: 30
+  price: 0
+  price_display: GRATIS
+  description: Akses tidak terbatas selama 30 hari, bisa diperpanjang dan gratis selama Beta.

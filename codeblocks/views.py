@@ -1,16 +1,26 @@
 import json
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from .models import CodeBlock
 from .forms import CodeBlockTesterAdminForm
 
-class AdminCodeBlockTester(View):
+
+class AdminCodeBlockTester(UserPassesTestMixin, View):
     template_name = 'admin/codeblocks/code_block_tester.html'
     default_context = {
         'title': 'Code Block Tester',
         'has_permission': True,
     }
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        return HttpResponseRedirect(reverse('admin:index'))
 
     def get(self, request):
         codeblock = CodeBlock()

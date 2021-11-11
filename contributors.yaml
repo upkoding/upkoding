@@ -1,0 +1,27 @@
+- name: Eka Putra
+  url: https://github.com/ekaputra07
+  contribs:
+    - code
+    - content
+
+- name: Rizky Kurniawan
+  url: https://github.com/rizkyrizky
+  contribs:
+    - code
+
+- name: Ngapa
+  url: https://github.com/Ngapa
+  contribs:
+    - code
+
+- name: Nazir Bahrul Ulum
+  url: https://github.com/devnazir
+  contribs:
+    - code
+    - content
+
+- name: Jaeger
+  url: /coders/jeagertester/
+  contribs:
+    - bug-report
+    - security
