@@ -20,7 +20,7 @@
     - code
     - content
 
-- name: Jaeger
+- name: Jeager Coder
   url: /coders/jeagertester/
   contribs:
     - bug-report
