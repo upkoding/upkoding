@@ -55,7 +55,6 @@ class IndexView(LoginRequiredMixin, TemplateView):
         data['projects'] = UserProject.objects.filter(user=user) \
             .order_by('-updated')[:10]
 
-
         return data
 
     def get(self, request):
@@ -72,13 +71,16 @@ class IndexView(LoginRequiredMixin, TemplateView):
                 return render(request, 'account/_notifications_card_content.html', {'notifications': enriched})
         return super().get(request)
 
+
 class ProfileFormView(LoginRequiredMixin, View):
-    def __render(self, request, form,):
-        return render(request, 'account/form_profile.html', {'form': form})
+    def __render(self, request, form, **kwargs):
+        return render(request, 'account/form_profile.html', {'form': form, **kwargs})
 
     def get(self, request):
-        form = ProfileForm(instance=request.user)
-        return self.__render(request, form)
+        user = request.user
+        form = ProfileForm(instance=user)
+        verify_email = user.is_email_verification_required()
+        return self.__render(request, form, verify_email=verify_email)
 
     def post(self, request):
         form = ProfileForm(request.POST, request.FILES, instance=request.user)

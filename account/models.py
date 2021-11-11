@@ -7,6 +7,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.humanize.templatetags import humanize
 from django.conf import settings
+from social_django.models import UserSocialAuth
 
 from sorl.thumbnail import ImageField, get_thumbnail
 from .managers import UserSettingManager, USER_SETTING_TYPES, USER_SETTING_TYPE_BOOL
@@ -82,6 +83,18 @@ class User(AbstractUser):
         except Exception:
             return False
 
+    def is_email_verification_required(self):
+        """
+        To avoid sending email to wrong address we need to verify them.
+        If user.email same as UserSocialAuth.uid, no need verification.
+        """
+        if not self.email:
+            return False
+
+        auths = UserSocialAuth.objects.filter(user=self,
+                                              uid=self.email.lower())
+        return len(auths) == 0
+
     @staticmethod
     def get_active_staffs(exclude_user=None):
         qs = User.objects.filter(is_active=True, is_staff=True)
@@ -91,21 +104,21 @@ class User(AbstractUser):
 class Link(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='link')
-    github = models.CharField(
+    github = models.URLField(
         'Github', max_length=200, blank=True, default='')
-    gitlab = models.CharField(
+    gitlab = models.URLField(
         'GitLab', max_length=200, blank=True, default='')
-    bitbucket = models.CharField(
+    bitbucket = models.URLField(
         'Bitbucket', max_length=200, blank=True, default='')
-    linkedin = models.CharField(
+    linkedin = models.URLField(
         'LinkedIn', max_length=200, blank=True, default='')
-    facebook = models.CharField(
+    facebook = models.URLField(
         'Facebook', max_length=200, blank=True, default='')
-    twitter = models.CharField(
+    twitter = models.URLField(
         'Twitter', max_length=200, blank=True, default='')
-    youtube = models.CharField(
+    youtube = models.URLField(
         'Youtube', max_length=200, blank=True, default='')
-    website = models.CharField(
+    website = models.URLField(
         'Website', max_length=200, blank=True, default='')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

@@ -384,8 +384,6 @@ with open(BASE_DIR / f'upkoding/pricing/v1.yaml') as file:
 with open(BASE_DIR / f'contributors.yaml') as file:
     CONTRIBUTORS = yaml.load(file, Loader=yaml.FullLoader)
 
-print(CONTRIBUTORS)
-
 MIDTRANS_IS_PRODUCTION = os.getenv('MIDTRANS_IS_PRODUCTION', 'False') == 'True'
 MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
 MIDTRANS_CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')

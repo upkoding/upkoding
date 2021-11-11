@@ -23,7 +23,24 @@ def get_form_error(form, field='__all__'):
     return message
 
 
-class ProfileForm(forms.ModelForm):
+class BootstrapFormErrorMixin:
+
+    def is_valid(self):
+        """
+        Add bootstrap `is-invalid` class to form input when its invalid.
+        """
+        result = super().is_valid()
+        fields = self.fields
+        errors = self.errors
+        for field in errors:
+            attrs = fields[field].widget.attrs
+            attrs.update(
+                {'class': attrs.get('class', '') + ' is-invalid'}
+            )
+        return result
+
+
+class ProfileForm(BootstrapFormErrorMixin, forms.ModelForm):
     """
     Customized profile form to match Bootstrap 5 styles.
     """
@@ -44,22 +61,20 @@ class ProfileForm(forms.ModelForm):
         fields = ['avatar', 'username', 'email',
                   'first_name', 'description', 'time_zone']
 
-    def is_valid(self):
+    def clean_email(self):
         """
-        Add bootstrap `is-invalid` class to form input when its invalid.
+        Prevent user saving the same email with others.
         """
-        result = super().is_valid()
-        fields = self.fields
-        errors = self.errors
-        for field in errors:
-            attrs = fields[field].widget.attrs
-            attrs.update(
-                {'class': attrs.get('class', '') + ' is-invalid'}
-            )
-        return result
+        user = self.instance
+        email = self.cleaned_data.get('email')
+        other_users = User.objects.filter(email=email).exclude(pk=user.pk)
+        if len(other_users) != 0:
+            raise forms.ValidationError(
+                'Email ini sudah terdaftar dengan pengguna lain')
+        return email
 
 
-class LinkForm(forms.ModelForm):
+class LinkForm(BootstrapFormErrorMixin, forms.ModelForm):
     class Meta:
         model = Link
         exclude = ('user',)
@@ -154,7 +169,6 @@ class ProAccessPurchaseForm(forms.Form):
             # TODO: remove this after beta
             if is_beta:
                 pro_access_purchase.set_gifted()
-
 
 
 class ProAccessPurchaseActionForm(forms.Form):
