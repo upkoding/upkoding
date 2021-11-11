@@ -27,8 +27,9 @@ class Command(BaseCommand):
         for cmd in commands:
             name = cmd.get('name')
             try:
-                requests.post(COMMANDS_API_URL,
-                              headers=BOT_REQUEST_HEADERS, json=cmd)
+                resp = requests.post(COMMANDS_API_URL,
+                                     headers=BOT_REQUEST_HEADERS, json=cmd)
+                resp.raise_for_status()
                 self.stdout.write(self.style.SUCCESS(
                     f'Command `{name}` registered.'))
             except Exception as e:
