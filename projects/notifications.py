@@ -62,7 +62,7 @@ class UserProjectEventNotification:
             notify.append(feed_manager.get_notification_feed(staff.pk))
 
             # check user notification settings
-            if UserSetting.objects.email_notify_project_review_request(staff):
+            if staff.is_email_verified() and UserSetting.objects.email_notify_project_review_request(staff):
                 self.context.update({'to_user': staff})
                 msg = render_to_string(tpl, self.context)
                 subject = f'[Proyek] Permintaan review dari @{self.event_user.username}'
@@ -95,7 +95,7 @@ class UserProjectEventNotification:
             notify.append(feed_manager.get_notification_feed(to_user.pk))
 
             # check user notification settings
-            if UserSetting.objects.email_notify_project_message(to_user):
+            if to_user.is_email_verified() and UserSetting.objects.email_notify_project_message(to_user):
                 self.context.update({'to_user': to_user})
                 msg = render_to_string(tpl, self.context)
                 subject = f'[Proyek] Pesan dari @{self.event_user.username}'
@@ -129,7 +129,7 @@ class UserProjectEventNotification:
         feed_manager.add_activity(self.user_feed, activity)
 
         # check user notification settings
-        if not self.is_sync and UserSetting.objects.email_notify_project_approved(user_project_owner):
+        if not self.is_sync and user_project_owner.is_email_verified() and UserSetting.objects.email_notify_project_approved(user_project_owner):
             self.context.update({'to_user': user_project_owner})
             msg = render_to_string(tpl, self.context)
             subject = '[Proyek] Proyek kamu telah disetujui!'
@@ -151,7 +151,7 @@ class UserProjectEventNotification:
         feed_manager.add_activity(self.user_feed, activity)
 
         # check user notification settings
-        if not self.is_sync and UserSetting.objects.email_notify_project_disapproved(user_project_owner):
+        if not self.is_sync and user_project_owner.is_email_verified() and UserSetting.objects.email_notify_project_disapproved(user_project_owner):
             self.context.update({'to_user': user_project_owner})
             msg = render_to_string(tpl, self.context)
             subject = '[Proyek] Status proyek kamu diralat'

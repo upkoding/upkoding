@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.humanize.templatetags import humanize
 from django.conf import settings
-from social_django.models import UserSocialAuth
+
 
 from sorl.thumbnail import ImageField, get_thumbnail
 from .managers import UserSettingManager, USER_SETTING_TYPES, USER_SETTING_TYPE_BOOL
@@ -90,10 +90,6 @@ class User(AbstractUser):
         if not self.email:
             return True
         return self.email.lower() == self.verified_email.lower()
-
-        # auths = UserSocialAuth.objects.filter(user=self,
-        #                                       uid=self.email.lower())
-        # return len(auths) == 0
 
     @staticmethod
     def get_active_staffs(exclude_user=None):

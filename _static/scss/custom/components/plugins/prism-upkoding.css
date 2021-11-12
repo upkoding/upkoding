@@ -38,7 +38,8 @@ pre[class*="language-"] {
   overflow: auto;
 }
 
-.project-description pre[class*="language-"] {
+.project-description pre[class*="language-"],
+.project-timeline pre[class*="language-"] {
   margin: 1em auto;
 }
 

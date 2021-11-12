@@ -10,6 +10,12 @@
 {% block form %}
 <form method="POST">
     <p class="text-muted h6 mb-3"><i class="material-icons-x mr-1">email</i> Kirimkan notifikasi via email tentang:</p>
+    {% if not user.is_email_verified %}
+    <div class="alert alert-warning border-warning mb-3" role="alert">
+        Kami hanya mengirimkan notifikasi ke email yang terverifikasi, <a href="{% url 'account:profile' %}">verifikasi
+            disini</a>.
+    </div>
+    {% endif %}
     <div>
         {% csrf_token %}
         {% for field in form.visible_fields %}

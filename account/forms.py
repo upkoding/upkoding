@@ -136,6 +136,11 @@ class ProAccessPurchaseForm(forms.Form):
         cleaned_data = super().clean()
         plan_id = cleaned_data.get('plan_id')
 
+        # make sure user's email is verified
+        if not self.user.is_email_verified():
+            raise forms.ValidationError(
+                'Maaf, email kamu belum terverifikasi!')
+
         # make sure plan ID is valid
         if not pricing.plan_id_is_valid(plan_id):
             raise forms.ValidationError(

@@ -50,6 +50,7 @@ def verifikasi(command, data):
     username, token = tokens
     try:
         user = User.objects.get(username=username)
+        
         # check token
         user_saved_token = UserSetting.objects.get_setting(
             user=user, key='discord_access_token')
