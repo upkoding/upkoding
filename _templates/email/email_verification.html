@@ -1,3 +1,18 @@
-<h1>You are almost there, {{ user.username }}!</h1><br>
-<h2>Please click <a href="{{ link }}">here</a> to confirm your account</h2>
-<h2>The token expires on {{ expiry|time:"TIME_FORMAT" }}</h2>
+<p>Halo {{ user.username }}!
+    <br><br>
+    Silahkan klik link berikut ini untuk memverifikasi email kamu:
+    <br>
+    <a href="{{ link }}">{{ link }}</a>
+</p>
+<p>Link diatas akan kadaluarsa 1 jam setelah kamu menerima email ini.</p>
+<p><small>
+        Kamu menerima email ini karena email kamu terdaftar di https://www.upkoding.com (platform belajar dan latihan
+        coding
+        Indonesia).<br>
+        Apabila kamu merasa tidak punya akun di UpKoding, silahkan abaikan email ini atau laporkan ke info@upkoding.com
+    </small>
+</p>
+<p>
+    Team UpKoding<br>
+    <a href="https://www.upkoding.com">https://www.upkoding.com</a>
+</p>

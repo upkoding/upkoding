@@ -293,7 +293,7 @@ EMAIL_FROM_ADDRESS = DEFAULT_EMAIL_FROM
 EMAIL_MAIL_SUBJECT = 'Verifikasi Email'
 EMAIL_MAIL_HTML = 'email/email_verification.html'
 EMAIL_MAIL_PLAIN = 'email/email_verification.txt'
-EMAIL_TOKEN_LIFE = 60 * 60 * 24 # 24hr
+EMAIL_TOKEN_LIFE = 60 * 60 # 1hr
 EMAIL_PAGE_TEMPLATE = 'email/email_verification_confirm.html'
 EMAIL_PAGE_DOMAIN = SITE_DOMAIN
 

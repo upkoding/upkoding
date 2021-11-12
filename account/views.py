@@ -89,7 +89,7 @@ class ProfileFormView(LoginRequiredMixin, View):
         if email_verification_request:
             try:
                 send_verification_email(user)
-                messages.info(request, f'Verifikasi email sudah dikirim ke {user.email}.',
+                messages.info(request, f'Email verifikasi sudah dikirimkan ke {user.email}.',
                               extra_tags='success')
             except Exception:
                 messages.info(request, f'Gagal mengirimkan email verifikasi, silahkan coba lagi setelah beberapa saat.',
