@@ -29,8 +29,10 @@ if settings.MAINTENANCE_MODE:
 else:
     urlpatterns = [
         path('admin/', admin.site.urls),
-        path('admin/codeblocks/tester', AdminCodeBlockTester.as_view(), name='admin_codeblocks_tester'),
+        path('admin/codeblocks/tester', AdminCodeBlockTester.as_view(),
+             name='admin_codeblocks_tester'),
         path('account/', include('account.urls', namespace='account')),
+        path('email-verification/', include('django_email_verification.urls')),
         path('challenges/', include('projects.urls', namespace='projects')),
         path('roadmaps/', include('roadmaps.urls', namespace='roadmaps')),
         path('coders/', include('coders.urls', namespace='coders')),

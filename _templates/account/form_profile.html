@@ -9,6 +9,16 @@
 {% block breadcrumb %}Edit Profil{% endblock %}
 
 {% block form %}
+{% if not user.is_email_verified %}
+<div class="alert alert-warning border-warning mb-3" role="alert">
+    <form method="POST" action="?email_verification=1">
+        {% csrf_token %}
+        <div class="mb-2">Demi keamanan dan kenyamanan bersama, silahkan verifikasi email <strong>{{ user.email}}</strong></div>
+        <input class="btn btn-success" type="submit" value="Verifikasi Sekarang">
+    </form>
+</div>
+{% endif %}
+
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="media mb-4">

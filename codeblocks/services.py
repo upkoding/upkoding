@@ -60,6 +60,7 @@ class Judge0:
                 headers=self.api_headers,
                 params=self.api_querystring
             )
+            resp.raise_for_status()
             return resp.json(), None
         except Exception as e:
             return None, e

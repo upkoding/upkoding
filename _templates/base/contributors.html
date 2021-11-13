@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% load base %}
+
+{% block meta %}
+{% meta title='Kontributor' desc='Developer yang berkontribusi pada pengembangan UpKoding.'%}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="material-icons text-info mr-2 h1">manage_accounts</i>
+                    <h1 class="h1 mb-0">Kontributor</h1>
+                </div>
+                <p class="lead">
+                    Terima kasih telah membuat upkoding lebih aman dan bermanfaat.
+                </p>
+            </div>
+            <hr>
+            <div class="tab-content pt-2">
+                <div class="tab-pane fade show active" id="members" role="tabpanel"
+                    data-filter-list="content-list-body">
+                    <div class="content-list">
+                        <div class="content-list-body row">
+
+                            {% for contributor in contributors %}
+                            <div class="col-4 mb-2">
+                                <a class="media media-member" href="{{ contributor.url }}">
+                                    <span class="material-icons-x text-info" style="font-size: 4rem;">face</span>
+                                    <div class="media-body">
+                                        <h6 class="mb-0" data-filter-by="text">{{ contributor.name }}</h6>
+                                        <span data-filter-by="text" class="text-body">
+                                            {% for c in contributor.contribs %}
+                                            <span class="badge badge-secondary">{{ c }}</span>
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                    <!--end of content list-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

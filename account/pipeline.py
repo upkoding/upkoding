@@ -37,6 +37,14 @@ def user_details(strategy, details, backend, user=None, *args, **kwargs):
     for name, value in details.items():
         # Convert to existing user field if mapping exists
         name = field_mapping.get(name, name)
+
+        # set verified_email <- email since 3rd party app already verified them.
+        # email is protected, so we need to check it before continued
+        if name == 'email':
+            setattr(user, 'verified_email', value)
+            changed = True
+
+        # set non-protected field only
         if value is None or not hasattr(user, name) or name in protected:
             continue
 

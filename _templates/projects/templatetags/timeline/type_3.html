@@ -32,7 +32,7 @@
         </li>
         {% endif %}
         {% if user_project.note %}
-        <li class="list-group-item bg-light text-dark">{{ user_project.note|markdownify }}</li>
+        <li class="list-group-item bg-light text-dark">{{ user_project.note|markdownify:"codes" }}</li>
         {% endif %}
     </ul>
     </p>

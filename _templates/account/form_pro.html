@@ -14,7 +14,8 @@
         {% if pro_access %}
         <div>
             {% if pro_access.is_active %}
-            <h4 class="text-success"><i class="material-icons-x">sentiment_very_satisfied</i> Kamu memiliki Pro Access!</h4>
+            <h4 class="text-success"><i class="material-icons-x">sentiment_very_satisfied</i> Kamu memiliki Pro Access!
+            </h4>
             {% else %}
             <h4 class="text-danger"><i class="material-icons-x">sentiment_dissatisfied</i> Pro Access kadaluarsa.</h4>
             {% endif %}
@@ -24,25 +25,35 @@
         <p class="card-text text-muted mt-4 mb-2">Perpanjang dengan memilih durasi di bawah ini:</p>
 
         {% else %}
-        <h4 class="card-title text-danger"><i class="material-icons-x">heart_broken</i> Kamu tidak memiliki Pro Access.</h4>
+        <h4 class="card-title text-danger"><i class="material-icons-x">heart_broken</i> Kamu tidak memiliki Pro Access.
+        </h4>
         <p class="card-text text-muted mt-4 mb-2">Pilih durasi akses yang kamu inginkan:</p>
         {% endif %}
     </div>
 
     <div class="col col-lg-12 text-center">
+        {% if not user.is_email_verified %}
+        <div class="alert alert-warning border-warning mb-3" role="alert">
+            Silahkan verifikasi email kamu terlebih dahulu sebelum melanjutkan. 
+            <a href="{% url 'account:profile' %}">verifikasi disini</a>.
+        </div>
+        {% endif %}
         <form method="POST">
             <div class="input-group">
                 {% csrf_token %}
-                <select class="custom-select" aria-label="Pilih durasi akses" name="plan_id">
+                <select class="custom-select" aria-label="Pilih durasi akses" 
+                name="plan_id" 
+                {% if not user.is_email_verified %}disabled{% endif %}>
                     {% for plan in plans %}
-                    <option value="{{plan.id}}" {% if plan.id == selected_plan %} selected {% endif %}>
+                    <option value="{{plan.id}}" {% if plan.id == selected_plan %}selected{% endif %}>
                         {{plan.label}}
                     </option>
                     {% endfor %}
                 </select>
                 <div class="input-group-append">
                     <input type="submit" class="btn btn-primary"
-                        value="{% if pro_access %}Perpanjang{% else %}Order{% endif %}" />
+                        value="{% if pro_access %}Perpanjang{% else %}Order{% endif %}" 
+                        {% if not user.is_email_verified%}disabled{% endif %} />
                 </div>
             </div>
         </form>

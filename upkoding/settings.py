@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
-import json
+import yaml
 from pathlib import Path
 import dj_database_url
 import sentry_sdk
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # 'forum.apps.ForumConfig',
 
     # 3rd party apps
+    'django_email_verification',
     'whitenoise.runserver_nostatic',
     'social_django',
     'sorl.thumbnail',
@@ -269,7 +270,8 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 }
 SOCIAL_AUTH_FACEBOOK_API_VERSION = '2.10'
 
-SITE_DOMAIN = os.getenv('SITE_DOMAIN')
+# Site
+SITE_DOMAIN = os.getenv('SITE_DOMAIN', 'http://localhost:8000')
 POINT_UNIT = 'UP'
 DEFAULT_METADATA = {
     'title': 'UpKoding',
@@ -281,6 +283,24 @@ GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
 STATUSPAGE_URL = 'https://stats.uptimerobot.com/ElMQmFWXKD'
 MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
 SHOW_ROADMAPS = os.getenv('SHOW_ROADMAPS', 'False') == 'True'
+
+# Email verification
+def email_verified_callback(user):
+    user.verified_email = user.email
+
+EMAIL_VERIFIED_CALLBACK = email_verified_callback
+EMAIL_FROM_ADDRESS = DEFAULT_EMAIL_FROM
+EMAIL_MAIL_SUBJECT = 'Verifikasi Email'
+EMAIL_MAIL_HTML = 'email/email_verification.html'
+EMAIL_MAIL_PLAIN = 'email/email_verification.txt'
+EMAIL_TOKEN_LIFE = 60 * 60 # 1hr
+EMAIL_PAGE_TEMPLATE = 'email/email_verification_confirm.html'
+EMAIL_PAGE_DOMAIN = SITE_DOMAIN
+
+# MidTrans
+MIDTRANS_IS_PRODUCTION = os.getenv('MIDTRANS_IS_PRODUCTION', 'False') == 'True'
+MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
+MIDTRANS_CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
 
 MDEDITOR_CONFIGS = {
     'default': {
@@ -314,6 +334,33 @@ MDEDITOR_CONFIGS = {
 
 MARKDOWNIFY = {
     'default': {
+        'WHITELIST_TAGS': [
+            'b',
+            'strong',
+            'p'
+        ]
+    },
+    'codes': {
+        'WHITELIST_TAGS': [
+            'b',
+            'strong',
+            'p',
+            'code',
+            'pre',
+            'ul',
+            'li',
+            'ol',
+            'hr',
+        ],
+        'WHITELIST_ATTRS': [
+            'class',
+        ],
+        'MARKDOWN_EXTENSIONS': [
+            'markdown.extensions.fenced_code',
+            'markdown.extensions.extra',
+        ]
+    },
+    'full': {
         'WHITELIST_TAGS': [
             'a',
             'abbr',
@@ -351,13 +398,11 @@ MARKDOWNIFY = {
     }
 }
 
-PRICING_VERSION = 'v1'
-with open(BASE_DIR / f'upkoding/pricing/{PRICING_VERSION}.json') as pf:
-    PRICING = json.load(pf)
+with open(BASE_DIR / f'upkoding/pricing/v1.yaml') as file:
+    PRICING = yaml.load(file, Loader=yaml.FullLoader)
 
-MIDTRANS_IS_PRODUCTION = os.getenv('MIDTRANS_IS_PRODUCTION', 'False') == 'True'
-MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
-MIDTRANS_CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
+with open(BASE_DIR / f'contributors.yaml') as file:
+    CONTRIBUTORS = yaml.load(file, Loader=yaml.FullLoader)
 
 try:
     from upkoding.settings_local import *

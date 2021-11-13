@@ -23,27 +23,7 @@ def get_form_error(form, field='__all__'):
     return message
 
 
-class ProfileForm(forms.ModelForm):
-    """
-    Customized profile form to match Bootstrap 5 styles.
-    """
-    username = UsernameField(required=True,
-                             label='Username *',
-                             validators=USERNAME_VALIDATORS,
-                             help_text="Minimum 3 karakter (huruf, angka dan _ diperbolehkan)")
-    email = forms.EmailField(required=True,
-                             label='Alamat Email *')
-    first_name = forms.CharField(required=True,
-                                 label='Nama *')
-    description = forms.CharField(required=True,
-                                  label='Tentang *',
-                                  help_text="Format = Markdown",
-                                  widget=forms.Textarea())
-
-    class Meta:
-        model = User
-        fields = ['avatar', 'username', 'email',
-                  'first_name', 'description', 'time_zone']
+class BootstrapFormErrorMixin:
 
     def is_valid(self):
         """
@@ -60,7 +40,42 @@ class ProfileForm(forms.ModelForm):
         return result
 
 
-class LinkForm(forms.ModelForm):
+class ProfileForm(BootstrapFormErrorMixin, forms.ModelForm):
+    """
+    Customized profile form to match Bootstrap 5 styles.
+    """
+    username = UsernameField(required=True,
+                             label='Username *',
+                             validators=USERNAME_VALIDATORS,
+                             help_text="Minimum 3 karakter (huruf, angka dan _ diperbolehkan)")
+    email = forms.EmailField(required=True,
+                             label='Alamat Email *',
+                             help_text="Email untuk notifikasi, pengumuman dan transaksi lainnya")
+    first_name = forms.CharField(required=True,
+                                 label='Nama *')
+    description = forms.CharField(required=True,
+                                  label='Tentang *',
+                                  widget=forms.Textarea())
+
+    class Meta:
+        model = User
+        fields = ['avatar', 'username', 'email',
+                  'first_name', 'description', 'time_zone']
+
+    def clean_email(self):
+        """
+        Prevent user saving the same email with others.
+        """
+        user = self.instance
+        email = self.cleaned_data.get('email')
+        other_users = User.objects.filter(email=email).exclude(pk=user.pk)
+        if len(other_users) != 0:
+            raise forms.ValidationError(
+                'Email ini sudah terdaftar dengan pengguna lain')
+        return email
+
+
+class LinkForm(BootstrapFormErrorMixin, forms.ModelForm):
     class Meta:
         model = Link
         exclude = ('user',)
@@ -121,6 +136,11 @@ class ProAccessPurchaseForm(forms.Form):
         cleaned_data = super().clean()
         plan_id = cleaned_data.get('plan_id')
 
+        # make sure user's email is verified
+        if not self.user.is_email_verified():
+            raise forms.ValidationError(
+                'Maaf, email kamu belum terverifikasi!')
+
         # make sure plan ID is valid
         if not pricing.plan_id_is_valid(plan_id):
             raise forms.ValidationError(
@@ -155,7 +175,6 @@ class ProAccessPurchaseForm(forms.Form):
             # TODO: remove this after beta
             if is_beta:
                 pro_access_purchase.set_gifted()
-
 
 
 class ProAccessPurchaseActionForm(forms.Form):

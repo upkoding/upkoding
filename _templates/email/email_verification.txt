@@ -1,0 +1,14 @@
+Halo {{ user.username }}!
+
+Silahkan klik link berikut ini untuk memverifikasi email kamu:
+{{ link }}
+
+Link diatas akan kadaluarsa 1 jam setelah kamu menerima email ini.
+
+--
+Kamu menerima email ini karena email kamu terdaftar di https://www.upkoding.com (platform belajar dan latihan coding Indonesia).
+Apabila kamu merasa tidak punya akun di UpKoding, silahkan abaikan email ini atau laporkan ke info@upkoding.com
+
+--
+Team UpKoding
+https://www.upkoding.com

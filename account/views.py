@@ -11,6 +11,7 @@ from django.views.generic import View, TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django_email_verification import send_email as send_verification_email
 from stream_django.enrich import Enrich
 from upkoding.activity_feed import feed_manager
 
@@ -55,7 +56,6 @@ class IndexView(LoginRequiredMixin, TemplateView):
         data['projects'] = UserProject.objects.filter(user=user) \
             .order_by('-updated')[:10]
 
-
         return data
 
     def get(self, request):
@@ -72,22 +72,37 @@ class IndexView(LoginRequiredMixin, TemplateView):
                 return render(request, 'account/_notifications_card_content.html', {'notifications': enriched})
         return super().get(request)
 
+
 class ProfileFormView(LoginRequiredMixin, View):
-    def __render(self, request, form,):
-        return render(request, 'account/form_profile.html', {'form': form})
+    def __render(self, request, form, **kwargs):
+        return render(request, 'account/form_profile.html', {'form': form, **kwargs})
 
     def get(self, request):
-        form = ProfileForm(instance=request.user)
+        user = request.user
+        form = ProfileForm(instance=user)
         return self.__render(request, form)
 
     def post(self, request):
-        form = ProfileForm(request.POST, request.FILES, instance=request.user)
-        if not form.is_valid():
-            return self.__render(request, form)
+        user = request.user
 
-        form.save()
-        messages.info(request, 'Profil berhasil disimpan!',
-                      extra_tags='success')
+        email_verification_request = request.GET.get('email_verification') == '1'
+        if email_verification_request:
+            try:
+                send_verification_email(user)
+                messages.info(request, f'Email verifikasi sudah dikirimkan ke {user.email}.',
+                              extra_tags='success')
+            except Exception:
+                messages.info(request, f'Gagal mengirimkan email verifikasi, silahkan coba lagi setelah beberapa saat.',
+                              extra_tags='danger')
+
+        else:
+            form = ProfileForm(request.POST, request.FILES, instance=user)
+            if not form.is_valid():
+                return self.__render(request, form)
+
+            form.save()
+            messages.info(request, 'Profil berhasil disimpan!',
+                          extra_tags='success')
 
         return HttpResponseRedirect(reverse('account:profile'))
 
