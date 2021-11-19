@@ -10,6 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         pages = Paginator(User.objects.all(), per_page=100)
+
         for p in range(1, pages.num_pages + 1):
             users = pages.page(p)
             for user in users:
@@ -23,8 +24,12 @@ class Command(BaseCommand):
                     auth = auths[0]
                     # uid == current email OR uid is not an email <-- mark verified
                     if ('@' in auth.uid and auth.uid == current_email) or (not '@' in auth.uid):
-                        user.verified_email = current_email
-                        user.save()
+                        if current_email != user.verified_email:
+                            self.stdout.write(self.style.WARNING(
+                                f'[{user_pk}] {current_email} {user.verified_email} not verified'))
+                            user.verified_email = current_email
+                            user.save()
+                        pass
                     else:
                         self.stdout.write(self.style.ERROR(
                             f'[{user_pk}] {current_email} not verified'))
@@ -32,8 +37,11 @@ class Command(BaseCommand):
                     verified = False
                     for auth in auths:
                         if auth.uid == current_email:
-                            user.verified_email = current_email
-                            user.save()
+                            if current_email != user.verified_email:
+                                self.stdout.write(self.style.WARNING(
+                                    f'[{user_pk}] {current_email} {user.verified_email} not verified'))
+                                user.verified_email = current_email
+                                user.save()
                             verified = True
                             break
                     if verified:

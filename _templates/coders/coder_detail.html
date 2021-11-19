@@ -16,11 +16,14 @@
                     <div class="media-body ml-3">
                         <h1 class="mb-0">{{ object.get_display_name|title }}</h1>
                         <p class="lead">
-                            @{{ object.username }}
+                            {{ object.username }}
                             {% if object.point > 0 %}
                             <span class="badge badge-secondary">
                                 {{ object.get_point_display }}
                             </span>
+                            {% endif %}
+                            {% if user.is_authenticated and object == user %}
+                            - <a href="{% url 'account:profile' %}">edit</a>
                             {% endif %}
                         </p>
                     </div>
