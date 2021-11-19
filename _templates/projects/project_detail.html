@@ -13,7 +13,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Tantangan</a></li>
             {% block breadcrumb_item %}
-            <li class="breadcrumb-item active" aria-current="page">{{ object.title|title }}
+            <li class="breadcrumb-item active" aria-current="page">{{ object.title }}
                 {% if object.is_premium %}
                 <span class="badge badge-warning ml-1 mt-1">PRO</span>
                 {% endif %}
@@ -51,7 +51,7 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-11 col-xl-10">
                             <div class="page-header">
-                                <h1>{{ object.title|title }}</h1>
+                                <h1>{{ object.title }}</h1>
                                 <p class="lead mb-0">{{ object.description_short }}</p>
                             </div>
 

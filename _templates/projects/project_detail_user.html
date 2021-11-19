@@ -6,13 +6,13 @@
 
 
 {% block meta %}
-{% meta object=object title=user_project_owner.get_display_name|add:" - "|add:object.title|title %}
+{% meta object=object title=user_project_owner.get_display_name|add:" - "|add:object.title %}
 {% endblock %}
 
 {% block breadcrumb_item %}
 <li class="breadcrumb-item">
     <a href="{{ object.get_absolute_url }}">
-        {{ object.title|title }}
+        {{ object.title }}
         {% if object.is_premium %}
         <span class="badge badge-warning mt-1">PRO</span>
         {% endif %}

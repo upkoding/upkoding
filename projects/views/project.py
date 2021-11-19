@@ -21,7 +21,7 @@ log = logging.getLogger(__file__)
 
 
 class ProjectList(ListView):
-    paginate_by = 15
+    paginate_by = 18
 
     def get_queryset(self):
         search_query = self.request.GET.get('s')
@@ -36,9 +36,15 @@ class ProjectList(ListView):
                 return Project.objects.active().filter(level=Project.LEVEL_PROJECT).order_by('-pk', 'status')
             elif search_query == 'pricing:pro':
                 return Project.objects.active().filter(is_premium=True)
+            elif search_query == 'status:solved':
+                return Project.objects.solved(self.request.user)
+            elif search_query == 'status:unsolved':
+                return Project.objects.unsolved(self.request.user)
+            elif search_query == 'status:not-taken':
+                return Project.objects.not_taken(self.request.user)
             else:
                 return Project.objects.search(search_query)
-        return Project.objects.active().order_by('-pk', 'level')
+        return Project.objects.active_ordered()
 
     def get_context_data(self, **kwargs):
         search_query = self.request.GET.get('s')

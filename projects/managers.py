@@ -7,6 +7,8 @@ from django.contrib.postgres.search import (
     TrigramSimilarity,
 )
 
+from account.models import User
+
 PROJECT_SEARCH_VECTORS = (SearchVector('title', weight='A') +
                           SearchVector('tags', weight='A') +
                           SearchVector('description_short', weight='B') +
@@ -26,8 +28,10 @@ class ProjectManager(models.Manager):
         Which is equivalent to:
             `Project.objects.all(status=2)`
         """
-        return self.select_related('codeblock') \
-            .filter(status__in=[self.model.STATUS_ACTIVE, self.model.STATUS_ARCHIVED])
+        return self.filter(status__in=[self.model.STATUS_ACTIVE, self.model.STATUS_ARCHIVED])
+
+    def active_ordered(self):
+        return self.active().order_by('-pk', 'level')
 
     def featured(self):
         """
@@ -37,7 +41,47 @@ class ProjectManager(models.Manager):
         Which is equivalent to:
             `Project.objects.all(status=2, is_featured=True)`
         """
-        return self.select_related('codeblock').filter(status=2, is_featured=True).order_by('level')
+        return self.filter(status=2, is_featured=True).order_by('level')
+
+    def solved(self, user: User):
+        # to avoid circular dependency
+        from projects.models import UserProject
+
+        if not user.is_authenticated:
+            return self.none()
+
+        # TODO: below are inefficient for large list
+        solved_ids = UserProject.objects \
+            .filter(user=user, status=UserProject.STATUS_COMPLETE) \
+            .values_list('project_id')
+        return self.active_ordered().filter(pk__in=solved_ids)
+
+    def unsolved(self, user: User):
+        # to avoid circular dependency
+        from projects.models import UserProject
+
+        if not user.is_authenticated:
+            return self.none()
+
+        # TODO: below are inefficient for large list
+        unsolved_ids = UserProject.objects \
+            .filter(user=user) \
+            .exclude(status=UserProject.STATUS_COMPLETE) \
+            .values_list('project_id')
+        return self.active_ordered().filter(pk__in=unsolved_ids)
+
+    def not_taken(self, user: User):
+        # to avoid circular dependency
+        from projects.models import UserProject
+
+        if not user.is_authenticated:
+            return self.none()
+
+        # TODO: below are inefficient for large list
+        taken_ids = UserProject.objects \
+            .filter(user=user) \
+            .values_list('project_id')
+        return self.active_ordered().exclude(pk__in=taken_ids)
 
     def search(self, text):
         """
@@ -52,7 +96,6 @@ class ProjectManager(models.Manager):
             TrigramSimilarity('description_short', text)
         return self.get_queryset() \
             .annotate(rank=search_rank, similarity=trigram_similarity) \
-            .select_related('codeblock') \
             .filter(status__in=[self.model.STATUS_ACTIVE, self.model.STATUS_ARCHIVED]) \
             .filter(Q(rank__gte=0.2) | Q(similarity__gt=0.1)) \
             .order_by('-rank', 'status', 'level')
