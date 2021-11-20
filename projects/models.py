@@ -188,6 +188,27 @@ class Project(models.Model):
     def has_codeblock(self):
         return self.codeblock_id is not None
 
+    def copy(self, user: User):
+        project = self
+        project.pk = None
+        project.user = user
+        project.title = f'{self.title} (copy)'
+        project.slug = None
+        project.status = self.STATUS_DRAFT
+        project.is_featured = False
+        project.is_premium = False
+        project.taken_count = 0
+        project.completed_count = 0
+        project.updated = now()
+        project.created = now()
+
+        if self.codeblock:
+            cb = self.codeblock
+            cb.pk = None
+            cb.save()
+            project.codeblock = cb
+        project.save()
+
     def assign_to(self, user):
         """
         Returns `UserProject` instance and created (bool).

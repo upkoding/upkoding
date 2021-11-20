@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
@@ -215,15 +215,6 @@ class ProjectDetailUser(DetailView):
                                 UserProject.STATUS_PENDING_REVIEW)) \
             .order_by('-created')[:10]
         data['user_projects'] = user_projects
-
-        # activity
-        try:
-            enricher = Enrich(('actor', 'target',))
-            feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
-            activities = feed.get(limit=6)['results']
-            data['activities'] = enricher.enrich_activities(activities)
-        except Exception as e:
-            log.error(e)
 
         # show completion form only when:
         # - requirements completed
