@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
@@ -21,7 +21,7 @@ log = logging.getLogger(__file__)
 
 
 class ProjectList(ListView):
-    paginate_by = 15
+    paginate_by = 18
 
     def get_queryset(self):
         search_query = self.request.GET.get('s')
@@ -36,9 +36,15 @@ class ProjectList(ListView):
                 return Project.objects.active().filter(level=Project.LEVEL_PROJECT).order_by('-pk', 'status')
             elif search_query == 'pricing:pro':
                 return Project.objects.active().filter(is_premium=True)
+            elif search_query == 'status:solved':
+                return Project.objects.solved(self.request.user)
+            elif search_query == 'status:unsolved':
+                return Project.objects.unsolved(self.request.user)
+            elif search_query == 'status:not-taken':
+                return Project.objects.not_taken(self.request.user)
             else:
                 return Project.objects.search(search_query)
-        return Project.objects.active().order_by('-pk', 'level')
+        return Project.objects.active_ordered()
 
     def get_context_data(self, **kwargs):
         search_query = self.request.GET.get('s')
@@ -209,15 +215,6 @@ class ProjectDetailUser(DetailView):
                                 UserProject.STATUS_PENDING_REVIEW)) \
             .order_by('-created')[:10]
         data['user_projects'] = user_projects
-
-        # activity
-        try:
-            enricher = Enrich(('actor', 'target',))
-            feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
-            activities = feed.get(limit=6)['results']
-            data['activities'] = enricher.enrich_activities(activities)
-        except Exception as e:
-            log.error(e)
 
         # show completion form only when:
         # - requirements completed

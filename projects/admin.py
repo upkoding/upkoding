@@ -35,6 +35,7 @@ class ProjectAdmin(admin.ModelAdmin):
         ('Stats & others',
          {'fields': ('point', 'taken_count', 'completed_count', 'search_vector', )}),
     )
+    actions = ['make_copy', ]
 
     readonly_fields = ('search_vector',)
     formfield_overrides = {
@@ -47,6 +48,16 @@ class ProjectAdmin(admin.ModelAdmin):
         if db_field.name == 'user':
             kwargs['queryset'] = User.objects.filter(is_staff=True)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def make_copy(self, request, queryset):
+        if request.user.is_superuser:
+            count = 0
+            for project in queryset:
+                project.copy(request.user)
+                count += 1
+            self.message_user(
+                request, f'{count} project(s) copied.')
+    make_copy.short_description = 'Copy projects yang dipilih'
 
 
 @admin.register(UserProjectEvent)

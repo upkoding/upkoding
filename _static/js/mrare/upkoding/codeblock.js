@@ -87,6 +87,7 @@ import jQuery from "jquery";
           }
 
           if (completed) {
+            confetti.start();
             codeblockSuccess.modal({ backdrop: "static" });
           } else {
             if (is_expecting_output && !is_output_match && stderr === null) {
@@ -111,6 +112,9 @@ import jQuery from "jquery";
       })
       .finally((_) => {
         setLoading(false);
+        setTimeout(function () {
+          confetti.stop();
+        }, 3000);
       });
   });
 })(jQuery);
