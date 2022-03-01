@@ -1,0 +1,159 @@
+{% extends 'base/base.html' %}
+{% load base %}
+{% load static %}
+
+{% block meta %}
+{% meta title='Aturan Penggunaan dan Kebijakan Privasi' desc='Aturan Penggunaan dan Kebijakan Privasi UpKoding.'%}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <div class="page-header">
+                <div class="mb-3 d-flex">
+                    <img alt="Pipeline" src="{% static 'assets/img/logo.png' %}" class="avatar avatar-lg mr-1" />
+                    <div>
+                        <span class="badge badge-info">{{ app_version }}</span>
+                    </div>
+                </div>
+                <h1>Aturan Penggunaan dan Kebijakan Privasi</h1>
+                <p class="lead">Aturan penggunaan ini bersifat mengikat dan dibuat untuk dipatuhi dan dipahami oleh
+                    seluruh pengguna UpKoding.com.<br /><br />
+                    Dengan melakukan pendaftaran pada situs upkoding.com maka Anda bersedia untuk mematuhi dan menerima
+                    seluruh aturan tanpa terkecuali dan tanpa keberatan sedikitpun. Kami berhak untuk mengubah,
+                    memodifikasi, menambahkan, dan/atau menghapus Ketentuan Penggunaan ini tanpa ada pemberitahuan
+                    sebelumnya kepada Anda.
+                </p>
+            </div>
+
+            <div class="accordion" id="accordion">
+                <div class="card">
+                    <div class="card-header" id="heading1">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-left" type="button" data-toggle="collapse"
+                                data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                                Aturan Pengguna
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion">
+                        <div class="card-body">
+                            Untuk dapat menikmati fitur-fitur yang terdapat pada UpKoding pengguna harus melakukan
+                            registrasi terlebih dahulu.
+                            <br /><br />Dengan melakukan registrasi maka anda menyatakan bahwa Anda:
+                            <ul>
+                                <li>Tidak pernah dikeluarkan oleh pihak UpKoding dengan alasan apapun.</li>
+                                <li>Bukan anak yang berusia di bawah 12 tahun yang tidak diawasi orang tua. Jika Anda
+                                    berusia di bawah 12 tahun maka Anda harus didampingi dan orang tua Anda mengetahui
+                                    aktivitas Anda di UpKoding dan bersedia menanggung segala akibat perbuatan yang Anda
+                                    lakukan.</li>
+                                <li>Menyetujui segala aturan dan larangan dari situs UpKoding dengan mematuhi dan
+                                    menerima aturan penggunaan.</li>
+                                <li>Segala data yang Anda berikan pada saat melakukan registrasi adalah benar dan
+                                    terbaru, sesuai dengan hukum dan aturan yang berlaku.</li>
+                                <li>Bertanggung jawab atas keamanan akun Anda, dengan menjaga kerahasiaan informasi
+                                    login berupa email dan kata sandi (password), maupun data lainnya yang digunakan
+                                    untuk mengakses akun Anda. Kami tidak bertanggung jawab atas kebocoran data pribadi
+                                    yang disebabkan oleh Anda maupun pihak ketiga.</li>
+                                <li>Dilarang menggunakan, memodifikasi, mengungkap, medistribusikan informasi dalam
+                                    bentuk apapun.</li>
+                                <li>Tidak akan mengunggah, menayangkan informasi atau konten dalam bentuk apapun yang
+                                    melanggar, atau menyalahgunakan hak kekayaan intelektual apapun milik UpKoding.</li>
+                                <li>Tidak akan menggunakan platform untuk mendistribusikan iklan atau konten lain.</li>
+                            </ul>
+                            <br />
+                            <strong>Perilaku yang dilarang</strong><br /><br />
+                            UpKoding akan memperingatkan, lalu memblokir dan mengeluarkan pengguna yang tidak
+                            mengindahkan peringatan pihak UpKoding jika pengguna tersebut melakukan hal-hal di bawah
+                            ini:
+                            <ul>
+                                <li>Mem-posting konten yang melanggar hukum, konten yang mengandung pornografi, tidak
+                                    senonoh dan tidak sopan baik dalam bentuk teks, gambar, audio, ataupun video ke
+                                    dalam sistem UpKoding pada bagian manapun.</li>
+                                <li>
+                                    Memberikan pranala ataupun tautan yang memiliki konten yang melanggar hukum, konten
+                                    yang mengandung pornografi, tidak senonoh dan tidak sopan Melakukan hacking terhadap
+                                    sistem UpKoding, menanam piranti lunak berbahaya (virus, worm, trojan, dsb.) yang
+                                    merusak konten atau mengganggu keamanan pengguna. Melakukan plagiarisme dalam bentuk
+                                    apapun.
+                                </li>
+                                <li>
+                                    Melakukan penghinaan atau serangan dalam bentuk apapun baik terhadap sesama pengguna
+                                    UpKoding ataupun terhadap orang lain di luar sistem UpKoding. Melakukan spamming
+                                    ataupun mengiklankan produk apapun yang dapat mengganggu kenyamanan pengguna lain di
+                                    sistem UpKoding.
+                                </li>
+                                <li>Hal-hal lain yang tidak tertulis pada aturan ini di atas yang mengganggu atau
+                                    melanggar hukum dan aturan yang berlaku.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="heading2">
+                        <h2 class="mb-0">
+                            <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse"
+                                data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                Kebijakan Privasi
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordion">
+                        <div class="card-body">
+                            <strong>Informasi yang Secara Otomatis Terkumpul</strong><br /><br />
+                            <ul>
+                                <li>Informasi Penggunaan dan Log: Kami mengumpulkan informasi terkait
+                                    layanan,
+                                    diagnostik, dan
+                                    kinerja. Ini termasuk informasi tentang aktivitas Anda (seperti bagaimana Anda
+                                    menggunakan
+                                    layanan kami, bagaimana Anda berinteraksi dengan orang lain menggunakan layanan
+                                    kami, dan
+                                    lain-lain), berkas log, laporan diagnostik, data crash, website, serta laporan
+                                    kinerja.</li>
+                                <li>Informasi Perangkat Seluler dan Koneksi: Kami mengumpulkan
+                                    informasi khusus
+                                    mengenai
+                                    perangkat Anda ketika menginstal, mengakses, atau menggunakan layanan kami. Ini
+                                    termasuk
+                                    informasi seperti model perangkat keras, sistem operasi, informasi browser, alamat
+                                    IP,
+                                    informasi jaringan seluler termasuk nomor ponsel, dan pengidentifikasi perangkat.
+                                    Kami
+                                    mengumpulkan informasi lokasi perangkat jika Anda menggunakan fitur berbagi lokasi,
+                                    dan
+                                    untuk tujuan diagnostik dan pemecahan masalah seperti jika Anda sedang mengalami
+                                    masalah
+                                    dengan fitur lokasi aplikasi kami.</li>
+                                <li>
+                                    Cookie: Kami menggunakan cookie untuk beroperasi, termasuk untuk
+                                    menyediakan layanan
+                                    kami
+                                    yang berbasis web. Kami juga menggunakannya untuk meningkatkan pengalaman Anda
+                                    dengan
+                                    memahami bagaimana layanan kami digunakan, dan menyesuaikan layanan kami agar sesuai
+                                    dengan
+                                    Anda. Kami dapat menggunakan cookie dan teknologi serupa di situs web kami untuk
+                                    mengumpulkan informasi seperti tanggal dan waktu kunjungan, lokasi geografis,
+                                    halaman yang
+                                    dilihat, alamat IP, tautan ke atau dari halaman manapun, jenis dan versi browser,
+                                    sistem
+                                    operasi, sumber rujukan, dan waktu yang dihabiskan di situs web kami.
+                                </li>
+                            </ul>
+                            <strong>Kerahasiaan Informasi</strong><br /><br />
+                            UpKoding tidak akan memberikan atau mendistribusikan informasi pribadi para pengguna yang
+                            didapat melalui penggunaan aplikasi kepada pihak ketiga. Akan tetapi, hal ini tidak termasuk
+                            ketika informasi tersebut diminta oleh pihak berwenang terkait, antara lain: Kepolisian
+                            Negara Republik Indonesia, Pejabat Pegawai Negeri Sipil tertentu dan Kejaksaan Standards of
+                            Commision mengajukan permohonan informasi, atau dalam hal lain melalui prosedur hukum.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
