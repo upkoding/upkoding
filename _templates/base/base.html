@@ -100,6 +100,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'base:contributors' %}">Kontributor</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'base:tos' %}">Aturan dan Privasi</a>
+                        </li>
                         {% if user.is_authenticated and user.is_staff %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
