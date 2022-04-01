@@ -17,8 +17,8 @@ services:
     build:
       context: .
       target: dev
-    environment:
-      DATABASE_URL: postgres://upkoding:upkoding@db:5432/upkoding
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:

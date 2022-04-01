@@ -9,16 +9,20 @@ Cara yang paling mudah yaitu dengan menggunakan Docker dan Docker compose, beber
 
 Kemudian jalankan perintah berikut secara berurutan:
 ```bash
-# 1. jalankan DB migration
+# 1. buat file env baru bernama .env dan copy isi dari .env.example
+# dan ubah parameter kalau diperlukan.
+cp .env.example .env
+
+# 2. jalankan DB migration
 make migrate
 
-# 2. buat admin / superuser, masukkan informasi yang diminta
+# 3. buat admin / superuser, masukkan informasi yang diminta
 make createsuperuser
 
-# 3. build static files
+# 4. build static files
 make buildstatic
 
-# 4. jalankan proyek
+# 5. jalankan proyek
 make runserver
 ```
 

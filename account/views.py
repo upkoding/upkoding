@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.views.generic import View, TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 
 from django_email_verification import send_email as send_verification_email
 from stream_django.enrich import Enrich
@@ -204,12 +205,15 @@ class ProStatusView(LoginRequiredMixin, View):
         user = request.user
         form = ProAccessPurchaseForm(user, request.POST)
         if form.is_valid():
-            # TODO: update this after beta
-            form.purchase_access(is_beta=True)
-            messages.info(self.request, 'Pro Access sudah aktif, happy coding!',
-                          extra_tags='success')
-            # messages.info(self.request, 'Order telah dibuat, silahkan lanjutkan dengan pembayaran.',
-            #               extra_tags='success')
+            if settings.ENABLE_PAYMENT:
+                form.purchase_access(is_gift=False)
+                messages.info(self.request, 'Order telah dibuat, silahkan lanjutkan dengan pembayaran.',
+                            extra_tags='success')
+            else:
+                form.purchase_access(is_gift=True)
+                messages.info(self.request, 'Pro Access sudah aktif, happy coding!',
+                            extra_tags='success')
+
             return HttpResponseRedirect(reverse('account:pro'))
 
         error_message = get_form_error(form)
@@ -256,10 +260,10 @@ def purchase_payment(request):
 
 
 @csrf_exempt
-def midtrans_payment_notification(request):
+def midtrans_payment_notification(request, merchant_id):
     if request.method == 'POST':
         payload = json.loads(request.body)
-        is_valid = is_payment_notification_valid(payload)
+        is_valid = is_payment_notification_valid(merchant_id, payload)
         if is_valid:
             MidtransPaymentNotification.create_from_payload(payload)
             return HttpResponse()

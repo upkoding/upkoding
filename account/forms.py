@@ -159,7 +159,7 @@ class ProAccessPurchaseForm(forms.Form):
 
         return cleaned_data
 
-    def purchase_access(self, is_beta: bool = False):
+    def purchase_access(self, is_gift: bool = False):
         with transaction.atomic():
             pro_access, _ = ProAccess.objects.get_or_create(user=self.user)
             plan = pricing.get_plan(self.cleaned_data.get('plan_id'))
@@ -171,9 +171,8 @@ class ProAccessPurchaseForm(forms.Form):
                 price=plan.price,
             )
             pro_access_purchase.save()
-
-            # TODO: remove this after beta
-            if is_beta:
+            
+            if is_gift:
                 pro_access_purchase.set_gifted()
 
 

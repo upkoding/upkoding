@@ -18,7 +18,7 @@ urlpatterns = [
          views.purchase_cancel, name='pro_purchase_cancel'),
     path('pro/purchases/payment/',
          views.purchase_payment, name='pro_purchase_payment'),
-    path('midtrans/payment_notification/',
+    path('midtrans/<str:merchant_id>/payment_notification/',
          views.midtrans_payment_notification, name='midtrans_payment_notification'),
     # complete namespace: account:social
     path('', include('social_django.urls', namespace='social')),

@@ -41,12 +41,15 @@ def get_redirect_url(
     return transaction['redirect_url']
 
 
-def is_payment_notification_valid(payload: dict):
+def is_payment_notification_valid(merchant_id: str, payload: dict):
     """
     Based on: https://docs.midtrans.com/en/after-payment/http-notification?id=verifying-notification-authenticity
 
     SHA512(order_id+status_code+gross_amount+ServerKey)
     """
+    if merchant_id != settings.MIDTRANS_MERCHANT_ID:
+        return False
+        
     signature = payload.get('signature_key')
     order_id = payload.get('order_id')
     status_code = payload.get('status_code')

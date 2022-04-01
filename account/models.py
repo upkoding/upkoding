@@ -190,6 +190,7 @@ class ProAccess(models.Model):
         else:
             self.end = self.end + timedelta(days=days)
         self.save()
+        # TODO: notify user
 
     def shorten_days(self, days):
         if self.end < now():

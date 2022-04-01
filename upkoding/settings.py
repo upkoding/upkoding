@@ -283,6 +283,7 @@ GOOGLE_ANALYTICS_TRACKING_ID = os.getenv('GOOGLE_ANALYTICS_TRACKING_ID')
 STATUSPAGE_URL = 'https://stats.uptimerobot.com/ElMQmFWXKD'
 MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
 SHOW_ROADMAPS = os.getenv('SHOW_ROADMAPS', 'False') == 'True'
+ENABLE_PAYMENT = os.getenv('ENABLE_PAYMENT', 'False') == 'True'
 
 # Email verification
 def email_verified_callback(user):
@@ -301,6 +302,7 @@ EMAIL_PAGE_DOMAIN = SITE_DOMAIN
 MIDTRANS_IS_PRODUCTION = os.getenv('MIDTRANS_IS_PRODUCTION', 'False') == 'True'
 MIDTRANS_SERVER_KEY = os.getenv('MIDTRANS_SERVER_KEY')
 MIDTRANS_CLIENT_KEY = os.getenv('MIDTRANS_CLIENT_KEY')
+MIDTRANS_MERCHANT_ID = os.getenv('MIDTRANS_MERCHANT_ID')
 
 MDEDITOR_CONFIGS = {
     'default': {
@@ -403,8 +405,3 @@ with open(BASE_DIR / f'upkoding/pricing/v1.yaml') as file:
 
 with open(BASE_DIR / f'contributors.yaml') as file:
     CONTRIBUTORS = yaml.load(file, Loader=yaml.FullLoader)
-
-try:
-    from upkoding.settings_local import *
-except ImportError:
-    pass
