@@ -1,6 +1,13 @@
-- id: PRO30_BETA
-  name: Pro Access
+- id: PRO_30
+  name: Pro Access 1 Bulan
   access_days: 30
-  price: 0
-  price_display: GRATIS
-  description: Akses tidak terbatas selama 30 hari, bisa diperpanjang dan gratis selama Beta.
+  price: 25000
+  price_display: Rp. 25K
+  description: Akses tidak terbatas selama 30 hari.
+
+- id: PRO_90
+  name: Pro Access 3 Bulan
+  access_days: 90
+  price: 50000
+  price_display: Rp. 50K
+  description: Akses tidak terbatas selama 90 hari (hemat 33%).

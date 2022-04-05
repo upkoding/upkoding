@@ -146,10 +146,9 @@ class ProAccessPurchaseForm(forms.Form):
             raise forms.ValidationError(
                 'Maaf, paket yang dipilih tidak valid!')
 
-        # TODO: remove this after beta
-        if self.user.is_pro_user():
-            raise forms.ValidationError(
-                'Pro Access bisa diperpanjang setelah periode saat ini sudah habis.')
+        # if self.user.is_pro_user():
+        #     raise forms.ValidationError(
+        #         'Pro Access bisa diperpanjang setelah periode saat ini sudah habis.')
 
         # make sure user doesn't have PENDING purchase
         if not ProAccessPurchase.can_create(self.user):
