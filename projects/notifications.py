@@ -17,10 +17,10 @@ class UserProjectEventNotification:
         self.project = self.user_project.project
         self.event_user = event.user
         self.context = {
-            'domain': settings.SITE_DOMAIN,
-            'user': self.event_user,
-            'user_project': self.user_project,
-            'project': self.project,
+            "domain": settings.SITE_DOMAIN,
+            "user": self.event_user,
+            "user_project": self.user_project,
+            "project": self.project,
         }
         # feed and activity
         self.activity = self.event.create_activity()
@@ -51,7 +51,7 @@ class UserProjectEventNotification:
         """
         Send email to staff/project creator about project need a review.
         """
-        tpl = 'projects/emails/project_review_request.html'
+        tpl = "projects/emails/project_review_request.html"
 
         # get all active staff except event_user
         participants = User.get_active_staffs(exclude_user=self.event_user)
@@ -62,10 +62,13 @@ class UserProjectEventNotification:
             notify.append(feed_manager.get_notification_feed(staff.pk))
 
             # check user notification settings
-            if staff.is_email_verified() and UserSetting.objects.email_notify_project_review_request(staff):
-                self.context.update({'to_user': staff})
+            if (
+                staff.is_email_verified()
+                and UserSetting.objects.email_notify_project_review_request(staff)
+            ):
+                self.context.update({"to_user": staff})
                 msg = render_to_string(tpl, self.context)
-                subject = f'[Proyek] Permintaan review dari @{self.event_user.username}'
+                subject = f"[Proyek] Permintaan review dari @{self.event_user.username}"
                 emails.append((subject, msg, FROM, [staff.email]))
 
         # add to user feed and notify staff
@@ -80,13 +83,14 @@ class UserProjectEventNotification:
         """
         Send email to participants about new message in project.
         """
-        tpl = 'projects/emails/project_message.html'
+        tpl = "projects/emails/project_message.html"
 
         # get all participants on this project, except the event creator.
-        participants = UserProjectParticipant.objects \
-            .select_related('user') \
-            .filter(user_project=self.user_project, subscribed=True) \
+        participants = (
+            UserProjectParticipant.objects.select_related("user")
+            .filter(user_project=self.user_project, subscribed=True)
             .exclude(user=self.event_user)
+        )
 
         notify = []
         emails = []
@@ -95,10 +99,13 @@ class UserProjectEventNotification:
             notify.append(feed_manager.get_notification_feed(to_user.pk))
 
             # check user notification settings
-            if to_user.is_email_verified() and UserSetting.objects.email_notify_project_message(to_user):
-                self.context.update({'to_user': to_user})
+            if (
+                to_user.is_email_verified()
+                and UserSetting.objects.email_notify_project_message(to_user)
+            ):
+                self.context.update({"to_user": to_user})
                 msg = render_to_string(tpl, self.context)
-                subject = f'[Proyek] Pesan dari @{self.event_user.username}'
+                subject = f"[Proyek] Pesan dari @{self.event_user.username}"
                 emails.append((subject, msg, FROM, [to_user.email]))
 
         # add to user feed and notify participants
@@ -112,7 +119,7 @@ class UserProjectEventNotification:
         """
         Send email to user who working on a project about their project has been approved.
         """
-        tpl = 'projects/emails/project_approved.html'
+        tpl = "projects/emails/project_approved.html"
         user_project_owner = self.user_project.user
 
         notify = [self.challenge_feed, self.challenge_feed_global]
@@ -124,39 +131,51 @@ class UserProjectEventNotification:
 
         # add to approving user and notify user project owner
         activity = feed_manager.add_notify_to_activity(
-            activity,
-            feed_manager.get_notification_feed(user_project_owner.pk))
+            activity, feed_manager.get_notification_feed(user_project_owner.pk)
+        )
         feed_manager.add_activity(self.user_feed, activity)
 
         # check user notification settings
-        if not self.is_sync and user_project_owner.is_email_verified() and UserSetting.objects.email_notify_project_approved(user_project_owner):
-            self.context.update({'to_user': user_project_owner})
+        if (
+            not self.is_sync
+            and user_project_owner.is_email_verified()
+            and UserSetting.objects.email_notify_project_approved(user_project_owner)
+        ):
+            self.context.update({"to_user": user_project_owner})
             msg = render_to_string(tpl, self.context)
-            subject = '[Proyek] Proyek kamu telah disetujui!'
-            send_mail(subject, msg, FROM, [
-                      user_project_owner.email], fail_silently=True)
+            subject = "[Proyek] Proyek kamu telah disetujui!"
+            send_mail(
+                subject, msg, FROM, [user_project_owner.email], fail_silently=True
+            )
 
     def _notify_project_disapproved(self):
         """
         Send email to user who working on a project about their project status changed.
         """
-        tpl = 'projects/emails/project_disapproved.html'
+        tpl = "projects/emails/project_disapproved.html"
         user_project_owner = self.user_project.user
 
         # add to disapproving user and notify user project owner
         owner_notification_feed = feed_manager.get_notification_feed(
-            user_project_owner.pk)
-        activity = feed_manager.add_notify_to_activity(self.activity,
-                                                       owner_notification_feed)
+            user_project_owner.pk
+        )
+        activity = feed_manager.add_notify_to_activity(
+            self.activity, owner_notification_feed
+        )
         feed_manager.add_activity(self.user_feed, activity)
 
         # check user notification settings
-        if not self.is_sync and user_project_owner.is_email_verified() and UserSetting.objects.email_notify_project_disapproved(user_project_owner):
-            self.context.update({'to_user': user_project_owner})
+        if (
+            not self.is_sync
+            and user_project_owner.is_email_verified()
+            and UserSetting.objects.email_notify_project_disapproved(user_project_owner)
+        ):
+            self.context.update({"to_user": user_project_owner})
             msg = render_to_string(tpl, self.context)
-            subject = '[Proyek] Status proyek kamu diralat'
-            send_mail(subject, msg, FROM, [
-                      user_project_owner.email], fail_silently=True)
+            subject = "[Proyek] Status proyek kamu diralat"
+            send_mail(
+                subject, msg, FROM, [user_project_owner.email], fail_silently=True
+            )
 
 
 def delete_activity(instance):

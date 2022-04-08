@@ -1,0 +1,18 @@
+{% if roadmaps %}
+<div class="mb-3">
+    {% for roadmap in roadmaps %}
+    <a href="{{ roadmap.get_absolute_url }}" title="Bagian dari roadmap: {{ roadmap.title }}">
+    <div class="card-list-body mb-1">
+        <div class="card card-task">
+            <div class="card-body">
+                <div class="card-title">
+                    <h5>{{ roadmap.title }} <span class="badge badge-success ml-1">Roadmap</span></h5>
+                    <span class="text-muted" style="line-height: 0px !important; ">{{ roadmap.description }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
