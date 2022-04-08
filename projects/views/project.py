@@ -120,7 +120,6 @@ class ProjectDetail(DetailView):
         )
         data["user_projects"] = user_projects
         data["roadmaps"] = project.get_roadmaps()
-        print(data['roadmaps'])
         return data
 
     def get(self, request, *args, **kwargs):

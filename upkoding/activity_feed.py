@@ -30,7 +30,7 @@ class FeedManager(DefaultFeedManager):
 
     def remove_activity_from_feed(self, instance):
         try:
-            self.remove_activity_from_feed(instance)
+            super().remove_activity_from_feed(instance)
         except Exception as e:
             log.error(str(e))
 
