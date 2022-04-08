@@ -5,7 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.http.response import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.http.response import (
+    Http404,
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    JsonResponse,
+)
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
@@ -24,43 +30,46 @@ class ProjectList(ListView):
     paginate_by = 18
 
     def get_queryset(self):
-        search_query = self.request.GET.get('s')
+        search_query = self.request.GET.get("s")
         if search_query:
-            if search_query == 'level:easy':
+            if search_query == "level:easy":
                 return Project.objects.active().filter(level=Project.LEVEL_EASY)
-            elif search_query == 'level:medium':
+            elif search_query == "level:medium":
                 return Project.objects.active().filter(level=Project.LEVEL_MEDIUM)
-            elif search_query == 'level:hard':
+            elif search_query == "level:hard":
                 return Project.objects.active().filter(level=Project.LEVEL_HARD)
-            elif search_query == 'level:project':
-                return Project.objects.active().filter(level=Project.LEVEL_PROJECT).order_by('-pk', 'status')
-            elif search_query == 'pricing:pro':
+            elif search_query == "level:project":
+                return (
+                    Project.objects.active()
+                    .filter(level=Project.LEVEL_PROJECT)
+                    .order_by("-pk", "status")
+                )
+            elif search_query == "pricing:pro":
                 return Project.objects.active().filter(is_premium=True)
-            elif search_query == 'status:solved':
+            elif search_query == "status:solved":
                 return Project.objects.solved(self.request.user)
-            elif search_query == 'status:unsolved':
+            elif search_query == "status:unsolved":
                 return Project.objects.unsolved(self.request.user)
-            elif search_query == 'status:not-taken':
+            elif search_query == "status:not-taken":
                 return Project.objects.not_taken(self.request.user)
             else:
                 return Project.objects.search(search_query)
         return Project.objects.active_ordered()
 
     def get_context_data(self, **kwargs):
-        search_query = self.request.GET.get('s')
-        page = self.request.GET.get('page')
+        search_query = self.request.GET.get("s")
+        page = self.request.GET.get("page")
 
         data = super().get_context_data(**kwargs)
-        data['search_query'] = search_query
+        data["search_query"] = search_query
 
         # only show featured project on page 1 AND not in search page
-        if not search_query and (not page or page == '1'):
-            data['featured_projects'] = Project.objects.featured()
+        if not search_query and (not page or page == "1"):
+            data["featured_projects"] = Project.objects.featured()
         return data
 
 
 class ProjectDetail(DetailView):
-
     def get_object(self):
         """
         We need to find object by using `pk` and `slug`.
@@ -68,8 +77,8 @@ class ProjectDetail(DetailView):
         user = self.request.user
         obj = get_object_or_404(
             Project,
-            pk=self.kwargs.get('pk'),
-            slug=self.kwargs.get('slug'),
+            pk=self.kwargs.get("pk"),
+            slug=self.kwargs.get("slug"),
         )
         # - allow staff to preview inactive project
         # - or if its active
@@ -79,63 +88,74 @@ class ProjectDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        project = data.get('object')
+        project = data.get("object")
 
         user = self.request.user
-        data['project_owner'] = project.user
+        data["project_owner"] = project.user
 
         if project.is_archived():
             messages.warning(
                 self.request,
-                'Maaf tantangan ini sudah diarsip, tidak bisa dikerjakan.',
-                extra_tags='warning'
+                "Maaf tantangan ini sudah diarsip, tidak bisa dikerjakan.",
+                extra_tags="warning",
             )
 
         if user.is_authenticated:
             try:
-                data['my_project'] = UserProject.objects.get(
-                    project=project,
-                    user=user
-                )
+                data["my_project"] = UserProject.objects.get(project=project, user=user)
             except UserProject.DoesNotExist:
                 pass
 
-        user_projects = UserProject.objects \
-            .select_related('user') \
+        user_projects = (
+            UserProject.objects.select_related("user")
             .filter(
                 project=project,
-                status__in=(UserProject.STATUS_IN_PROGRESS,
-                            UserProject.STATUS_COMPLETE,
-                            UserProject.STATUS_PENDING_REVIEW)
-            ).order_by('-created')[:10]
-        data['user_projects'] = user_projects
+                status__in=(
+                    UserProject.STATUS_IN_PROGRESS,
+                    UserProject.STATUS_COMPLETE,
+                    UserProject.STATUS_PENDING_REVIEW,
+                ),
+            )
+            .order_by("-created")[:10]
+        )
+        data["user_projects"] = user_projects
+        data["roadmaps"] = project.get_roadmaps()
+        print(data['roadmaps'])
         return data
 
     def get(self, request, *args, **kwargs):
-        if request.GET.get('partial') == 'activities':
+        if request.GET.get("partial") == "activities":
             # activities
             try:
                 project = self.get_object()
-                enricher = Enrich(('actor', 'target',))
+                enricher = Enrich(
+                    (
+                        "actor",
+                        "target",
+                    )
+                )
                 feed = feed_manager.get_challenge_feed(challenge_id=project.pk)
-                activities = feed.get(limit=6)['results']
+                activities = feed.get(limit=6)["results"]
                 enriched = enricher.enrich_activities(activities)
-                return render(request, 'projects/_activities.html', {'activities': enriched})
+                return render(
+                    request, "projects/_activities.html", {"activities": enriched}
+                )
             except Exception:
                 return HttpResponse()
 
-        if request.GET.get('partial') == 'completed':
+        if request.GET.get("partial") == "completed":
             # current user status
-            data = {'completed': False}
+            data = {"completed": False}
             try:
                 user = request.user
                 if not user.is_authenticated():
-                    raise Exception('not authenticated')
+                    raise Exception("not authenticated")
 
                 project = self.get_object()
                 user_project = UserProject.objects.get(
-                    project=project, user=request.user)
-                data['complete'] = user_project.is_complete()
+                    project=project, user=request.user
+                )
+                data["complete"] = user_project.is_complete()
             except Exception:
                 pass
             return JsonResponse(data)
@@ -146,7 +166,7 @@ class ProjectDetail(DetailView):
         user = request.user
         project = self.get_object()
 
-        next_url = reverse('projects:detail', args=[slug, pk])
+        next_url = reverse("projects:detail", args=[slug, pk])
 
         # if archived, redirect to project detail
         if project.is_archived():
@@ -156,30 +176,35 @@ class ProjectDetail(DetailView):
         if not user.is_authenticated:
             messages.warning(
                 request,
-                'Silahkan login terlebih dahulu sebelum mengerjakan tantangan.',
-                extra_tags='warning'
+                "Silahkan login terlebih dahulu sebelum mengerjakan tantangan.",
+                extra_tags="warning",
             )
-            return HttpResponseRedirect(reverse('account:login') + '?next={}'.format(next_url))
+            return HttpResponseRedirect(
+                reverse("account:login") + "?next={}".format(next_url)
+            )
 
         # premium challenge and not a pro user? redirect to pro page
         if project.is_premium and not user.is_pro_user():
-            return HttpResponseRedirect(reverse('base:pro'))
+            return HttpResponseRedirect(reverse("base:pro"))
 
         # assign user to the project
         with transaction.atomic():
             user_project, created = project.assign_to(user)
             if created:
                 user_project.add_event(UserProjectEvent.TYPE_PROJECT_START)
-                messages.info(request,
-                              f"Selamat mengerjakan '{project.title}'!",
-                              extra_tags='success')
-            success_url = reverse('projects:detail_user', args=[
-                                  slug, pk, user.username])
+                messages.info(
+                    request,
+                    f"Selamat mengerjakan '{project.title}'!",
+                    extra_tags="success",
+                )
+            success_url = reverse(
+                "projects:detail_user", args=[slug, pk, user.username]
+            )
             return HttpResponseRedirect(success_url)
 
 
 class ProjectDetailUser(DetailView):
-    template_name = 'projects/project_detail_user.html'
+    template_name = "projects/project_detail_user.html"
 
     def get_object(self):
         """
@@ -187,42 +212,45 @@ class ProjectDetailUser(DetailView):
         """
         return get_object_or_404(
             Project,
-            pk=self.kwargs.get('pk'),
-            slug=self.kwargs.get('slug'),
-            status__in=[Project.STATUS_ACTIVE, Project.STATUS_ARCHIVED]
+            pk=self.kwargs.get("pk"),
+            slug=self.kwargs.get("slug"),
+            status__in=[Project.STATUS_ACTIVE, Project.STATUS_ARCHIVED],
         )
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
-        project = data.get('object')
-        user = get_object_or_404(User, username=self.kwargs.get('username'))
-        user_project = get_object_or_404(
-            UserProject,
-            user=user,
-            project=self.object
+        project = data.get("object")
+        user = get_object_or_404(User, username=self.kwargs.get("username"))
+        user_project = get_object_or_404(UserProject, user=user, project=self.object)
+
+        data["project_owner"] = project.user
+        data["user_project"] = user_project
+        data["user_project_owner"] = user
+
+        user_projects = (
+            UserProject.objects.select_related("user")
+            .filter(
+                project=project,
+                status__in=(
+                    UserProject.STATUS_IN_PROGRESS,
+                    UserProject.STATUS_COMPLETE,
+                    UserProject.STATUS_PENDING_REVIEW,
+                ),
+            )
+            .order_by("-created")[:10]
         )
-
-        data['project_owner'] = project.user
-        data['user_project'] = user_project
-        data['user_project_owner'] = user
-
-        user_projects = UserProject.objects \
-            .select_related('user') \
-            .filter(project=project,
-                    status__in=(UserProject.STATUS_IN_PROGRESS,
-                                UserProject.STATUS_COMPLETE,
-                                UserProject.STATUS_PENDING_REVIEW)) \
-            .order_by('-created')[:10]
-        data['user_projects'] = user_projects
+        data["user_projects"] = user_projects
+        data["roadmaps"] = project.get_roadmaps()
 
         # show completion form only when:
         # - requirements completed
         # - current user is the owner
-        show_review_request_form = user_project.is_requirements_complete() \
-            and (user == self.request.user)
+        show_review_request_form = user_project.is_requirements_complete() and (
+            user == self.request.user
+        )
         if show_review_request_form:
-            data['review_request_form'] = UserProjectReviewRequestForm(
+            data["review_request_form"] = UserProjectReviewRequestForm(
                 instance=user_project
             )
         return data
@@ -236,18 +264,17 @@ class ProjectDetailUser(DetailView):
         )
         if submission.is_valid():
             codeblock = submission.run()
-            data = {
-                'result': codeblock.run_result_summary(),
-                'completed': False
-            }
+            data = {"result": codeblock.run_result_summary(), "completed": False}
 
-            if (codeblock.is_expecting_output and codeblock.is_output_match) or (not codeblock.is_expecting_output and codeblock.is_run_accepted):
+            if (codeblock.is_expecting_output and codeblock.is_output_match) or (
+                not codeblock.is_expecting_output and codeblock.is_run_accepted
+            ):
                 with transaction.atomic():
                     user_project.set_complete()
                     user_project.add_event(
-                        UserProjectEvent.TYPE_PROJECT_COMPLETE,
-                        user=user)
-                    data['completed'] = True
+                        UserProjectEvent.TYPE_PROJECT_COMPLETE, user=user
+                    )
+                    data["completed"] = True
 
             return JsonResponse(data)
         return HttpResponseBadRequest(submission.errors.as_json())
@@ -258,8 +285,9 @@ class ProjectDetailUser(DetailView):
         """
         request = self.request
         user = request.user
-        redirect_url = reverse('projects:detail_user',
-                               args=[project.slug, project.pk, user.username])
+        redirect_url = reverse(
+            "projects:detail_user", args=[project.slug, project.pk, user.username]
+        )
 
         # deepcopy to preserve the original state
         requirements = copy.deepcopy(user_project.requirements)
@@ -270,17 +298,17 @@ class ProjectDetailUser(DetailView):
             requirements_copy = copy.deepcopy(requirements)
 
             # update requirements_copy
-            updated_reqs = [int(r) for r in request.POST.getlist('reqs', [])]
+            updated_reqs = [int(r) for r in request.POST.getlist("reqs", [])]
 
             # remove `complete` flag
             for r in requirements_copy:
-                if r.get('complete'):
-                    del r['complete']
+                if r.get("complete"):
+                    del r["complete"]
 
             # assign new flag from `updated_reqs`
             for index in updated_reqs:
                 req = requirements_copy[index]
-                req['complete'] = True
+                req["complete"] = True
 
             # save changes
             user_project.requirements = requirements_copy
@@ -288,19 +316,22 @@ class ProjectDetailUser(DetailView):
             user_project.save()
 
             _, progress_after, become_complete, _ = UserProject.requirements_diff(
-                requirements, requirements_copy)
+                requirements, requirements_copy
+            )
             # only create progress update event when progress_after > progress_before
             if progress_after > float(max_progress):
                 for msg in become_complete:
                     user_project.add_event(
-                        UserProjectEvent.TYPE_PROGRESS_UPDATE,
-                        message=msg)
+                        UserProjectEvent.TYPE_PROGRESS_UPDATE, message=msg
+                    )
 
             # if all requirements completed, ready for review
             if user_project.is_requirements_complete():
-                messages.info(request,
-                              "Mantap! Proyek kamu siap untuk direview",
-                              extra_tags='success')
+                messages.info(
+                    request,
+                    "Mantap! Proyek kamu siap untuk direview",
+                    extra_tags="success",
+                )
 
         return HttpResponseRedirect(redirect_url)
 
@@ -308,38 +339,44 @@ class ProjectDetailUser(DetailView):
         request = self.request
         user = request.user
 
-        redirect_url = reverse('projects:detail_user',
-                               args=[project.slug, project.pk, user.username])
-        form = UserProjectReviewRequestForm(
-            request.POST, instance=user_project)
+        redirect_url = reverse(
+            "projects:detail_user", args=[project.slug, project.pk, user.username]
+        )
+        form = UserProjectReviewRequestForm(request.POST, instance=user_project)
 
         if form.is_valid():
             review_requested = form.submit_review()
             if review_requested:
                 user_project.add_event(UserProjectEvent.TYPE_REVIEW_REQUEST)
-                messages.info(request,
-                              "Terima kasih! Proyek kamu akan segera direview team UpKoding.",
-                              extra_tags='success')
+                messages.info(
+                    request,
+                    "Terima kasih! Proyek kamu akan segera direview team UpKoding.",
+                    extra_tags="success",
+                )
             else:
-                messages.info(request,
-                              "Detail proyek berhasil diupdate!",
-                              extra_tags='success')
+                messages.info(
+                    request, "Detail proyek berhasil diupdate!", extra_tags="success"
+                )
             return HttpResponseRedirect(redirect_url)
 
         self.object = self.get_object()
         context = self.get_context_data(**self.kwargs)
-        context['review_request_form'] = form
+        context["review_request_form"] = form
         return render(request, self.template_name, context)
 
     def _handle_delete(self, user, project, user_project):
         if user_project.is_deletable_by(user):
             user_project.delete()
-            messages.info(self.request, 'Tantangan telah dibatalkan.',
-                          extra_tags='warning')
+            messages.info(
+                self.request, "Tantangan telah dibatalkan.", extra_tags="warning"
+            )
             return HttpResponse(project.get_absolute_url())
         else:
-            messages.info(self.request, 'Tantangan hanya bisa dibatalkan 24 jam setelah dimulai. Ayolah kamu pasti bisa!',
-                          extra_tags='danger')
+            messages.info(
+                self.request,
+                "Tantangan hanya bisa dibatalkan 24 jam setelah dimulai. Ayolah kamu pasti bisa!",
+                extra_tags="danger",
+            )
             return HttpResponse(user_project.get_absolute_url())
 
     @method_decorator(login_required)
@@ -348,34 +385,32 @@ class ProjectDetailUser(DetailView):
         if user.username != username:
             return HttpResponseForbidden()
 
-        action = request.POST.get('action')
+        action = request.POST.get("action")
         project = self.get_object()
-        user_project = get_object_or_404(
-            UserProject, user=user, project=project)
+        user_project = get_object_or_404(UserProject, user=user, project=project)
 
-        if action == 'code_submission':
+        if action == "code_submission":
             return self._handle_code_submission(project, user_project)
 
-        if action == 'update':
+        if action == "update":
             return self._handle_update(project, user_project)
 
-        if action == 'delete':
+        if action == "delete":
             return self._handle_delete(user, project, user_project)
 
-        if action == 'review_request':
+        if action == "review_request":
             return self._handle_review_request(project, user_project)
         return HttpResponseRedirect(project.get_absolute_url())
 
 
 class ProjectStatuses(View):
-
     @method_decorator(login_required)
     def get(self, request):
         user = request.user
-        ids_str = set(request.GET.get('ids').split(','))
+        ids_str = set(request.GET.get("ids").split(","))
         ids = [int(id) for id in ids_str]  # dedupe
-        user_projects = UserProject.objects \
-            .filter(project_id__in=ids, user=user)
-        statuses = [dict(id=up.project_id, complete=up.is_complete())
-                    for up in user_projects]
+        user_projects = UserProject.objects.filter(project_id__in=ids, user=user)
+        statuses = [
+            dict(id=up.project_id, complete=up.is_complete()) for up in user_projects
+        ]
         return JsonResponse(dict(statuses=statuses))

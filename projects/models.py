@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models.deletion import CASCADE
 from django.template.defaultfilters import slugify
@@ -12,6 +13,8 @@ from stream_django.activity import Activity, create_model_reference
 
 from account.models import User
 from codeblocks.models import CodeBlock
+from roadmaps.models import RoadmapTopicContent
+
 from .managers import ProjectManager, PROJECT_SEARCH_VECTORS
 
 
@@ -20,7 +23,7 @@ def project_cover_path(instance, filename):
     Custom cover path: projects/cover/123455678-hello-world.png
     """
     ts = int(now().timestamp())
-    return 'projects/cover/{}-{}'.format(ts, filename)
+    return "projects/cover/{}-{}".format(ts, filename)
 
 
 def project_image_path(instance, filename):
@@ -28,13 +31,14 @@ def project_image_path(instance, filename):
     Custom cover path: projects/images/12345678-hello-world.png
     """
     ts = int(now().timestamp())
-    return 'projects/images/{}-{}'.format(ts, filename)
+    return "projects/images/{}-{}".format(ts, filename)
 
 
 class Project(models.Model):
     """
     Project that can be picked-up by users.
     """
+
     # statuses
     STATUS_DRAFT = 0
     STATUS_PENDING = 1
@@ -42,11 +46,11 @@ class Project(models.Model):
     STATUS_DELETED = 3
     STATUS_ARCHIVED = 4
     STATUSES = [
-        (STATUS_DRAFT, 'Draft'),
-        (STATUS_PENDING, 'Pending'),
-        (STATUS_ACTIVE, 'Active'),
-        (STATUS_DELETED, 'Deleted'),
-        (STATUS_ARCHIVED, 'Archived'),
+        (STATUS_DRAFT, "Draft"),
+        (STATUS_PENDING, "Pending"),
+        (STATUS_ACTIVE, "Active"),
+        (STATUS_DELETED, "Deleted"),
+        (STATUS_ARCHIVED, "Archived"),
     ]
 
     # dificulty levels and its point
@@ -55,43 +59,35 @@ class Project(models.Model):
     LEVEL_HARD = 3
     LEVEL_PROJECT = 99  # (backward compat with legacy project)
     LEVELS = [
-        (LEVEL_EASY, 'easy'),
-        (LEVEL_MEDIUM, 'medium'),
-        (LEVEL_HARD, 'hard'),
-        (LEVEL_PROJECT, 'project'),
+        (LEVEL_EASY, "easy"),
+        (LEVEL_MEDIUM, "medium"),
+        (LEVEL_HARD, "hard"),
+        (LEVEL_PROJECT, "project"),
     ]
     POINT_EASY = 1
     POINT_MEDIUM = 5
     POINT_HARD = 10
 
     user = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='projects')
+        User, on_delete=models.SET_NULL, null=True, related_name="projects"
+    )
     level = models.PositiveIntegerField(choices=LEVELS, default=LEVEL_EASY)
     slug = models.SlugField(max_length=150, blank=True)
-    title = models.CharField('Judul', max_length=100)
-    description_short = models.CharField(
-        'Deskripsi Pendek', max_length=100, default='')
-    description = models.TextField('Deskripsi')
+    title = models.CharField("Judul", max_length=100)
+    description_short = models.CharField("Deskripsi Pendek", max_length=100, default="")
+    description = models.TextField("Deskripsi")
     codeblock = models.OneToOneField(
-        CodeBlock,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True)
-    requirements = models.JSONField('Requirements', blank=True, null=True)
-    cover = ImageField(
-        upload_to=project_cover_path,
-        blank=True,
-        null=True
+        CodeBlock, on_delete=models.SET_NULL, blank=True, null=True
     )
+    requirements = models.JSONField("Requirements", blank=True, null=True)
+    cover = ImageField(upload_to=project_cover_path, blank=True, null=True)
     point = models.IntegerField(default=0)
-    tags = models.CharField('Tags', max_length=50, blank=True, default='')
+    tags = models.CharField("Tags", max_length=50, blank=True, default="")
     is_featured = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
     status = models.PositiveSmallIntegerField(
-        'Status', choices=STATUSES, default=STATUS_DRAFT)
+        "Status", choices=STATUSES, default=STATUS_DRAFT
+    )
 
     # whether user need to provide `demo_url` and/or `sourcecode_url` before project
     # marked as complete.
@@ -111,24 +107,23 @@ class Project(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['slug'], name='project_slug_idx'),
-            models.Index(fields=['status'], name='project_status_idx'),
-            models.Index(fields=['level'], name='project_level_idx'),
-            models.Index(fields=['is_premium'], name='project_is_premium_idx'),
-            GinIndex(fields=['search_vector'],
-                     name='project_search_vector_idx'),
+            models.Index(fields=["slug"], name="project_slug_idx"),
+            models.Index(fields=["status"], name="project_status_idx"),
+            models.Index(fields=["level"], name="project_level_idx"),
+            models.Index(fields=["is_premium"], name="project_is_premium_idx"),
+            GinIndex(fields=["search_vector"], name="project_search_vector_idx"),
         ]
-        ordering = ['-pk']
+        ordering = ["-pk"]
 
     def __str__(self, *args, **kwargs):
         return self.title
 
     def get_level_color(self):
         colors = {
-            self.LEVEL_PROJECT: 'dark',
-            self.LEVEL_EASY:  'success',
-            self.LEVEL_MEDIUM: 'warning',
-            self.LEVEL_HARD: 'danger',
+            self.LEVEL_PROJECT: "dark",
+            self.LEVEL_EASY: "success",
+            self.LEVEL_MEDIUM: "warning",
+            self.LEVEL_HARD: "danger",
         }
         return colors.get(self.level)
 
@@ -139,9 +134,7 @@ class Project(models.Model):
 
         # cleanup tags
         if self.tags:
-            self.tags = ','.join([
-                tag.strip().lower()
-                for tag in self.tags.split(',')])
+            self.tags = ",".join([tag.strip().lower() for tag in self.tags.split(",")])
 
         # set point based on level
         if self.level != self.LEVEL_PROJECT:
@@ -168,21 +161,32 @@ class Project(models.Model):
         return self.codeblock_id is not None
 
     def get_absolute_url(self):
-        return reverse('projects:detail', args=[self.slug, str(self.pk)])
+        return reverse("projects:detail", args=[self.slug, str(self.pk)])
 
     def get_point_display(self):
-        return '{}{}'.format(self.point, settings.POINT_UNIT)
+        return "{}{}".format(self.point, settings.POINT_UNIT)
+
+    def get_roadmaps(self):
+        # if this project part of roadmap(s), return the roadmap(s).
+        project_type = ContentType.objects.get_for_model(Project)
+        roadmap_topic_contents = RoadmapTopicContent.objects.select_related(
+            "roadmap_topic__roadmap"
+        ).filter(content_type__pk=project_type.pk, content_id=self.pk)
+        return [
+            roadmap_topic_content.roadmap_topic.roadmap
+            for roadmap_topic_content in roadmap_topic_contents
+        ]
 
     def inc_taken_count(self):
-        self.taken_count = models.F('taken_count') + 1
+        self.taken_count = models.F("taken_count") + 1
         self.save()
 
     def inc_completed_count(self):
-        self.completed_count = models.F('completed_count') + 1
+        self.completed_count = models.F("completed_count") + 1
         self.save()
 
     def dec_completed_count(self):
-        self.completed_count = models.F('completed_count') - 1
+        self.completed_count = models.F("completed_count") - 1
         self.save()
 
     def has_codeblock(self):
@@ -192,7 +196,7 @@ class Project(models.Model):
         project = self
         project.pk = None
         project.user = user
-        project.title = f'{self.title} (copy)'
+        project.title = f"{self.title} (copy)"
         project.slug = None
         project.status = self.STATUS_DRAFT
         project.is_featured = False
@@ -223,11 +227,12 @@ class Project(models.Model):
             user=user,
             project=self,
             defaults={
-                'requirements': self.requirements,
-                'point': self.point,
-                'require_demo_url': self.require_demo_url,
-                'require_sourcecode_url': self.require_sourcecode_url,
-            })
+                "requirements": self.requirements,
+                "point": self.point,
+                "require_demo_url": self.require_demo_url,
+                "require_sourcecode_url": self.require_sourcecode_url,
+            },
+        )
 
         if created:
             # assign codeblock if any
@@ -241,10 +246,10 @@ class Project(models.Model):
 
             # add project creator as participant
             UserProjectParticipant.objects.get_or_create(
-                user_project=obj, user=self.user)
+                user_project=obj, user=self.user
+            )
             # add user who working on the project as participant
-            UserProjectParticipant.objects.get_or_create(
-                user_project=obj, user=user)
+            UserProjectParticipant.objects.get_or_create(user_project=obj, user=user)
             # inc taken count
             self.inc_taken_count()
         return obj, created
@@ -252,8 +257,9 @@ class Project(models.Model):
 
 class ProjectImage(models.Model):
     project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, related_name='images')
-    title = models.CharField(max_length=250, blank=True, default='')
+        Project, on_delete=models.CASCADE, related_name="images"
+    )
+    title = models.CharField(max_length=250, blank=True, default="")
     order = models.SmallIntegerField(default=0)
     image = ImageField(
         upload_to=project_image_path,
@@ -268,46 +274,48 @@ class UserProject(models.Model):
     The original project data itself may changed overtime, but UserProject will holds
     the snapshot of important data (requirements, point) at the time user pick this project.
     """
+
     # statuses
     STATUS_IN_PROGRESS = 0
     STATUS_PENDING_REVIEW = 1
     STATUS_COMPLETE = 2
     STATUS_INCOMPLETE = 3
     STATUSES = [
-        (STATUS_IN_PROGRESS, 'In Progress'),
-        (STATUS_PENDING_REVIEW, 'Pending Review'),
-        (STATUS_COMPLETE, 'Complete'),
-        (STATUS_INCOMPLETE, 'Incomplete'),
+        (STATUS_IN_PROGRESS, "In Progress"),
+        (STATUS_PENDING_REVIEW, "Pending Review"),
+        (STATUS_COMPLETE, "Complete"),
+        (STATUS_INCOMPLETE, "Incomplete"),
     ]
 
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='user_projects')
+        User, on_delete=models.CASCADE, related_name="user_projects"
+    )
     project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-        related_name='user_projects')
+        Project, on_delete=models.CASCADE, related_name="user_projects"
+    )
     codeblock = models.OneToOneField(
-        CodeBlock,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True)
-    requirements = models.JSONField('Requirements', blank=True, null=True)
+        CodeBlock, on_delete=models.SET_NULL, blank=True, null=True
+    )
+    requirements = models.JSONField("Requirements", blank=True, null=True)
     requirements_completed_percent = models.DecimalField(
-        default=0.0, decimal_places=2, max_digits=5)  # max value: 100.00
+        default=0.0, decimal_places=2, max_digits=5
+    )  # max value: 100.00
     requirements_completed_percent_max = models.DecimalField(
-        default=0.0, decimal_places=2, max_digits=5)
+        default=0.0, decimal_places=2, max_digits=5
+    )
     point = models.IntegerField(default=0)
     status = models.PositiveSmallIntegerField(
-        'Status', choices=STATUSES, default=STATUS_IN_PROGRESS)
+        "Status", choices=STATUSES, default=STATUS_IN_PROGRESS
+    )
 
     # information bellow can be added by user when confirming the project completion
     demo_url = models.CharField(
-        'URL demo proyek', max_length=250, blank=True, default='')
+        "URL demo proyek", max_length=250, blank=True, default=""
+    )
     sourcecode_url = models.CharField(
-        'URL kode sumber proyek', max_length=250, blank=True, default='')
-    note = models.TextField('Catatan', blank=True, default='')
+        "URL kode sumber proyek", max_length=250, blank=True, default=""
+    )
+    note = models.TextField("Catatan", blank=True, default="")
 
     # whether user need to provide `demo_url` and/or `sourcecode_url` before project
     # marked as complete.
@@ -322,38 +330,41 @@ class UserProject(models.Model):
     class Meta:
         indexes = [
             # to make sure get UserProject by `user` and `project` query fast
-            models.Index(fields=['user', 'project'], name='user_project_idx'),
-            models.Index(fields=['status'], name='user_project_status_idx'),
+            models.Index(fields=["user", "project"], name="user_project_idx"),
+            models.Index(fields=["status"], name="user_project_status_idx"),
         ]
         constraints = [
             # to make sure there's only one UserProject record with the same `user` and `project`
             models.UniqueConstraint(
-                fields=['user', 'project'],
-                name='unique_user_project')
+                fields=["user", "project"], name="unique_user_project"
+            )
         ]
-        ordering = ['-pk']
+        ordering = ["-pk"]
 
     def __str__(self):
-        return '{} - {} ({})'.format(self.user.username, self.project.slug, self.point)
+        return "{} - {} ({})".format(self.user.username, self.project.slug, self.point)
 
     def get_absolute_url(self):
-        return reverse('projects:detail_user', args=[self.project.slug, self.project.pk, self.user.username])
+        return reverse(
+            "projects:detail_user",
+            args=[self.project.slug, self.project.pk, self.user.username],
+        )
 
     def get_project_url(self):
         return self.project.get_absolute_url()
 
     def get_point_display(self):
-        return '{}{}'.format(self.point, settings.POINT_UNIT)
+        return "{}{}".format(self.point, settings.POINT_UNIT)
 
     def get_color_class(self):
         """
         Based Bootstrap theme color
         """
         if self.is_pending_review() or self.is_incomplete():
-            return 'warning'
+            return "warning"
         if self.is_complete():
-            return 'success'
-        return 'primary'
+            return "success"
+        return "primary"
 
     def approvable_by(self, user):
         """
@@ -370,10 +381,9 @@ class UserProject(models.Model):
         """
         Returns progress in percent.
         """
-        reqs_progress = sum(
-            map(lambda r: 1 if 'complete' in r else 0, requirements))
+        reqs_progress = sum(map(lambda r: 1 if "complete" in r else 0, requirements))
         reqs_progress_percent = (reqs_progress / len(requirements)) * 100.0
-        return float(format(reqs_progress_percent, '.2f'))
+        return float(format(reqs_progress_percent, ".2f"))
 
     @staticmethod
     def requirements_diff(before, after):
@@ -387,10 +397,10 @@ class UserProject(models.Model):
 
         for index, req_before in enumerate(before):
             req_after = after[index]
-            if not req_before.get('complete') and req_after.get('complete'):
-                become_complete.append(req_before.get('title'))
-            if req_before.get('complete') and not req_after.get('complete'):
-                become_incomplete.append(req_before.get('title'))
+            if not req_before.get("complete") and req_after.get("complete"):
+                become_complete.append(req_before.get("title"))
+            if req_before.get("complete") and not req_after.get("complete"):
+                become_incomplete.append(req_before.get("title"))
         return progress_before, progress_after, become_complete, become_incomplete
 
     def calculate_progress(self):
@@ -434,7 +444,7 @@ class UserProject(models.Model):
         return False
 
     def is_solution_editable_by(self, user):
-        return (self.user == user)
+        return self.user == user
 
     def is_deletable_by(self, user):
         """
@@ -495,9 +505,10 @@ class UserProject(models.Model):
     def add_event(self, event_type, **kwargs):
         event = UserProjectEvent(
             user_project=self,
-            user=kwargs.get('user', self.user),
+            user=kwargs.get("user", self.user),
             event_type=event_type,
-            message=kwargs.get('message', ''))
+            message=kwargs.get("message", ""),
+        )
         event.save()
         return event
 
@@ -511,27 +522,27 @@ class UserProjectEvent(models.Model, Activity):
     TYPE_PROJECT_COMPLETE = 11
     TYPE_PROJECT_INCOMPLETE = 12
     TYPES = [
-        (TYPE_PROJECT_START, 'project_start'),
-        (TYPE_PROGRESS_UPDATE, 'progress_update'),
-        (TYPE_PROGRESS_COMPLETE, 'progress_complete'),
-        (TYPE_REVIEW_REQUEST, 'review_request'),
-        (TYPE_REVIEW_MESSAGE, 'review_message'),
-        (TYPE_PROJECT_COMPLETE, 'project_complete'),
-        (TYPE_PROJECT_INCOMPLETE, 'project_incomplete'),
+        (TYPE_PROJECT_START, "project_start"),
+        (TYPE_PROGRESS_UPDATE, "progress_update"),
+        (TYPE_PROGRESS_COMPLETE, "progress_complete"),
+        (TYPE_REVIEW_REQUEST, "review_request"),
+        (TYPE_REVIEW_MESSAGE, "review_message"),
+        (TYPE_PROJECT_COMPLETE, "project_complete"),
+        (TYPE_PROJECT_INCOMPLETE, "project_incomplete"),
     ]
 
     user_project = models.ForeignKey(
-        UserProject, on_delete=models.CASCADE, related_name='events')
+        UserProject, on_delete=models.CASCADE, related_name="events"
+    )
     user = models.ForeignKey(User, on_delete=CASCADE)
     event_type = models.PositiveSmallIntegerField(choices=TYPES)
-    message = models.TextField(blank=True, default='')
+    message = models.TextField(blank=True, default="")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         indexes = [
-            models.Index(fields=['event_type'],
-                         name='user_project_event_type_idx'),
+            models.Index(fields=["event_type"], name="user_project_event_type_idx"),
         ]
 
     def __str__(self):
@@ -549,6 +560,7 @@ class UserProjectEvent(models.Model, Activity):
     target = user_project
     foreign_id = self
     """
+
     @property
     def activity_object_attr(self):
         return self.user_project.project
@@ -567,15 +579,15 @@ class UserProjectEvent(models.Model, Activity):
 
     @classmethod
     def activity_related_models(cls):
-        return ['user_project', 'user']
+        return ["user_project", "user"]
 
     @property
     def extra_activity_data(self):
         target = create_model_reference(self.user_project)
         return dict(
-            target=target,
-            event_type=self.event_type,
-            event_message=self.message)
+            target=target, event_type=self.event_type, event_message=self.message
+        )
+
     # END <== properties and methods for getstream.io activity feed.
 
 
@@ -584,8 +596,8 @@ class UserProjectParticipant(models.Model):
     Used to track who participates in `UserProject`
     including the owner and reviewers.
     """
-    user_project = models.ForeignKey(
-        UserProject, on_delete=models.CASCADE)
+
+    user_project = models.ForeignKey(UserProject, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=CASCADE)
     # whether this user will will be notified for an event.
     subscribed = models.BooleanField(default=True)

@@ -5,8 +5,8 @@ log = logging.getLogger(__name__)
 
 
 class FeedManager(DefaultFeedManager):
-    CHALLENGE_FEED = 'challenge'
-    CHALLENGE_FEED_AGGREGATED = 'challenge_aggregated'
+    CHALLENGE_FEED = "challenge"
+    CHALLENGE_FEED_AGGREGATED = "challenge_aggregated"
 
     def get_challenge_feed(self, challenge_id: str, aggregated: str = False):
         if aggregated:
@@ -14,18 +14,23 @@ class FeedManager(DefaultFeedManager):
         return self.get_feed(self.CHALLENGE_FEED, challenge_id)
 
     def get_global_challenge_feed(self):
-        return self.get_feed(self.CHALLENGE_FEED_AGGREGATED, 'global')
+        return self.get_feed(self.CHALLENGE_FEED_AGGREGATED, "global")
 
     def add_notify_to_activity(self, activity, notify):
         if not isinstance(notify, list):
             notify = [notify]
-        activity['to'] = list(
-            set(activity.get('to', []) + [n.id for n in notify]))
+        activity["to"] = list(set(activity.get("to", []) + [n.id for n in notify]))
         return activity
 
     def add_activity(self, feed, activity):
         try:
             feed.add_activity(activity)
+        except Exception as e:
+            log.error(str(e))
+
+    def remove_activity_from_feed(self, instance):
+        try:
+            self.remove_activity_from_feed(instance)
         except Exception as e:
             log.error(str(e))
 
