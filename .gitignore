@@ -131,6 +131,7 @@ dmypy.json
 static/
 media/
 node_modules/
+postgres-data/
 .DS_Store
 .git
 .vscode
