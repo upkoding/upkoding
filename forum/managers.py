@@ -13,14 +13,20 @@ class TopicManager(models.Manager):
         """
         return self.filter(status=self.model.STATUS_ACTIVE)
 
-    def get_or_create_for_project(self, project):
+    def get_for_project(self, project):
+        content_type = ContentType.objects.get_for_model(project.__class__)
+        topic = self.get(content_type=content_type, content_id=project.pk)
+        return topic
+
+    def get_or_create_for_project(self, project, user=None):
         content_type = ContentType.objects.get_for_model(project.__class__)
         topic, _ = self.get_or_create(
-            content_type=content_type.pk,
+            content_type=content_type,
             content_id=project.pk,
             defaults={
                 "title": project.title,
                 "description": project.description_short,
+                "user": user,
             },
         )
         return topic

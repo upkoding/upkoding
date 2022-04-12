@@ -25,6 +25,7 @@
         gtag('config', '{{ ga_tracking_id }}');
     </script>
     {% endif %}
+    <script>window.csrf_token = '{{ csrf_token }}';</script>
 </head>
 
 <body>

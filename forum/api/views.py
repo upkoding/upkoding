@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import status
@@ -120,25 +121,48 @@ class UtilsViewSet(viewsets.ViewSet):
     def err_message(self, msg):
         return {"detail": msg}
 
-    @action(detail=False, methods=["post"], name="Get or Create Topic for a project")
-    def topic_for_project(self, request):
-        """
-        Return topic for given project_id.
-        """
-        project_id = request.data.get("project_id")
+    @action(detail=False, methods=["get"], name="Get Topic for a project")
+    def get_topic_for_project(self, request):
+        project_id = request.query_params.get("project")
         if project_id:
             try:
                 project = Project.objects.active().get(pk=project_id)
-                topic = Topic.objects.get_or_create_for_project(project)
+                topic = Topic.objects.get_for_project(
+                    project,
+                )
                 serializer = TopicSerializer(topic)
                 return Response(serializer.data)
-            except Project.DoesNotExist:
+            except (ObjectDoesNotExist):
                 return Response(
-                    self.err_message(f"Project with id={project_id} not found."),
-                    status=status.HTTP_400_BAD_REQUEST,
+                    self.err_message(f"Topic or Project does not exist"),
+                    status=status.HTTP_404_NOT_FOUND,
                 )
 
         return Response(
-            self.err_message("Missing project_id in body."),
+            self.err_message("Missing project in query params"),
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    @action(detail=False, methods=["post"], name="Create Topic for a project")
+    def create_topic_for_project(self, request):
+        """
+        Return topic for given project_id.
+        """
+        project_id = request.data.get("project")
+        if project_id:
+            try:
+                project = Project.objects.active().get(pk=project_id)
+                topic = Topic.objects.get_or_create_for_project(
+                    project, user=request.user
+                )
+                serializer = TopicSerializer(topic)
+                return Response(serializer.data)
+            except (ObjectDoesNotExist):
+                return Response(
+                    self.err_message(f"Topic or Project does not exist"),
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        return Response(
+            self.err_message("Missing project in body"),
             status=status.HTTP_400_BAD_REQUEST,
         )

@@ -76,7 +76,7 @@
                             {% endif %}
                             {% endblock %}
 
-                            <div class="d-flex justify-content-between text-small mt-2">
+                            <div class="d-flex justify-content-between text-small mt-2 mb-3">
                                 <div class="d-flex align-items-center">
                                     <span>Tantangan diposting oleh
                                         <a href="{{ project_owner.get_absolute_url }}">
@@ -89,6 +89,11 @@
                                     {% render_tags object 'secondary' %}
                                 </span>
                             </div>
+
+                        <link href="{% static 'discuss.css' %}" rel="stylesheet"/>
+                        <div id="discuss-target"></div>
+                        <script id="discuss-props" type="application/json">{"project_id": {{object.id}}, "is_authenticated": {{user.is_authenticated|lower}}}</script>
+                        <script type="text/javascript" src="{% static 'discuss.js' %}"></script>
 
                         </div>
                     </div>
