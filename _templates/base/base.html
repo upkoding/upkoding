@@ -26,6 +26,10 @@
     </script>
     {% endif %}
     <script>window.csrf_token = '{{ csrf_token }}';</script>
+    <!-- Required vendor scripts (Do not remove) -->
+    <script type="text/javascript" src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/bootstrap.js' %}"></script>
 </head>
 
 <body>
@@ -155,11 +159,6 @@
             Hello, world! This is a toast message.
         </div>
     </div>
-
-    <!-- Required vendor scripts (Do not remove) -->
-    <script type="text/javascript" src="{% static 'assets/js/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'assets/js/popper.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'assets/js/bootstrap.js' %}"></script>
 
     <!-- Optional Vendor Scripts (Remove the plugin script here and comment initializer script out of index.js if site does not use that feature) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"

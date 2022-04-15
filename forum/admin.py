@@ -3,20 +3,18 @@ from django.contrib import admin
 from .models import (
     Topic,
     Thread,
-    ThreadStat,
-    ThreadAnswer,
-    ThreadAnswerParticipant,
-    ThreadAnswerStat,
-    ThreadParticipant,
+    Reply,
+    Stat,
+    Participant,
 )
 
 
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         "title",
         "content_object",
-        "thread_count",
         "status",
         "created",
         "updated",
@@ -26,33 +24,22 @@ class TopicAdmin(admin.ModelAdmin):
 
 @admin.register(Thread)
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ["title", "topic", "user", "status", "created"]
+    list_display = ["id", "title", "topic", "user", "status", "created"]
     list_filter = ["status"]
 
 
-@admin.register(ThreadStat)
-class ThreadStatAdmin(admin.ModelAdmin):
-    list_display = ["thread", "type", "value", "created"]
-    list_filter = ["type"]
-
-
-@admin.register(ThreadParticipant)
-class ThreadParticipantAdmin(admin.ModelAdmin):
-    list_display = ["user", "thread", "subscribed", "created"]
-
-
-@admin.register(ThreadAnswer)
-class ThreadAnswerAdmin(admin.ModelAdmin):
-    list_display = ["thread", "user", "parent", "status", "created"]
+@admin.register(Reply)
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "message", "parent", "status", "created"]
     list_filter = ["status"]
 
 
-@admin.register(ThreadAnswerParticipant)
-class ThreadAnswerParticipantAdmin(admin.ModelAdmin):
-    list_display = ["user", "thread_answer", "subscribed", "created"]
+@admin.register(Stat)
+class StatAdmin(admin.ModelAdmin):
+    list_display = ["id", "content_type", "content_id", "stat_type", "value", "created"]
+    list_filter = ["stat_type"]
 
 
-@admin.register(ThreadAnswerStat)
-class ThreadAnswerStatAdmin(admin.ModelAdmin):
-    list_display = ["thread_answer", "type", "value", "created"]
-    list_filter = ["type"]
+@admin.register(Participant)
+class ParticipantAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "content_type", "content_id", "subscribed", "created"]

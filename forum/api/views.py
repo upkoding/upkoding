@@ -6,18 +6,16 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from projects.models import Project
 from forum.models import (
-    ThreadAnswer,
-    ThreadAnswerParticipant,
-    ThreadParticipant,
+    Reply,
+    Participant,
     Topic,
     Thread,
 )
 from forum.api.serializers import (
-    ThreadAnswerParticipantSerializer,
-    ThreadAnswerSerializer,
-    ThreadParticipantSerializer,
+    ReplySerializer,
     TopicSerializer,
     ThreadSerializer,
+    ParticipantSerializer,
 )
 
 from .permissions import IsOwnerOrReadOnly
@@ -50,70 +48,59 @@ class ThreadDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
 
 
-# Thread Participant
-class ThreadParticipantList(generics.ListCreateAPIView):
-
-    serializer_class = ThreadParticipantSerializer
-    filterset_fields = ["user", "user__username", "subscribed"]
-
-    def get_queryset(self):
-        thread_id = self.kwargs.get("thread_pk")
-        return ThreadParticipant.objects.filter(thread=thread_id)
-
-    def perform_create(self, serializer):
-        thread_id = self.kwargs.get("thread_pk")
-        thread = Thread.objects.active().get(pk=thread_id)
-        serializer.save(user=self.request.user, thread=thread)
-
-
-class ThreadParticipantDetail(generics.RetrieveUpdateAPIView):
-    serializer_class = ThreadParticipantSerializer
-    permission_classes = [IsOwnerOrReadOnly]
-
-    def get_queryset(self):
-        thread_id = self.kwargs.get("thread_pk")
-        return ThreadParticipant.objects.filter(thread=thread_id)
-
-
-# ThreadAnswer
-class ThreadAnswerList(generics.ListCreateAPIView):
-    queryset = ThreadAnswer.objects.active()
-    serializer_class = ThreadAnswerSerializer
+# Reply
+class ReplyList(generics.ListCreateAPIView):
+    queryset = Reply.objects.active()
+    serializer_class = ReplySerializer
     filterset_fields = ["thread", "user", "user__username", "parent"]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-class ThreadAnswerDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ThreadAnswer.objects.active()
-    serializer_class = ThreadAnswerSerializer
+class ReplyDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Reply.objects.active()
+    serializer_class = ReplySerializer
     permission_classes = [IsOwnerOrReadOnly]
 
 
-# Thread Answer Participant
-class ThreadAnswerParticipantList(generics.ListCreateAPIView):
-
-    serializer_class = ThreadAnswerParticipantSerializer
+# Participant
+class ParticipantList(generics.ListCreateAPIView):
+    content_class = None
+    serializer_class = ParticipantSerializer
     filterset_fields = ["user", "user__username", "subscribed"]
 
     def get_queryset(self):
-        thread_answer_id = self.kwargs.get("thread_answer_pk")
-        return ThreadAnswerParticipant.objects.filter(thread_answer=thread_answer_id)
+        content_id = self.kwargs.get("content_id")
+        content_type = self.content_class.get_content_type()
+        return Participant.objects.filter(
+            content_type=content_type, content_id=content_id
+        )
 
     def perform_create(self, serializer):
-        thread_answer_id = self.kwargs.get("thread_answer_pk")
-        thread_answer = ThreadAnswer.objects.active().get(pk=thread_answer_id)
-        serializer.save(user=self.request.user, thread_answer=thread_answer)
+        content_id = self.kwargs.get("content_id")
+        objects = self.content_class.objects
+        if hasattr(objects, "active"):
+            content = objects.active().get(pk=content_id)
+        else:
+            content = objects.get(pk=content_id)
+        content_type = self.content_class.get_content_type()
+        serializer.save(
+            user=self.request.user, content_type=content_type, content_id=content.pk
+        )
 
 
-class ThreadAnswerParticipantDetail(generics.RetrieveUpdateAPIView):
-    serializer_class = ThreadAnswerParticipantSerializer
+class ParticipantDetail(generics.RetrieveUpdateAPIView):
+    content_class = None
+    serializer_class = ParticipantSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
-        thread_answer_id = self.kwargs.get("thread_answer_pk")
-        return ThreadAnswerParticipant.objects.filter(thread_answer=thread_answer_id)
+        content_type = self.content_class.get_content_type()
+        content_id = self.kwargs.get("content_id")
+        return Participant.objects.filter(
+            content_type=content_type, content_id=content_id
+        )
 
 
 # Utils

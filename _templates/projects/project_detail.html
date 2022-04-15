@@ -7,6 +7,9 @@
 {% load projects %}
 
 {% block meta %}{% meta object=object %}{% endblock %}
+{% block extrastyle %}
+
+{% endblock %}
 
 {% block content %}
 <div class="breadcrumb-bar navbar bg-white sticky-top">
@@ -90,10 +93,12 @@
                                 </span>
                             </div>
 
+                        {% if not user_project %}
                         <link href="{% static 'discuss.css' %}" rel="stylesheet"/>
                         <div id="discuss-target"></div>
-                        <script id="discuss-props" type="application/json">{"project_id": {{object.id}}, "is_authenticated": {{user.is_authenticated|lower}}}</script>
+                        {{ discuss_props|json_script:"discuss-props" }}
                         <script type="text/javascript" src="{% static 'discuss.js' %}"></script>
+                        {% endif %}
 
                         </div>
                     </div>

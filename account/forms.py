@@ -9,13 +9,11 @@ from .models import User, Link, UserSetting, ProAccess, ProAccessPurchase
 from .midtrans import get_redirect_url
 
 USERNAME_VALIDATORS = [
-    RegexValidator(
-        regex='^[a-zA-Z0-9_]{3,}$',
-        message='Format username tidak valid'),
+    RegexValidator(regex="^[a-zA-Z0-9_]{3,}$", message="Format username tidak valid"),
 ]
 
 
-def get_form_error(form, field='__all__'):
+def get_form_error(form, field="__all__"):
     message = None
     all_errors = form.errors.as_data().get(field)
     if all_errors:
@@ -24,7 +22,6 @@ def get_form_error(form, field='__all__'):
 
 
 class BootstrapFormErrorMixin:
-
     def is_valid(self):
         """
         Add bootstrap `is-invalid` class to form input when its invalid.
@@ -34,9 +31,7 @@ class BootstrapFormErrorMixin:
         errors = self.errors
         for field in errors:
             attrs = fields[field].widget.attrs
-            attrs.update(
-                {'class': attrs.get('class', '') + ' is-invalid'}
-            )
+            attrs.update({"class": attrs.get("class", "") + " is-invalid"})
         return result
 
 
@@ -44,41 +39,52 @@ class ProfileForm(BootstrapFormErrorMixin, forms.ModelForm):
     """
     Customized profile form to match Bootstrap 5 styles.
     """
-    username = UsernameField(required=True,
-                             label='Username *',
-                             validators=USERNAME_VALIDATORS,
-                             help_text="Minimum 3 karakter (huruf, angka dan _ diperbolehkan)")
-    email = forms.EmailField(required=True,
-                             label='Alamat Email *',
-                             help_text="Email untuk notifikasi, pengumuman dan transaksi lainnya")
-    first_name = forms.CharField(required=True,
-                                 label='Nama *')
-    description = forms.CharField(required=True,
-                                  label='Tentang *',
-                                  widget=forms.Textarea())
+
+    username = UsernameField(
+        required=True,
+        label="Username *",
+        validators=USERNAME_VALIDATORS,
+        help_text="Minimum 3 karakter (huruf, angka dan _ diperbolehkan)",
+    )
+    email = forms.EmailField(
+        required=True,
+        label="Alamat Email *",
+        help_text="Email untuk notifikasi, pengumuman dan transaksi lainnya",
+    )
+    first_name = forms.CharField(required=True, label="Nama *")
+    description = forms.CharField(
+        required=True, label="Tentang *", widget=forms.Textarea()
+    )
 
     class Meta:
         model = User
-        fields = ['avatar', 'username', 'email',
-                  'first_name', 'description', 'time_zone']
+        fields = [
+            "avatar",
+            "username",
+            "email",
+            "first_name",
+            "description",
+            "time_zone",
+        ]
 
     def clean_email(self):
         """
         Prevent user saving the same email with others.
         """
         user = self.instance
-        email = self.cleaned_data.get('email')
+        email = self.cleaned_data.get("email")
         other_users = User.objects.filter(email=email).exclude(pk=user.pk)
         if len(other_users) != 0:
             raise forms.ValidationError(
-                'Email ini sudah terdaftar dengan pengguna lain')
+                "Email ini sudah terdaftar dengan pengguna lain"
+            )
         return email
 
 
 class LinkForm(BootstrapFormErrorMixin, forms.ModelForm):
     class Meta:
         model = Link
-        exclude = ('user',)
+        exclude = ("user",)
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -92,17 +98,17 @@ class LinkForm(BootstrapFormErrorMixin, forms.ModelForm):
 
 class EmailNotificationSettings(forms.Form):
     email_notify_project_message = forms.BooleanField(
-        label='Percakapan di timeline proyek',
-        required=False)
+        label="Percakapan di timeline proyek", required=False
+    )
     email_notify_project_approved = forms.BooleanField(
-        label='Proyek saya disetujui',
-        required=False)
+        label="Proyek saya disetujui", required=False
+    )
     email_notify_project_disapproved = forms.BooleanField(
-        label='Proyek saya tidak disetujui',
-        required=False)
-    # email_notify_forum_activity = forms.BooleanField(
-    #     label='Aktivitas di forum',
-    #     required=False)
+        label="Proyek saya tidak disetujui", required=False
+    )
+    email_notify_forum_activity = forms.BooleanField(
+        label="Aktivitas di forum", required=False
+    )
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -122,7 +128,8 @@ class EmailNotificationSettings(forms.Form):
 
 class StaffEmailNotificationSettings(EmailNotificationSettings):
     email_notify_project_review_request = forms.BooleanField(
-        label='Permintaan review proyek (for staff only)', required=False)
+        label="Permintaan review proyek (for staff only)", required=False
+    )
 
 
 class ProAccessPurchaseForm(forms.Form):
@@ -134,34 +141,29 @@ class ProAccessPurchaseForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        plan_id = cleaned_data.get('plan_id')
+        plan_id = cleaned_data.get("plan_id")
 
         # make sure user's email is verified
         if not self.user.is_email_verified():
-            raise forms.ValidationError(
-                'Maaf, email kamu belum terverifikasi!')
+            raise forms.ValidationError("Maaf, email kamu belum terverifikasi!")
 
         # make sure plan ID is valid
         if not pricing.plan_id_is_valid(plan_id):
-            raise forms.ValidationError(
-                'Maaf, paket yang dipilih tidak valid!')
-
-        # if self.user.is_pro_user():
-        #     raise forms.ValidationError(
-        #         'Pro Access bisa diperpanjang setelah periode saat ini sudah habis.')
+            raise forms.ValidationError("Maaf, paket yang dipilih tidak valid!")
 
         # make sure user doesn't have PENDING purchase
         if not ProAccessPurchase.can_create(self.user):
             raise forms.ValidationError(
-                'Terdapat order yang masih pending, '
-                'batalkan atau lanjutkan ke pembayaran sebelum membuat yang baru.')
+                "Terdapat order yang masih pending, "
+                "batalkan atau lanjutkan ke pembayaran sebelum membuat yang baru."
+            )
 
         return cleaned_data
 
     def purchase_access(self, is_gift: bool = False):
         with transaction.atomic():
             pro_access, _ = ProAccess.objects.get_or_create(user=self.user)
-            plan = pricing.get_plan(self.cleaned_data.get('plan_id'))
+            plan = pricing.get_plan(self.cleaned_data.get("plan_id"))
             pro_access_purchase = ProAccessPurchase(
                 user=self.user,
                 pro_access=pro_access,
@@ -170,14 +172,14 @@ class ProAccessPurchaseForm(forms.Form):
                 price=plan.price,
             )
             pro_access_purchase.save()
-            
+
             if is_gift:
                 pro_access_purchase.set_gifted()
 
 
 class ProAccessPurchaseActionForm(forms.Form):
-    ACTION_CANCEL = 'cancel'
-    ACTION_PAY = 'pay'
+    ACTION_CANCEL = "cancel"
+    ACTION_PAY = "pay"
     ACTIONS = [
         (ACTION_CANCEL, ACTION_CANCEL),
         (ACTION_PAY, ACTION_PAY),
@@ -196,15 +198,14 @@ class ProAccessPurchaseActionForm(forms.Form):
         # make sure it belongs to current user
         try:
             self.purchase = ProAccessPurchase.objects.get(
-                pk=cleaned_data.get('purchase_id'),
-                user=self.user
+                pk=cleaned_data.get("purchase_id"), user=self.user
             )
         except ProAccessPurchase.DoesNotExist:
-            raise ValidationError('Order ID tidak valid!')
+            raise ValidationError("Order ID tidak valid!")
 
         # make sure it payable and cancelable
         if not self.purchase.can_pay():
-            raise ValidationError('Order sudah kadaluarsa!')
+            raise ValidationError("Order sudah kadaluarsa!")
 
         return cleaned_data
 
@@ -218,5 +219,5 @@ class ProAccessPurchaseActionForm(forms.Form):
             gross_amount=self.purchase.price,
             customer_first_name=self.user.first_name,
             customer_last_name=self.user.last_name,
-            customer_email=self.user.email
+            customer_email=self.user.email,
         )

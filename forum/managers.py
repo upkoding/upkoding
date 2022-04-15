@@ -35,7 +35,7 @@ class TopicManager(models.Manager):
 class ThreadManager(models.Manager):
     def active(self):
         """
-        Returns active answers only.
+        Returns active threads only.
         Usage:
             `Thread.objects.active()`
         Which is equivalent to:
@@ -44,13 +44,13 @@ class ThreadManager(models.Manager):
         return self.filter(status=self.model.STATUS_ACTIVE)
 
 
-class ThreadAnswerManager(models.Manager):
+class ReplyManager(models.Manager):
     def active(self):
         """
-        Returns active answers only.
+        Returns active replies only.
         Usage:
-            `ThreadAnswer.objects.active()`
+            `Reply.objects.active()`
         Which is equivalent to:
-            `ThreadAnswer.objects.all(status=1)`
+            `Reply.objects.all(status=1)`
         """
         return self.filter(status=self.model.STATUS_ACTIVE)

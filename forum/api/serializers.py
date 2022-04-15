@@ -2,11 +2,10 @@ from rest_framework import serializers
 
 from account.models import User
 from forum.models import (
-    ThreadAnswer,
-    ThreadAnswerParticipant,
+    Reply,
     Topic,
     Thread,
-    ThreadParticipant,
+    Participant,
 )
 
 
@@ -21,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TopicSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    stats = serializers.DictField(source="get_stats", read_only=True)
 
     class Meta:
         model = Topic
@@ -31,10 +31,10 @@ class TopicSerializer(serializers.ModelSerializer):
             "slug",
             "description",
             "image",
-            "thread_count",
             "created",
+            "stats",
         ]
-        read_only_fields = ["slug", "image", "thread_count"]
+        read_only_fields = ["slug", "image"]
 
 
 class ThreadSerializer(serializers.ModelSerializer):
@@ -56,37 +56,56 @@ class ThreadSerializer(serializers.ModelSerializer):
         read_only_fields = ["slug"]
 
 
-class ThreadParticipantSerializer(serializers.ModelSerializer):
+class ParticipantSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
     class Meta:
-        model = ThreadParticipant
+        model = Participant
         fields = ["id", "user", "subscribed", "created"]
 
     def create(self, validated_data):
         # make sure there's no duplicate
-        participant, _ = ThreadParticipant.objects.get_or_create(
+        participant, _ = Participant.objects.get_or_create(
             user=validated_data.get("user"),
-            thread=validated_data.get("thread"),
+            content_type=validated_data.get("content_type"),
+            content_id=validated_data.get("content_id"),
             defaults={"subscribed": validated_data.get("subscribed")},
         )
         return participant
 
 
-class ThreadAnswerSerializer(serializers.ModelSerializer):
+class ReplySerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     stats = serializers.DictField(source="get_stats", read_only=True)
 
     class Meta:
-        model = ThreadAnswer
-        fields = ["id", "user", "thread", "message", "parent", "created", "stats"]
+        model = Reply
+        fields = [
+            "id",
+            "user",
+            "thread",
+            "message",
+            "parent",
+            "level",
+            "created",
+            "stats",
+        ]
+        read_only_fields = ["level"]
 
     def create(self, validated_data):
-        # make sure thread and parent__thread are the same
+        # rules:
+        # - make sure thread and parent__thread are the same
+        # - can not reply to parent that has level=Reply.MAX_LEVEL
         thread = validated_data.get("thread")
         parent = validated_data.get("parent")
-        if parent is not None and thread.id != parent.thread_id:
-            raise serializers.ValidationError("parent must be in the same thread")
+        validated_data["level"] = 0
+
+        if parent is not None:
+            if thread.id != parent.thread_id:
+                raise serializers.ValidationError("parent.thread validation")
+            if parent.level >= Reply.MAX_LEVEL:
+                raise serializers.ValidationError("reply.level validation error")
+            validated_data["level"] = parent.level + 1
 
         return super().create(validated_data)
 
@@ -97,20 +116,3 @@ class ThreadAnswerSerializer(serializers.ModelSerializer):
         ) or instance.parent != validated_data.get("parent"):
             raise serializers.ValidationError("thread and parent can not changed")
         return super().update(instance, validated_data)
-
-
-class ThreadAnswerParticipantSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
-    class Meta:
-        model = ThreadAnswerParticipant
-        fields = ["id", "user", "subscribed", "created"]
-
-    def create(self, validated_data):
-        # make sure there's no duplicate
-        participant, _ = ThreadAnswerParticipant.objects.get_or_create(
-            user=validated_data.get("user"),
-            thread_answer=validated_data.get("thread_answer"),
-            defaults={"subscribed": validated_data.get("subscribed")},
-        )
-        return participant

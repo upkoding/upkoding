@@ -7,6 +7,10 @@ async function get(url, params) {
     }
 }
 
+async function del(url) {
+    return await fetch(url, { method: 'delete', headers: { "x-CSRFToken": window.csrf_token } })
+}
+
 async function post(url, data) {
     return await fetch(url, {
         method: 'post',
@@ -18,17 +22,68 @@ async function post(url, data) {
     })
 }
 
-export const getTopicForProject = async (projectId) => {
+async function put(url, data) {
+    return await fetch(url, {
+        method: 'put',
+        headers: {
+            "x-CSRFToken": window.csrf_token,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+    })
+}
+
+// topics
+export async function getTopicForProject(projectId) {
     const resp = await get('/forum/api/v1/utils/get_topic_for_project/', { project: projectId })
-    return resp.ok ? await resp.json() : null
+    return {
+        ok: resp.ok,
+        data: await resp.json()
+    }
 }
 
-export const createTopicForProject = async (projectId) => {
+export async function createTopicForProject(projectId) {
     const resp = await post('/forum/api/v1/utils/create_topic_for_project/', { project: projectId })
-    return resp.ok ? await resp.json() : null
+    return {
+        ok: resp.ok,
+        data: await resp.json()
+    }
 }
 
-export const getTopicThreads = async (topicId) => {
-    const resp = await get('/forum/api/v1/threads/', { topic: topicId })
-    return resp.ok ? await resp.json() : null
+
+// threads
+export async function listThreads(filter) {
+    const resp = await get('/forum/api/v1/threads/', filter)
+    return {
+        ok: resp.ok,
+        data: await resp.json()
+    }
+}
+
+export async function getThread(threadId) {
+    const resp = await get(`/forum/api/v1/threads/${threadId}/`)
+    return {
+        ok: resp.ok,
+        data: await resp.json()
+    }
+}
+
+export async function createOrUpdateThread(thread) {
+    let resp;
+    if (thread.id) {
+        resp = await put(`/forum/api/v1/threads/${thread.id}/`, thread)
+    } else {
+        resp = await post(`/forum/api/v1/threads/`, thread)
+    }
+    return {
+        ok: resp.ok,
+        data: await resp.json()
+    }
+}
+
+export async function deleteThread(threadId) {
+    const resp = await del(`/forum/api/v1/threads/${threadId}/`)
+    return {
+        ok: resp.ok
+    }
 }

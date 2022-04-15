@@ -120,6 +120,7 @@ class ProjectDetail(DetailView):
         )
         data["user_projects"] = user_projects
         data["roadmaps"] = project.get_roadmaps()
+        data["discuss_props"] = {"project_id": project.id, "current_user_id": user.id}
         return data
 
     def get(self, request, *args, **kwargs):
