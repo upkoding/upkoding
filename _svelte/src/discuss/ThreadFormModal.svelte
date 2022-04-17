@@ -1,5 +1,5 @@
 <script>
-    import { onMount, createEventDispatcher, tick } from "svelte";
+    import { onMount, createEventDispatcher } from "svelte";
     import MarkdownEditor from "./MarkdownEditor.svelte";
 
     export let key = 0; // to make sure modal has unique ID

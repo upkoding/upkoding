@@ -7,6 +7,8 @@
 
     export let id;
     export let value = "";
+    export let width = "100%";
+    export let height = 150;
     export let reset = 0; // if reset value > 0 and keep changing, we'll reset
     let textArea;
 
@@ -18,6 +20,7 @@
             mode: "markdown",
             autoRefresh: true,
         });
+        editor.setSize(width, height);
         editor.on("change", (e) => {
             value = e.getDoc().getValue();
         });
@@ -33,7 +36,7 @@
 </script>
 
 <div class="editor-container">
-    <textarea bind:this={textArea} bind:value {id}/>
+    <textarea bind:this={textArea} bind:value {id} />
 </div>
 
 <style>

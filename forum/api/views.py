@@ -4,6 +4,8 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from upkoding.pagination import NewestIdFirstCursorPagination
 from projects.models import Project
 from forum.models import (
     Reply,
@@ -23,7 +25,9 @@ from .permissions import IsOwnerOrReadOnly
 # Topic
 class TopicList(generics.ListAPIView):
     queryset = Topic.objects.active()
+    # we want newly created topic showing first
     serializer_class = TopicSerializer
+    pagination_class = NewestIdFirstCursorPagination
     filterset_fields = ["user", "user__username"]
 
 
@@ -36,6 +40,8 @@ class TopicDetail(generics.RetrieveAPIView):
 class ThreadList(generics.ListCreateAPIView):
     queryset = Thread.objects.active()
     serializer_class = ThreadSerializer
+    # we want newly created thread showing first
+    pagination_class = NewestIdFirstCursorPagination
     filterset_fields = ["topic", "user", "user__username"]
 
     def perform_create(self, serializer):
@@ -52,7 +58,7 @@ class ThreadDetail(generics.RetrieveUpdateDestroyAPIView):
 class ReplyList(generics.ListCreateAPIView):
     queryset = Reply.objects.active()
     serializer_class = ReplySerializer
-    filterset_fields = ["thread", "user", "user__username", "parent"]
+    filterset_fields = ["thread", "user", "user__username", "parent", "level"]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

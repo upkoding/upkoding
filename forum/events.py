@@ -30,10 +30,30 @@ class OnThreadCreated:
         self.topic.inc_thread_count()
 
         # send notification to Topic subscribers
+        self.email_context = {
+            "domain": settings.SITE_DOMAIN,
+            "user": self.user,
+            "thread": thread,
+        }
         self.notify_new_thread()
 
     def notify_new_thread(self):
-        pass
+        """Notify all users subscribed to a thread"""
+        tpl = "forum/emails/new_thread.html"
+        subscribers = Participant.subscribed_to(self.topic, exclude_user=self.user)
+        if subscribers:
+            subject = f"[UpKoding Forum] @{self.user.username} bertanya di '{self.topic_content_object.title}'"
+            msg = render_to_string(tpl, self.email_context)
+
+            # TODO: need better (scalable) solution for this if subscribers number are large.
+            emails = []
+            for sub in subscribers:
+                to_user = sub.user
+                if UserSetting.objects.email_notify_forum_activity(to_user):
+                    emails.append((subject, msg, FROM, [to_user.email]))
+
+            if emails:
+                send_mass_mail(emails, fail_silently=True)
 
 
 class OnReplyCreated:

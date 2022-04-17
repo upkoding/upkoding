@@ -52,8 +52,14 @@ export async function createTopicForProject(projectId) {
 
 
 // threads
-export async function listThreads(filter) {
-    const resp = await get('/forum/api/v1/threads/', filter)
+export async function listThread(filter, next_url) {
+    let resp;
+    if (next_url) {
+        resp = await get(next_url)
+    } else {
+        resp = await get('/forum/api/v1/threads/', filter)
+    }
+
     return {
         ok: resp.ok,
         data: await resp.json()
@@ -62,6 +68,40 @@ export async function listThreads(filter) {
 
 export async function getThread(threadId) {
     const resp = await get(`/forum/api/v1/threads/${threadId}/`)
+    return {
+        ok: resp.ok,
+        data: await resp.json()
+    }
+}
+
+export async function listReply(filter, next_url) {
+    let resp;
+    if (next_url) {
+        resp = await get(next_url)
+    } else {
+        resp = await get('/forum/api/v1/replies/', filter)
+    }
+    return {
+        ok: resp.ok,
+        data: await resp.json()
+    }
+}
+
+export async function getReply(replyId) {
+    const resp = await get(`/forum/api/v1/replies/${replyId}/`)
+    return {
+        ok: resp.ok,
+        data: await resp.json()
+    }
+}
+
+export async function createOrUpdateReply(reply) {
+    let resp;
+    if (reply.id) {
+        resp = await put(`/forum/api/v1/replies/${reply.id}/`, reply)
+    } else {
+        resp = await post(`/forum/api/v1/replies/`, reply)
+    }
     return {
         ok: resp.ok,
         data: await resp.json()

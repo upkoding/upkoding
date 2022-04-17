@@ -4,6 +4,7 @@
     import { deleteThread, createOrUpdateThread } from "../common/api";
     import ConfirmationModal from "./ConfirmationModal.svelte";
     import ThreadFormModal from "./ThreadFormModal.svelte";
+    import ThreadDetailModal from "./ThreadDetailModal.svelte";
 
     export let thread;
     export let current_user_id;
@@ -11,8 +12,12 @@
     const dispatch = createEventDispatcher();
     let showEditModal = false;
     let showConfirmDeleteModal = false;
+    let showDetailModal = false;
     let loading = false;
     let errors;
+
+    $: reply_count =
+        thread.stats && thread.stats.reply_count ? thread.stats.reply_count : 0;
 
     async function _deleteThread() {
         loading = true;
@@ -28,6 +33,8 @@
     }
 
     async function _updateThread(e) {
+        if (loading) return;
+
         loading = true;
         const { ok, data } = await createOrUpdateThread(e.detail);
         loading = false;
@@ -44,7 +51,7 @@
 <div class="media chat-item px-2 py-3 m-0 d-flex justify-content-between">
     <!-- <img alt={thread.user.username} src={thread.user.avatar} class="avatar" /> -->
 
-    <div class="media-body">
+    <div class="media-body" on:click={() => (showDetailModal = true)}>
         <div class="chat-item-body">
             <h6>
                 <i class="material-icons-x mr-1">question_answer</i>
@@ -56,7 +63,7 @@
             <span class="text-small">
                 oleh <a href={thread.user.url}>{thread.user.username}</a>
                 {dayjs(thread.created).fromNow()} &middot;
-                <a href="">2 balasan</a>
+                <span>{reply_count} jawaban</span>
             </span>
         </div>
     </div>
@@ -103,7 +110,7 @@
 
 <ThreadFormModal
     key={thread.id}
-    theme="primary"
+    theme="info"
     title="Edit Pertanyaan"
     {thread}
     btnText="Simpan"
@@ -114,9 +121,20 @@
     on:submit={_updateThread}
 />
 
+<ThreadDetailModal
+    key={thread.id}
+    theme="info"
+    title={thread.title}
+    {thread}
+    btnText="Simpan"
+    btnTextLoading="Menyimpan..."
+    bind:show={showDetailModal}
+/>
+
 <style>
     .dropdown-item,
-    h6 {
+    h6,
+    .media-body {
         cursor: pointer;
     }
 </style>

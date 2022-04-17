@@ -4,7 +4,7 @@
 		getTopicForProject,
 		createTopicForProject,
 		createOrUpdateThread,
-		listThreads,
+		listThread,
 	} from "../common/api";
 	import EmptyThreads from "./EmptyThreads.svelte";
 	import ThreadFormModal from "./ThreadFormModal.svelte";
@@ -15,27 +15,50 @@
 	export let project_id;
 
 	// local vars
-	let loading = true;
+	let loading = false;
 	let topic = null;
 	let threads = [];
+	let nextThreadsURL;
 	let showNewThreadModal = false;
 	let saving = false;
 	let savingErrors = null;
 
-	// on mounted: fetch threads
-	onMount(async () => {
-		const { ok, data } = await getTopicForProject(project_id);
-		topic = ok ? data : null;
+	async function getThreads(refresh) {
+		if (loading) return;
+
+		loading = true;
+		if (topic === null) {
+			const { ok, data } = await getTopicForProject(project_id);
+			topic = ok ? data : null;
+		}
+
 		if (topic) {
-			const { ok, data } = await listThreads({ topic: topic.id });
-			threads = ok ? data.results : [];
+			const { ok, data } = await listThread(
+				{ topic: topic.id },
+				refresh ? null : nextThreadsURL
+			);
+			if (ok) {
+				threads = refresh
+					? data.results
+					: [...threads, ...data.results];
+				nextThreadsURL = data.next;
+			}
 		}
 		loading = false;
+	}
+
+	// on mounted: fetch threads
+	onMount(async () => {
+		await getThreads(true);
 	});
 
 	// on thread deleted: remove from list
 	function onThreadDeleted(e) {
 		threads = threads.filter((t) => t.id !== e.detail.id);
+		// in case all thread deleted, pull from server if there's left.
+		if (threads.length == 0) {
+			getThreads(true);
+		}
 	}
 
 	function showForm() {
@@ -43,6 +66,8 @@
 	}
 
 	async function newThread(e) {
+		if (saving) return;
+
 		let thread = e.detail;
 		saving = true;
 		if (topic === null) {
@@ -64,10 +89,10 @@
 
 <ThreadFormModal
 	key="new"
-	theme="primary"
+	theme="info"
 	title="Ajukan Pertanyaan"
-	btnText="Kirim"
-	btnTextLoading="Mengirim..."
+	btnText="Submit Pertanyaan"
+	btnTextLoading="Submitting..."
 	loading={saving}
 	errors={savingErrors}
 	resetOnClose={true}
@@ -78,7 +103,7 @@
 <div class="card shadow-sm mb-3">
 	<div class="card-header d-flex justify-content-between">
 		<span class="mt-1">FORUM DISKUSI</span>
-		<button class="btn btn-primary" on:click={showForm}>
+		<button class="btn btn-info" on:click={showForm}>
 			Ajukan Pertanyaan
 		</button>
 	</div>
@@ -91,6 +116,18 @@
 					on:delete={onThreadDeleted}
 				/>
 			{/each}
+			{#if nextThreadsURL}
+				<div class="media chat-item py-2 d-flex justify-content-center">
+					<a
+						href={"#"}
+						on:click|preventDefault={() => {
+							getThreads(false);
+						}}
+					>
+						<span class="material-icons-x mr-1">arrow_downward</span>{loading ? "Memuat..." : "Muat diskusi sebelumnya"}
+					</a>
+				</div>
+			{/if}
 		</div>
 	{:else}
 		<EmptyThreads {loading} />
