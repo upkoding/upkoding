@@ -1,5 +1,6 @@
 import logging
 import json
+import jwt
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -33,50 +34,62 @@ log = logging.getLogger(__name__)
 
 
 class LoginView(views.LoginView):
-    template_name = 'account/login.html'
+    template_name = "account/login.html"
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('base:index'))
+            return HttpResponseRedirect(reverse("base:index"))
         return super().dispatch(request, *args, **kwargs)
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
-    template_name = 'account/index.html'
+    template_name = "account/index.html"
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         user = self.request.user
 
         if user.is_staff:
-            data['projects_pending_review'] = UserProject.objects \
-                .filter(status=UserProject.STATUS_PENDING_REVIEW) \
-                .exclude(user=user) \
-                .order_by('-updated')[:5]
+            data["projects_pending_review"] = (
+                UserProject.objects.filter(status=UserProject.STATUS_PENDING_REVIEW)
+                .exclude(user=user)
+                .order_by("-updated")[:5]
+            )
 
-        data['projects'] = UserProject.objects.filter(user=user) \
-            .order_by('-updated')[:10]
+        data["projects"] = UserProject.objects.filter(user=user).order_by("-updated")[
+            :10
+        ]
 
         return data
 
     def get(self, request):
         user = self.request.user
-        if request.GET.get('partial') == 'notifications':
+        if request.GET.get("partial") == "notifications":
             try:
-                enricher = Enrich(('actor', 'object', 'target',))
+                enricher = Enrich(
+                    (
+                        "actor",
+                        "object",
+                        "target",
+                    )
+                )
                 feed = feed_manager.get_notification_feed(user.id)
-                activities = feed.get(limit=10)['results']
+                activities = feed.get(limit=10)["results"]
                 enriched = enricher.enrich_aggregated_activities(activities)
             except Exception:
                 enriched = []
             finally:
-                return render(request, 'account/_notifications_card_content.html', {'notifications': enriched})
+                return render(
+                    request,
+                    "account/_notifications_card_content.html",
+                    {"notifications": enriched},
+                )
         return super().get(request)
 
 
 class ProfileFormView(LoginRequiredMixin, View):
     def __render(self, request, form, **kwargs):
-        return render(request, 'account/form_profile.html', {'form': form, **kwargs})
+        return render(request, "account/form_profile.html", {"form": form, **kwargs})
 
     def get(self, request):
         user = request.user
@@ -86,15 +99,21 @@ class ProfileFormView(LoginRequiredMixin, View):
     def post(self, request):
         user = request.user
 
-        email_verification_request = request.GET.get('email_verification') == '1'
+        email_verification_request = request.GET.get("email_verification") == "1"
         if email_verification_request:
             try:
                 send_verification_email(user)
-                messages.info(request, f'Email verifikasi sudah dikirimkan ke {user.email}.',
-                              extra_tags='success')
+                messages.info(
+                    request,
+                    f"Email verifikasi sudah dikirimkan ke {user.email}.",
+                    extra_tags="success",
+                )
             except Exception:
-                messages.info(request, f'Gagal mengirimkan email verifikasi, silahkan coba lagi setelah beberapa saat.',
-                              extra_tags='danger')
+                messages.info(
+                    request,
+                    f"Gagal mengirimkan email verifikasi, silahkan coba lagi setelah beberapa saat.",
+                    extra_tags="danger",
+                )
 
         else:
             form = ProfileForm(request.POST, request.FILES, instance=user)
@@ -102,15 +121,14 @@ class ProfileFormView(LoginRequiredMixin, View):
                 return self.__render(request, form)
 
             form.save()
-            messages.info(request, 'Profil berhasil disimpan!',
-                          extra_tags='success')
+            messages.info(request, "Profil berhasil disimpan!", extra_tags="success")
 
-        return HttpResponseRedirect(reverse('account:profile'))
+        return HttpResponseRedirect(reverse("account:profile"))
 
 
 class LinksFormView(LoginRequiredMixin, View):
     def __render(self, request, form):
-        return render(request, 'account/form_links.html', {'form': form})
+        return render(request, "account/form_links.html", {"form": form})
 
     def get(self, request):
         user = request.user
@@ -124,60 +142,72 @@ class LinksFormView(LoginRequiredMixin, View):
             return self.__render(request, form)
 
         form.save()
-        messages.info(request, 'Links berhasil disimpan!',
-                      extra_tags='success')
+        messages.info(request, "Links berhasil disimpan!", extra_tags="success")
 
-        return HttpResponseRedirect(reverse('account:links'))
+        return HttpResponseRedirect(reverse("account:links"))
 
 
 class AuthenticationMethodFormView(LoginRequiredMixin, TemplateView):
-    template_name = 'account/form_auths.html'
+    template_name = "account/form_auths.html"
 
 
 class NotificationFormView(LoginRequiredMixin, View):
-
     def __render(self, request, form):
-        return render(request, 'account/form_notifications.html', {
-            'form': form,
-        })
+        return render(
+            request,
+            "account/form_notifications.html",
+            {
+                "form": form,
+            },
+        )
 
     def get(self, request):
         user = request.user
-        form = StaffEmailNotificationSettings(
-            user) if user.is_staff else EmailNotificationSettings(user)
+        form = (
+            StaffEmailNotificationSettings(user)
+            if user.is_staff
+            else EmailNotificationSettings(user)
+        )
         form.load()
 
         return self.__render(request, form)
 
     def post(self, request):
         user = request.user
-        form = StaffEmailNotificationSettings(
-            user, request.POST) if user.is_staff else EmailNotificationSettings(user, request.POST)
+        form = (
+            StaffEmailNotificationSettings(user, request.POST)
+            if user.is_staff
+            else EmailNotificationSettings(user, request.POST)
+        )
         if form.is_valid():
             form.save()
-            messages.info(self.request, 'Pengaturan notifikasi berhasil disimpan!',
-                          extra_tags='success')
+            messages.info(
+                self.request,
+                "Pengaturan notifikasi berhasil disimpan!",
+                extra_tags="success",
+            )
 
-        return HttpResponseRedirect(reverse('account:notifications'))
+        return HttpResponseRedirect(reverse("account:notifications"))
 
 
 class DiscordFormView(LoginRequiredMixin, View):
-
     def get(self, request):
         user = request.user
         discord_token = UserSetting.objects.discord_access_token(user)
-        discord_token_status = UserSetting.objects.discord_access_token_status(
-            user)
-        return render(request, 'account/form_discord.html', {
-            'discord_token': f'{user.username}@{discord_token}',
-            'discord_token_status': discord_token_status,
-        })
+        discord_token_status = UserSetting.objects.discord_access_token_status(user)
+        return render(
+            request,
+            "account/form_discord.html",
+            {
+                "discord_token": f"{user.username}@{discord_token}",
+                "discord_token_status": discord_token_status,
+            },
+        )
 
 
 class ProStatusView(LoginRequiredMixin, View):
-
     def _render(self, request, **kwargs):
-        selected_plan = request.GET.get('plan')
+        selected_plan = request.GET.get("plan")
 
         # get pro access for user, if end-date never set
         # consider it doesn't exist.
@@ -188,15 +218,18 @@ class ProStatusView(LoginRequiredMixin, View):
         except Exception:
             pro_access = None
 
-        purchases = ProAccessPurchase.objects \
-            .filter(user=request.user)
+        purchases = ProAccessPurchase.objects.filter(user=request.user)
 
-        return render(request, 'account/form_pro.html', {
-            'selected_plan': selected_plan,
-            'pro_access': pro_access,
-            'purchases': purchases,
-            **kwargs
-        })
+        return render(
+            request,
+            "account/form_pro.html",
+            {
+                "selected_plan": selected_plan,
+                "pro_access": pro_access,
+                "purchases": purchases,
+                **kwargs,
+            },
+        )
 
     def get(self, request):
         return self._render(request)
@@ -207,18 +240,24 @@ class ProStatusView(LoginRequiredMixin, View):
         if form.is_valid():
             if settings.ENABLE_PAYMENT:
                 form.purchase_access(is_gift=False)
-                messages.info(self.request, 'Order telah dibuat, silahkan lanjutkan dengan pembayaran.',
-                            extra_tags='success')
+                messages.info(
+                    self.request,
+                    "Order telah dibuat, silahkan lanjutkan dengan pembayaran.",
+                    extra_tags="success",
+                )
             else:
                 form.purchase_access(is_gift=True)
-                messages.info(self.request, 'Pro Access sudah aktif, happy coding!',
-                            extra_tags='success')
+                messages.info(
+                    self.request,
+                    "Pro Access sudah aktif, happy coding!",
+                    extra_tags="success",
+                )
 
-            return HttpResponseRedirect(reverse('account:pro'))
+            return HttpResponseRedirect(reverse("account:pro"))
 
         error_message = get_form_error(form)
         if error_message:
-            messages.info(self.request, error_message, extra_tags='warning')
+            messages.info(self.request, error_message, extra_tags="warning")
         return self._render(request, form=form)
 
 
@@ -226,19 +265,25 @@ class ProStatusView(LoginRequiredMixin, View):
 def purchase_cancel(request):
     form = ProAccessPurchaseActionForm(request.user, request.POST)
     if form.is_valid():
-        purchase_id = form.cleaned_data.get('purchase_id')
+        purchase_id = form.cleaned_data.get("purchase_id")
         try:
             form.cancel_purchase()
-            messages.info(request, f'Order Pro Access dengan ID={purchase_id} telah dibatalkan.',
-                          extra_tags='success')
+            messages.info(
+                request,
+                f"Order Pro Access dengan ID={purchase_id} telah dibatalkan.",
+                extra_tags="success",
+            )
         except Exception:
-            messages.info(request, f'Maaf terjadi error ketika membatalkan order Pro Access dengan ID={purchase_id}.',
-                          extra_tags='danger')
+            messages.info(
+                request,
+                f"Maaf terjadi error ketika membatalkan order Pro Access dengan ID={purchase_id}.",
+                extra_tags="danger",
+            )
     else:
         error_message = get_form_error(form)
         if error_message:
-            messages.info(request, error_message, extra_tags='warning')
-    return HttpResponseRedirect(reverse('account:pro'))
+            messages.info(request, error_message, extra_tags="warning")
+    return HttpResponseRedirect(reverse("account:pro"))
 
 
 @login_required
@@ -250,23 +295,53 @@ def purchase_payment(request):
             return HttpResponseRedirect(payment_url)
         except Exception as e:
             log.error(str(e))
-            messages.info(request, f'Maaf terjadi error ketika membuat link pembayaran Midtrans.',
-                          extra_tags='danger')
+            messages.info(
+                request,
+                f"Maaf terjadi error ketika membuat link pembayaran Midtrans.",
+                extra_tags="danger",
+            )
     else:
         error_message = get_form_error(form)
         if error_message:
-            messages.info(request, error_message, extra_tags='warning')
-    return HttpResponseRedirect(reverse('account:pro'))
+            messages.info(request, error_message, extra_tags="warning")
+    return HttpResponseRedirect(reverse("account:pro"))
+
+
+@login_required
+def cannyio_sso(request):
+    """
+    SSO redirect url for Canny.io
+    """
+    if not settings.CANNYIO_ENABLED:
+        return HttpResponseRedirect(reverse("base:index"))
+
+    secret_key = settings.CANNYIO_SECRET_KEY
+    redirect_url = request.GET.get("redirect")
+    company_id = request.GET.get("companyID")
+
+    if not redirect_url or not company_id or not secret_key:
+        return HttpResponseRedirect(reverse("base:index"))
+
+    user = request.user
+    user_data = {
+        "avatarURL": user.avatar_url(),  # optional, but preferred
+        "email": user.email,
+        "id": user.id,
+        "name": user.username,
+    }
+    sso_token = jwt.encode(user_data, secret_key, algorithm="HS256")
+    sso_url = f"https://canny.io/api/redirects/sso?companyID={company_id}&ssoToken={sso_token}&redirect={redirect_url}"
+    return HttpResponseRedirect(sso_url)
 
 
 @csrf_exempt
 def midtrans_payment_notification(request, merchant_id):
-    if request.method == 'POST':
+    if request.method == "POST":
         payload = json.loads(request.body)
         is_valid = is_payment_notification_valid(merchant_id, payload)
         if is_valid:
             MidtransPaymentNotification.create_from_payload(payload)
             return HttpResponse()
-        return HttpResponseBadRequest('Notification payload invalid')
+        return HttpResponseBadRequest("Notification payload invalid")
 
-    return HttpResponseRedirect(reverse('account:pro'))
+    return HttpResponseRedirect(reverse("account:pro"))

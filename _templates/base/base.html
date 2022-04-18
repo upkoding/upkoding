@@ -89,6 +89,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'base:tentang' %}">Tentang</a>
                         </li>
+                        {% if cannyio_enabled %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{cannyio_url}}" target="_blank"
+                                rel="noopener noreferrer">
+                            Saran dan Masukan <span class="material-icons-x text-warning">feedback</span>
+                            </a>
+                        </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ statuspage_url }}" target="_blank"
                                 rel="noopener noreferrer">Status</a>

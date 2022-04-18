@@ -30,7 +30,7 @@ defusedxml==0.7.1
     # via
     #   python3-openid
     #   social-auth-core
-discord_interactions==0.3.0
+discord-interactions==0.3.0
     # via -r requirements.in
 dj-database-url==0.5.0
     # via -r requirements.in
@@ -82,6 +82,7 @@ pycryptodomex==3.11.0
     # via stream-python
 pyjwt==2.3.0
     # via
+    #   -r requirements.in
     #   social-auth-core
     #   stream-python
 pynacl==1.4.0
