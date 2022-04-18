@@ -13,7 +13,7 @@ from stream_django.activity import Activity, create_model_reference
 
 from account.models import User
 from codeblocks.models import CodeBlock
-from roadmaps.models import RoadmapTopicContent
+from roadmaps.models import Roadmap, RoadmapTopicContent
 
 from .managers import ProjectManager, PROJECT_SEARCH_VECTORS
 
@@ -171,7 +171,11 @@ class Project(models.Model):
         project_type = ContentType.objects.get_for_model(Project)
         roadmap_topic_contents = RoadmapTopicContent.objects.select_related(
             "roadmap_topic__roadmap"
-        ).filter(content_type__pk=project_type.pk, content_id=self.pk)
+        ).filter(
+            content_type__pk=project_type.pk,
+            content_id=self.pk,
+            roadmap_topic__roadmap__status=Roadmap.STATUS_ACTIVE,
+        )
         return [
             roadmap_topic_content.roadmap_topic.roadmap
             for roadmap_topic_content in roadmap_topic_contents
