@@ -74,9 +74,27 @@ class ParticipantSerializer(serializers.ModelSerializer):
         return participant
 
 
+class SubReplySerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Reply
+        fields = [
+            "id",
+            "user",
+            "thread",
+            "message",
+            "parent",
+            "level",
+            "created",
+        ]
+        read_only_fields = fields
+
+
 class ReplySerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     stats = serializers.DictField(source="get_stats", read_only=True)
+    replies = SubReplySerializer(source="get_replies", many=True, read_only=True)
 
     class Meta:
         model = Reply
@@ -89,6 +107,7 @@ class ReplySerializer(serializers.ModelSerializer):
             "level",
             "created",
             "stats",
+            "replies",
         ]
         read_only_fields = ["level"]
 

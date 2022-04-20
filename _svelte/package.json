@@ -19,6 +19,7 @@
     "dayjs": "1.11.0",
     "codemirror": "5.63.1",
     "marked": "4.0.14",
-    "highlight.js": "11.5.1"
+    "highlight.js": "11.5.1",
+    "dompurify": "2.3.6"
   }
 }

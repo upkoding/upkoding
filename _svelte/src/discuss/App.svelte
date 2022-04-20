@@ -81,24 +81,25 @@
 			showNewThreadModal = false;
 			await tick();
 			threads = [data, ...threads];
+			savingErrors = null;
 		} else {
 			savingErrors = data;
 		}
 	}
 </script>
 
-<ThreadFormModal
-	key="new"
-	theme="info"
-	title="Ajukan Pertanyaan"
-	btnText="Submit Pertanyaan"
-	btnTextLoading="Submitting..."
-	loading={saving}
-	errors={savingErrors}
-	resetOnClose={true}
-	bind:show={showNewThreadModal}
-	on:submit={newThread}
-/>
+{#if showNewThreadModal}
+	<ThreadFormModal
+		theme="info"
+		title="Ajukan Pertanyaan"
+		btnText="Submit Pertanyaan"
+		btnTextLoading="Submitting..."
+		loading={saving}
+		errors={savingErrors}
+		on:close={() => (showNewThreadModal = false)}
+		on:submit={newThread}
+	/>
+{/if}
 
 <div class="card shadow-sm mb-3">
 	<div class="card-header d-flex justify-content-between">
@@ -117,14 +118,15 @@
 				/>
 			{/each}
 			{#if nextThreadsURL}
-				<div class="media chat-item py-2 d-flex justify-content-center">
+				<div class="media chat-item d-flex justify-content-center">
 					<a
 						href={"#"}
 						on:click|preventDefault={() => {
 							getThreads(false);
 						}}
 					>
-						<span class="material-icons-x mr-1">arrow_downward</span>{loading ? "Memuat..." : "Muat diskusi sebelumnya"}
+						<span class="material-icons-x mr-1">arrow_downward</span
+						>{loading ? "Memuat..." : "Muat diskusi sebelumnya"}
 					</a>
 				</div>
 			{/if}
@@ -133,3 +135,9 @@
 		<EmptyThreads {loading} />
 	{/if}
 </div>
+
+<style>
+	:global(.hljs) {
+		background: #0d1117 !important;
+	}
+</style>

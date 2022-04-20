@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import "codemirror/lib/codemirror.css";
     import "codemirror/mode/markdown/markdown";
     import "codemirror/addon/display/autorefresh";

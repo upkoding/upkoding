@@ -305,3 +305,6 @@ class Reply(models.Model, StatMixin, ParticipantMixin):
 
     def owned_by(self, user):
         return self.user == user
+
+    def get_replies(self):
+        return Reply.objects.active().filter(parent=self)

@@ -1,17 +1,15 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, onDestroy, createEventDispatcher } from "svelte";
     import { listReply, createOrUpdateReply } from "../common/api";
     import ThreadReplyItem from "./ThreadReplyItem.svelte";
     import MarkdownEditor from "./MarkdownEditor.svelte";
 
-    export let key = 0; // to make sure modal has unique ID
     export let thread;
     export let theme = "info";
     export let title;
     export let backdrop = true;
-    export let show = false;
 
-    let modalId = "thread-detail-modal" + key;
+    let modalId = "thread-detail-modal";
     let modalIdSelector = "#" + modalId;
 
     // all replies that comes from API
@@ -24,6 +22,12 @@
     let submitReplyErrors;
     let submittingReply;
     let replyEditorReset = 0;
+
+    const dispatch = createEventDispatcher();
+
+    function close() {
+        dispatch("close");
+    }
 
     async function getReplies() {
         loadingReplies = true;
@@ -66,40 +70,32 @@
     }
 
     onMount(async () => {
-        jQuery(modalIdSelector).on("hide.bs.modal", async () => {
-            show = false;
-        });
+        jQuery(modalIdSelector)
+            .on("hide.bs.modal", async () => {
+                close();
+            })
+            .modal({ backdrop: backdrop });
 
-        // call api only when modal is showing
-        jQuery(modalIdSelector).on("show.bs.modal", async () => {
-            // if replies is not empty (we already open the modal previously), don't call the API
-            if (replies.length == 0) {
-                await getReplies();
-            }
-        });
+        // if replies is not empty (we already open the modal previously), don't call the API
+        if (replies.length == 0) {
+            await getReplies();
+        }
     });
 
-    $: if (show) {
-        jQuery(modalIdSelector).modal({ backdrop: backdrop });
-    } else {
+    onDestroy(() => {
         jQuery(modalIdSelector).modal("hide");
-    }
+    });
 </script>
 
-<div
-    class="modal model-{theme} fade"
-    id={modalId}
-    tabindex="-1"
-    aria-hidden="true"
->
+<div class="modal fade" id={modalId} tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-{theme} d-flex justify-content-between">
                 <h5 class="modal-title">{title}</h5>
-                <a href="javascript;">
+                <a href={"#"}>
                     <span
                         class="material-icons text-light"
-                        on:click|preventDefault={() => (show = false)}
+                        on:click|preventDefault={close}
                     >
                         close
                     </span>
@@ -107,42 +103,37 @@
             </div>
             <div class="modal-body p-0">
                 <ThreadReplyItem
-                    user={thread.user}
-                    message={thread.description}
-                    created={thread.created}
+                    reply={{
+                        user: thread.user,
+                        created: thread.created,
+                        message: thread.description,
+                    }}
                 />
-                {#if replies.length > 0 && !loadingReplies}
-                    {#each replies as reply (reply.id)}
-                        <ThreadReplyItem
-                            user={reply.user}
-                            message={reply.message}
-                            created={reply.created}
-                            classes="bg-light border-top"
-                        />
-                    {/each}
-                    {#if nextRepliesURL}
-                        <div
-                            class="py-2 d-flex justify-content-center border-top border-bottom"
-                        >
-                            <a href={"#"} on:click|preventDefault={getReplies}>
-                                <span class="material-icons-x mr-1">
-                                    arrow_downward
-                                </span>
-                                {loadingReplies
-                                    ? "Memuat..."
-                                    : "Muat jawaban lainnya"}
-                            </a>
-                        </div>
-                    {/if}
-                    {#each newReplies as reply (reply.id)}
-                        <ThreadReplyItem
-                            user={reply.user}
-                            message={reply.message}
-                            created={reply.created}
-                            classes="bg-light border-top"
-                        />
-                    {/each}
+
+                {#each replies as reply (reply.id)}
+                    <ThreadReplyItem
+                        {reply}
+                        allowReply={true}
+                        classes="bg-light border-top"
+                    />
+                {/each}
+                {#if nextRepliesURL}
+                    <div
+                        class="py-2 d-flex justify-content-center border-top border-bottom"
+                    >
+                        <a href={"#"} on:click|preventDefault={getReplies}>
+                            <span class="material-icons-x mr-1">
+                                arrow_downward
+                            </span>
+                            {loadingReplies
+                                ? "Memuat..."
+                                : "Muat jawaban lainnya"}
+                        </a>
+                    </div>
                 {/if}
+                {#each newReplies as reply (reply.id)}
+                    <ThreadReplyItem {reply} classes="bg-light border-top" />
+                {/each}
             </div>
             <div class="p-4">
                 <h5>Jawaban kamu</h5>

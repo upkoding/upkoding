@@ -1,44 +1,46 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
+    import { onMount, createEventDispatcher, onDestroy } from "svelte";
 
-    export let key = 0; // to make sure modal has unique ID
     export let theme = "danger";
     export let backdrop = true;
-    export let show = false;
     export let title = "Konfirmasi";
     export let message = null;
     export let loading = false;
     export let btnText;
     export let btnTextLoading = "Loading...";
 
-    let modalId = "confirm-modal" + key;
+    let modalId = "confirm-modal";
     let modalIdSelector = "#" + modalId;
 
     const dispatch = createEventDispatcher();
-    onMount(() => {
-        jQuery(modalIdSelector).on("hide.bs.modal", (e) => {
-            show = false;
-        });
-    });
-
-    $: if (show) {
-        jQuery(modalIdSelector).modal({ backdrop: backdrop });
-    } else {
-        jQuery(modalIdSelector).modal("hide");
-    }
 
     function confirm() {
-        dispatch("confirm", true);
+        dispatch("confirm");
     }
+
+    function close() {
+        dispatch("close");
+    }
+
+    onMount(() => {
+        jQuery(modalIdSelector).on("hide.bs.modal", (e) => {
+            close();
+        });
+        jQuery(modalIdSelector).modal({ backdrop: backdrop });
+    });
+
+    onDestroy(() => {
+        jQuery(modalIdSelector).modal("hide");
+    });
 </script>
 
 <div
-    class="modal model-{theme} fade"
+    class="modal fade"
     id={modalId}
     tabindex="-1"
     aria-hidden="true"
 >
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-{theme}">
                 <h5 class="modal-title">{title}</h5>

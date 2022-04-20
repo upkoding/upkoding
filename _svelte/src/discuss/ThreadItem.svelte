@@ -48,9 +48,7 @@
     }
 </script>
 
-<div class="media chat-item px-2 py-3 m-0 d-flex justify-content-between">
-    <!-- <img alt={thread.user.username} src={thread.user.avatar} class="avatar" /> -->
-
+<div class="media chat-item px-2 py-2 m-0 d-flex justify-content-between">
     <div class="media-body" on:click={() => (showDetailModal = true)}>
         <div class="chat-item-body">
             <h6>
@@ -59,12 +57,12 @@
             </h6>
         </div>
         <div class="chat-item-title mx-3 mb-0">
-            <!-- <span class="chat-item-author"></span> -->
-            <span class="text-small">
+            <small class="text-small">
                 oleh <a href={thread.user.url}>{thread.user.username}</a>
-                {dayjs(thread.created).fromNow()} &middot;
+                {dayjs(thread.created).fromNow()}
+                &middot;
                 <span>{reply_count} jawaban</span>
-            </span>
+            </small>
         </div>
     </div>
 
@@ -98,43 +96,48 @@
     {/if}
 </div>
 
-<ConfirmationModal
-    key={thread.id}
-    title="Hapus pertanyaan kamu?"
-    btnText="Hapus"
-    btnTextLoading="Menghapus..."
-    {loading}
-    bind:show={showConfirmDeleteModal}
-    on:confirm={_deleteThread}
-/>
+{#if showConfirmDeleteModal}
+    <ConfirmationModal
+        title="Hapus pertanyaan kamu?"
+        btnText="Hapus"
+        btnTextLoading="Menghapus..."
+        {loading}
+        on:close={() => (showConfirmDeleteModal = false)}
+        on:confirm={_deleteThread}
+    />
+{/if}
 
-<ThreadFormModal
-    key={thread.id}
-    theme="info"
-    title="Edit Pertanyaan"
-    {thread}
-    btnText="Simpan"
-    btnTextLoading="Menyimpan..."
-    {loading}
-    {errors}
-    bind:show={showEditModal}
-    on:submit={_updateThread}
-/>
+{#if showEditModal}
+    <ThreadFormModal
+        theme="info"
+        title="Edit Pertanyaan"
+        {thread}
+        btnText="Simpan"
+        btnTextLoading="Menyimpan..."
+        {loading}
+        {errors}
+        on:close={() => (showEditModal = false)}
+        on:submit={_updateThread}
+    />
+{/if}
 
-<ThreadDetailModal
-    key={thread.id}
-    theme="info"
-    title={thread.title}
-    {thread}
-    btnText="Simpan"
-    btnTextLoading="Menyimpan..."
-    bind:show={showDetailModal}
-/>
+{#if showDetailModal}
+    <ThreadDetailModal
+        theme="info"
+        title={thread.title}
+        {thread}
+        on:close={() => (showDetailModal = false)}
+    />
+{/if}
 
 <style>
     .dropdown-item,
     h6,
     .media-body {
         cursor: pointer;
+    }
+
+    .text-small {
+        font-size: smaller;
     }
 </style>

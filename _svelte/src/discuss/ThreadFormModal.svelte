@@ -1,55 +1,49 @@
 <script>
-    import { onMount, createEventDispatcher } from "svelte";
+    import { onMount, onDestroy, createEventDispatcher } from "svelte";
     import MarkdownEditor from "./MarkdownEditor.svelte";
 
-    export let key = 0; // to make sure modal has unique ID
     export let thread = { title: "", description: "" };
     export let theme = "info";
     export let title;
     export let backdrop = true;
-    export let show = false;
     export let loading = false;
     export let errors = null;
-    export let resetOnClose = false;
     export let btnText;
     export let btnTextLoading = "Loading...";
 
-    let modalId = "thread-form-modal" + key;
+    let modalId = "thread-form-modal";
     let modalIdSelector = "#" + modalId;
-    let resetMarkdownEditor = 0;
 
     const dispatch = createEventDispatcher();
-    onMount(() => {
-        jQuery(modalIdSelector).on("hide.bs.modal", async () => {
-            if (resetOnClose) resetForm();
-            show = false;
-        });
-    });
-
-    $: if (show) {
-        jQuery(modalIdSelector).modal({ backdrop: backdrop });
-    } else {
-        jQuery(modalIdSelector).modal("hide");
-    }
 
     function submit() {
         dispatch("submit", thread);
     }
 
-    function resetForm() {
-        errors = null;
-        thread = {};
-        resetMarkdownEditor += 1;
+    function close() {
+        dispatch("close");
     }
+
+    onMount(() => {
+        jQuery(modalIdSelector)
+            .on("hide.bs.modal", () => {
+                close();
+            })
+            .modal({ backdrop: backdrop });
+    });
+
+    onDestroy(() => {
+        jQuery(modalIdSelector).modal("hide");
+    });
 </script>
 
 <div
-    class="modal model-{theme} fade"
+    class="modal fade"
     id={modalId}
     tabindex="-1"
     aria-hidden="true"
 >
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-{theme}">
                 <h5 class="modal-title">{title}</h5>
@@ -63,7 +57,6 @@
                         id="title"
                         type="text"
                         class="form-control form-control-lg"
-                        placeholder="Judul pertanyaan"
                         required
                         bind:value={thread.title}
                     />
@@ -82,7 +75,6 @@
                     </label>
                     <MarkdownEditor
                         id="description"
-                        reset={resetMarkdownEditor}
                         bind:value={thread.description}
                     />
                     <small class="form-text text-muted">
