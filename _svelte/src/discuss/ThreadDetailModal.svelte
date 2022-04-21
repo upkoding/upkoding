@@ -4,6 +4,7 @@
     import ThreadReplyItem from "./ThreadReplyItem.svelte";
     import MarkdownEditor from "./MarkdownEditor.svelte";
 
+    export let currentUserId;
     export let thread;
     export let theme = "info";
     export let title;
@@ -69,6 +70,14 @@
         }
     }
 
+    function onDeleteReply({ detail }) {
+        replies = replies.filter((r) => r.id !== detail.id);
+    }
+
+    function onDeleteNewReply({ detail }) {
+        newReplies = newReplies.filter((r) => r.id !== detail.id);
+    }
+
     onMount(async () => {
         jQuery(modalIdSelector)
             .on("hide.bs.modal", async () => {
@@ -112,9 +121,12 @@
 
                 {#each replies as reply (reply.id)}
                     <ThreadReplyItem
+                        {currentUserId}
                         {reply}
                         allowReply={true}
+                        allowActions={currentUserId == reply.user.id}
                         classes="bg-light border-top"
+                        on:delete={onDeleteReply}
                     />
                 {/each}
                 {#if nextRepliesURL}
@@ -132,7 +144,13 @@
                     </div>
                 {/if}
                 {#each newReplies as reply (reply.id)}
-                    <ThreadReplyItem {reply} classes="bg-light border-top" />
+                    <ThreadReplyItem
+                        {currentUserId}
+                        {reply}
+                        classes="bg-light border-top"
+                        allowActions={currentUserId == reply.user.id}
+                        on:delete={onDeleteNewReply}
+                    />
                 {/each}
             </div>
             <div class="p-4">

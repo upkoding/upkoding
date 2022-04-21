@@ -1,12 +1,17 @@
 <script>
+    import { createEventDispatcher } from "svelte";
     import { parse } from "../common/markdown";
-    import { createOrUpdateReply } from "../common/api";
+    import { createOrUpdateReply, deleteReply } from "../common/api";
     import dayjs from "../common/dayjs";
     import ThreadSubReplyItem from "./ThreadSubReplyItem.svelte";
 
+    const dispatch = createEventDispatcher();
+
     // props
+    export let currentUserId;
     export let classes = "";
     export let allowReply = false;
+    export let allowActions = false;
     export let reply;
 
     // local vars
@@ -20,23 +25,40 @@
 
     // new reply
     let newReplyMessage = "";
-    let loadingCreateReply = false;
-    async function createReply() {
-        if (loadingCreateReply) return;
+    let loadingReplyThis = false;
+    async function replyThis() {
+        if (loadingReplyThis) return;
 
         const newReply = {
             message: newReplyMessage,
             thread: reply.thread,
             parent: reply.id,
         };
-        loadingCreateReply = true;
+        loadingReplyThis = true;
         const { ok, data } = await createOrUpdateReply(newReply);
-        loadingCreateReply = false;
+        loadingReplyThis = false;
         if (ok) {
             subReplies = [...subReplies, data];
             newReplyMessage = "";
             showNewReplyInput = false;
         }
+    }
+
+    // delete reply
+    let loadingDeleteThis = false;
+    async function deleteThis() {
+        if (loadingDeleteThis) return;
+        loadingDeleteThis = true;
+        const { ok } = await deleteReply(reply.id);
+        loadingDeleteThis = false;
+        if (ok) {
+            dispatch("delete", reply);
+        }
+    }
+
+    // sub-reply deleted
+    function onSubReplyDeleted({ detail }) {
+        subReplies = subReplies.filter((sr) => sr.id !== detail.id);
     }
 </script>
 
@@ -54,8 +76,20 @@
                 </div>
             </div>
         </a>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center" style="font-size: smaller;">
             <span>{dayjs(reply.created).fromNow()}</span>
+            {#if allowActions}
+                <span class="mx-1">/</span>
+                <a href={"#"}>edit</a>
+                <span class="mx-1">/</span>
+                <a
+                    href={"#"}
+                    class="text-danger"
+                    on:click|preventDefault={deleteThis}
+                >
+                    {loadingDeleteThis ? "menghapus..." : "hapus"}
+                </a>
+            {/if}
         </div>
     </div>
     <div class="card-body text-dark">
@@ -65,7 +99,12 @@
             {#if subReplies.length > 0}
                 <div class="mb-1 text-muted">Komentar</div>
                 {#each subReplies as sr, index (sr.id)}
-                    <ThreadSubReplyItem {index} reply={sr} />
+                    <ThreadSubReplyItem
+                        {index}
+                        reply={sr}
+                        allowActions={currentUserId === sr.user.id}
+                        on:delete={onSubReplyDeleted}
+                    />
                 {/each}
             {/if}
 
@@ -79,11 +118,9 @@
                         bind:value={newReplyMessage}
                     />
                     <div class="d-flex justify-content-end pt-1">
-                        <a href={"#"} on:click|preventDefault={createReply}>
+                        <a href={"#"} on:click|preventDefault={replyThis}>
                             <small>
-                                {loadingCreateReply
-                                    ? "Submitting..."
-                                    : "Submit"}
+                                {loadingReplyThis ? "Submitting..." : "Submit"}
                                 <span class="material-icons-x">
                                     arrow_right
                                 </span>

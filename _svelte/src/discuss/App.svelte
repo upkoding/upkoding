@@ -113,7 +113,7 @@
 			{#each threads as thread (thread.id)}
 				<ThreadItem
 					bind:thread
-					{current_user_id}
+					currentUserId={current_user_id}
 					on:delete={onThreadDeleted}
 				/>
 			{/each}

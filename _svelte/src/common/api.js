@@ -108,6 +108,13 @@ export async function createOrUpdateReply(reply) {
     }
 }
 
+export async function deleteReply(replyId) {
+    const resp = await del(`/forum/api/v1/replies/${replyId}/`)
+    return {
+        ok: resp.ok
+    }
+}
+
 export async function createOrUpdateThread(thread) {
     let resp;
     if (thread.id) {

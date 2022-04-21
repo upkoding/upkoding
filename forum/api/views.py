@@ -53,6 +53,11 @@ class ThreadDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ThreadSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
+    def perform_destroy(self, instance):
+        """Soft delete"""
+        instance.status = Thread.STATUS_DELETED
+        instance.save()
+
 
 # Reply
 class ReplyList(generics.ListCreateAPIView):
@@ -68,6 +73,11 @@ class ReplyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Reply.objects.active()
     serializer_class = ReplySerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+    def perform_destroy(self, instance):
+        """Soft delete"""
+        instance.status = Reply.STATUS_DELETED
+        instance.save()
 
 
 # Participant

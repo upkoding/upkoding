@@ -76,6 +76,7 @@ class OnReplyCreated:
 
             # update reply count
             self.parent.inc_reply_count()
+            self.thread.inc_reply_count()
 
             # send notifications to reply participants
             self.notify_new_reply_reply()

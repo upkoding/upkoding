@@ -7,7 +7,7 @@
     import ThreadDetailModal from "./ThreadDetailModal.svelte";
 
     export let thread;
-    export let current_user_id;
+    export let currentUserId;
 
     const dispatch = createEventDispatcher();
     let showEditModal = false;
@@ -66,7 +66,7 @@
         </div>
     </div>
 
-    {#if thread.user.id === current_user_id}
+    {#if thread.user.id === currentUserId}
         <div class="ml-1 dropdown card-options">
             <button
                 class="btn-options"
@@ -126,6 +126,7 @@
         theme="info"
         title={thread.title}
         {thread}
+        currentUserId={currentUserId}
         on:close={() => (showDetailModal = false)}
     />
 {/if}

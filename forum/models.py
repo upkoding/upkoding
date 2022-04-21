@@ -151,9 +151,11 @@ class Topic(models.Model, StatMixin, ParticipantMixin):
 
     STATUS_INACTIVE = 0
     STATUS_ACTIVE = 1
+    STATUS_DELETED = 3
     STATUSES = (
         (STATUS_INACTIVE, "Inactive"),
         (STATUS_ACTIVE, "Active"),
+        (STATUS_DELETED, "Deleted"),
     )
 
     title = models.CharField(max_length=100)
@@ -227,9 +229,11 @@ class Thread(models.Model, StatMixin, ParticipantMixin):
 
     STATUS_INACTIVE = 0
     STATUS_ACTIVE = 1
+    STATUS_DELETED = 3
     STATUSES = (
         (STATUS_INACTIVE, "Inactive"),
         (STATUS_ACTIVE, "Active"),
+        (STATUS_DELETED, "Deleted"),
     )
 
     title = models.CharField(max_length=200)
@@ -272,9 +276,11 @@ class Reply(models.Model, StatMixin, ParticipantMixin):
 
     STATUS_INACTIVE = 0
     STATUS_ACTIVE = 1
+    STATUS_DELETED = 3
     STATUSES = (
         (STATUS_INACTIVE, "Inactive"),
         (STATUS_ACTIVE, "Active"),
+        (STATUS_DELETED, "Deleted"),
     )
 
     # level 0: is a reply to a thread
