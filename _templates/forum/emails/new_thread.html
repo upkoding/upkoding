@@ -1,5 +1,10 @@
-@{{ user.username }} bertanya:
+{{ user.username }} bertanya,
+---
 
 {{ thread.title }}
---
 {{ thread.description }}
+
+
+---
+Balas disini:
+{{ domain }}{{ topic_content_object.get_absolute_url }}?t={{thread.id}}

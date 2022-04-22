@@ -1,3 +1,9 @@
-@{{ user.username }} menjawab:
+{{ user.username }} menjawab,
+---
 
 {{ thread_reply.message }}
+
+
+---
+Balas disini:
+{{ domain }}{{ topic_content_object.get_absolute_url }}?t={{thread.id}}

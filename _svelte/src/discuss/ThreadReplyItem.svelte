@@ -1,20 +1,20 @@
 <script>
-    import { createEventDispatcher } from "svelte";
+    import { getContext } from "svelte";
     import { parse } from "../common/markdown";
-    import { createOrUpdateReply, deleteReply } from "../common/api";
+    import { deleteReply } from "../common/api";
     import dayjs from "../common/dayjs";
     import ThreadSubReplyItem from "./ThreadSubReplyItem.svelte";
-
-    const dispatch = createEventDispatcher();
+    import ThreadReplyItemEdit from "./ThreadReplyItemEdit.svelte";
 
     // props
-    export let currentUserId;
     export let classes = "";
     export let allowReply = false;
     export let allowActions = false;
     export let reply;
+    export let onDelete;
 
     // local vars
+    const currentUserId = getContext("currentUserId");
     let subReplies = reply.replies ? reply.replies : [];
 
     // reply toggle
@@ -23,28 +23,13 @@
         showNewReplyInput = !showNewReplyInput;
     }
 
-    // new reply
-    let newReplyMessage = "";
-    let loadingReplyThis = false;
-    async function replyThis() {
-        if (loadingReplyThis) return;
-
-        const newReply = {
-            message: newReplyMessage,
-            thread: reply.thread,
-            parent: reply.id,
-        };
-        loadingReplyThis = true;
-        const { ok, data } = await createOrUpdateReply(newReply);
-        loadingReplyThis = false;
-        if (ok) {
-            subReplies = [...subReplies, data];
-            newReplyMessage = "";
-            showNewReplyInput = false;
-        }
+    // edit mode
+    let editMode = false;
+    function toggleEditMode() {
+        editMode = !editMode;
     }
 
-    // delete reply
+    // delete this
     let loadingDeleteThis = false;
     async function deleteThis() {
         if (loadingDeleteThis) return;
@@ -52,13 +37,24 @@
         const { ok } = await deleteReply(reply.id);
         loadingDeleteThis = false;
         if (ok) {
-            dispatch("delete", reply);
+            onDelete(reply);
         }
     }
 
-    // sub-reply deleted
-    function onSubReplyDeleted({ detail }) {
-        subReplies = subReplies.filter((sr) => sr.id !== detail.id);
+    // update this
+    async function updateThis(r) {
+        reply = r;
+        toggleEditMode();
+    }
+
+    // sub-reply
+    function onSubReplyCreated(r) {
+        subReplies = [...subReplies, r];
+        toggleInput();
+    }
+
+    function onSubReplyDeleted(r) {
+        subReplies = subReplies.filter((sr) => sr.id !== r.id);
     }
 </script>
 
@@ -80,7 +76,9 @@
             <span>{dayjs(reply.created).fromNow()}</span>
             {#if allowActions}
                 <span class="mx-1">/</span>
-                <a href={"#"}>edit</a>
+                <a href={"#"} on:click|preventDefault={toggleEditMode}>
+                    edit
+                </a>
                 <span class="mx-1">/</span>
                 <a
                     href={"#"}
@@ -93,7 +91,16 @@
         </div>
     </div>
     <div class="card-body text-dark">
-        {@html parse(reply.message)}
+        {#if editMode && allowActions}
+            <ThreadReplyItemEdit
+                {reply}
+                onCreate={() => {}}
+                onUpdate={updateThis}
+                onCancel={toggleEditMode}
+            />
+        {:else}
+            {@html parse(reply.message)}
+        {/if}
         <div class="mt-4 bg-light">
             <!-- sub replies -->
             {#if subReplies.length > 0}
@@ -103,7 +110,7 @@
                         {index}
                         reply={sr}
                         allowActions={currentUserId === sr.user.id}
-                        on:delete={onSubReplyDeleted}
+                        onDelete={onSubReplyDeleted}
                     />
                 {/each}
             {/if}
@@ -111,22 +118,14 @@
             <!-- input -->
             {#if showNewReplyInput}
                 <div class="mt-2">
-                    <textarea
-                        rows="2"
-                        placeholder="Beri komentar..."
-                        class="form-control"
-                        bind:value={newReplyMessage}
+                    <ThreadReplyItemEdit
+                        reply={{}}
+                        parent={reply}
+                        useMarkdownEditor={false}
+                        onCreate={onSubReplyCreated}
+                        onUpdate={() => {}}
+                        onCancel={toggleInput}
                     />
-                    <div class="d-flex justify-content-end pt-1">
-                        <a href={"#"} on:click|preventDefault={replyThis}>
-                            <small>
-                                {loadingReplyThis ? "Submitting..." : "Submit"}
-                                <span class="material-icons-x">
-                                    arrow_right
-                                </span>
-                            </small>
-                        </a>
-                    </div>
                 </div>
             {/if}
 

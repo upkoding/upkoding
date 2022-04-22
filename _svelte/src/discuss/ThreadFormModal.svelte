@@ -1,5 +1,5 @@
 <script>
-    import { onMount, onDestroy, createEventDispatcher } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import MarkdownEditor from "./MarkdownEditor.svelte";
 
     export let thread = { title: "", description: "" };
@@ -10,24 +10,20 @@
     export let errors = null;
     export let btnText;
     export let btnTextLoading = "Loading...";
+    export let onClose;
+    export let onSubmit;
 
     let modalId = "thread-form-modal";
     let modalIdSelector = "#" + modalId;
 
-    const dispatch = createEventDispatcher();
-
     function submit() {
-        dispatch("submit", thread);
-    }
-
-    function close() {
-        dispatch("close");
+        onSubmit(thread);
     }
 
     onMount(() => {
         jQuery(modalIdSelector)
             .on("hide.bs.modal", () => {
-                close();
+                onClose();
             })
             .modal({ backdrop: backdrop });
     });
@@ -37,12 +33,7 @@
     });
 </script>
 
-<div
-    class="modal fade"
-    id={modalId}
-    tabindex="-1"
-    aria-hidden="true"
->
+<div class="modal fade" id={modalId} tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-{theme}">
@@ -74,8 +65,8 @@
                         <strong>Detail pertanyaan</strong>
                     </label>
                     <MarkdownEditor
-                        id="description"
-                        bind:value={thread.description}
+                        value={thread.description}
+                        onChange={(v) => (thread.description = v)}
                     />
                     <small class="form-text text-muted">
                         Sertakan informasi yang cukup untuk mempermudah orang

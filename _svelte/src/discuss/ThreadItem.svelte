@@ -1,5 +1,5 @@
 <script>
-    import { createEventDispatcher, tick } from "svelte";
+    import { tick, getContext } from "svelte";
     import dayjs from "../common/dayjs";
     import { deleteThread, createOrUpdateThread } from "../common/api";
     import ConfirmationModal from "./ConfirmationModal.svelte";
@@ -7,9 +7,9 @@
     import ThreadDetailModal from "./ThreadDetailModal.svelte";
 
     export let thread;
-    export let currentUserId;
+    export let onDelete;
 
-    const dispatch = createEventDispatcher();
+    const currentUserId = getContext("currentUserId");
     let showEditModal = false;
     let showConfirmDeleteModal = false;
     let showDetailModal = false;
@@ -19,27 +19,51 @@
     $: reply_count =
         thread.stats && thread.stats.reply_count ? thread.stats.reply_count : 0;
 
+    function openEditForm() {
+        showEditModal = true;
+    }
+
+    function closeEditForm() {
+        showEditModal = false;
+        errors = null;
+    }
+
+    function openConfirmForm() {
+        showConfirmDeleteModal = true;
+    }
+
+    function closeConfirmForm() {
+        showConfirmDeleteModal = false;
+    }
+
+    function openDetail() {
+        showDetailModal = true;
+    }
+    function closeDetail() {
+        showDetailModal = false;
+    }
+
     async function _deleteThread() {
         loading = true;
         const { ok } = await deleteThread(thread.id);
         loading = false;
         if (ok) {
-            showConfirmDeleteModal = false;
+            closeConfirmForm();
             await tick();
-            dispatch("delete", thread);
+            onDelete(thread);
         } else {
             alert("Gagal menghapus pertanyaan!");
         }
     }
 
-    async function _updateThread(e) {
+    async function _updateThread(t) {
         if (loading) return;
 
         loading = true;
-        const { ok, data } = await createOrUpdateThread(e.detail);
+        const { ok, data } = await createOrUpdateThread(t);
         loading = false;
         if (ok) {
-            showEditModal = false;
+            closeEditForm();
             await tick();
             thread = data;
         } else {
@@ -49,7 +73,7 @@
 </script>
 
 <div class="media chat-item px-2 py-2 m-0 d-flex justify-content-between">
-    <div class="media-body" on:click={() => (showDetailModal = true)}>
+    <div class="media-body" on:click={openDetail}>
         <div class="chat-item-body">
             <h6>
                 <i class="material-icons-x mr-1">question_answer</i>
@@ -79,15 +103,12 @@
                 <i class="material-icons">more_vert</i>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <span
-                    class="dropdown-item"
-                    on:click={() => (showEditModal = true)}
-                >
+                <span class="dropdown-item" on:click={openEditForm}>
                     Edit
                 </span>
                 <span
                     class="dropdown-item text-danger"
-                    on:click={() => (showConfirmDeleteModal = true)}
+                    on:click={openConfirmForm}
                 >
                     Hapus
                 </span>
@@ -102,8 +123,8 @@
         btnText="Hapus"
         btnTextLoading="Menghapus..."
         {loading}
-        on:close={() => (showConfirmDeleteModal = false)}
-        on:confirm={_deleteThread}
+        onClose={closeConfirmForm}
+        onConfirm={_deleteThread}
     />
 {/if}
 
@@ -111,13 +132,13 @@
     <ThreadFormModal
         theme="info"
         title="Edit Pertanyaan"
-        {thread}
         btnText="Simpan"
         btnTextLoading="Menyimpan..."
+        {thread}
         {loading}
         {errors}
-        on:close={() => (showEditModal = false)}
-        on:submit={_updateThread}
+        onClose={closeEditForm}
+        onSubmit={_updateThread}
     />
 {/if}
 
@@ -126,8 +147,7 @@
         theme="info"
         title={thread.title}
         {thread}
-        currentUserId={currentUserId}
-        on:close={() => (showDetailModal = false)}
+        onClose={closeDetail}
     />
 {/if}
 

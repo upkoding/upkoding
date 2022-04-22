@@ -1,5 +1,5 @@
 <script>
-	import { onMount, tick } from "svelte";
+	import { onMount, tick, setContext } from "svelte";
 	import {
 		getTopicForProject,
 		createTopicForProject,
@@ -13,6 +13,8 @@
 	// app props
 	export let current_user_id;
 	export let project_id;
+
+	setContext("currentUserId", current_user_id);
 
 	// local vars
 	let loading = false;
@@ -53,22 +55,26 @@
 	});
 
 	// on thread deleted: remove from list
-	function onThreadDeleted(e) {
-		threads = threads.filter((t) => t.id !== e.detail.id);
+	function onDelete(thread) {
+		threads = threads.filter((t) => t.id !== thread.id);
 		// in case all thread deleted, pull from server if there's left.
 		if (threads.length == 0) {
 			getThreads(true);
 		}
 	}
 
-	function showForm() {
+	function openForm() {
 		showNewThreadModal = true;
 	}
 
-	async function newThread(e) {
+	function closeForm() {
+		showNewThreadModal = false;
+		savingErrors = null;
+	}
+
+	async function newThread(thread) {
 		if (saving) return;
 
-		let thread = e.detail;
 		saving = true;
 		if (topic === null) {
 			const { ok, data } = await createTopicForProject(project_id);
@@ -96,26 +102,22 @@
 		btnTextLoading="Submitting..."
 		loading={saving}
 		errors={savingErrors}
-		on:close={() => (showNewThreadModal = false)}
-		on:submit={newThread}
+		onClose={closeForm}
+		onSubmit={newThread}
 	/>
 {/if}
 
 <div class="card shadow-sm mb-3">
 	<div class="card-header d-flex justify-content-between">
 		<span class="mt-1">FORUM DISKUSI</span>
-		<button class="btn btn-info" on:click={showForm}>
+		<button class="btn btn-info" on:click={openForm}>
 			Ajukan Pertanyaan
 		</button>
 	</div>
 	{#if threads.length > 0}
 		<div class="list-group list-group-flush">
 			{#each threads as thread (thread.id)}
-				<ThreadItem
-					bind:thread
-					currentUserId={current_user_id}
-					on:delete={onThreadDeleted}
-				/>
+				<ThreadItem {thread} {onDelete} />
 			{/each}
 			{#if nextThreadsURL}
 				<div class="media chat-item d-flex justify-content-center">

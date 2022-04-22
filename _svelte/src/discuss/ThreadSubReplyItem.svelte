@@ -1,21 +1,25 @@
 <script>
-    import { createEventDispatcher } from "svelte";
     import { parseInline } from "../common/markdown";
-    import { createOrUpdateReply, deleteReply } from "../common/api";
+    import { deleteReply } from "../common/api";
     import dayjs from "../common/dayjs";
+    import ThreadReplyItemEdit from "./ThreadReplyItemEdit.svelte";
 
     // props
     export let index;
     export let reply;
     export let allowActions = true;
+    export let onDelete;
 
-    const dispatch = createEventDispatcher();
+    // edit mode
+    let editMode = false;
+    function toggleEditMode() {
+        editMode = !editMode;
+    }
+
     // update
-    async function updateThis() {
-        const { ok, data } = await createOrUpdateReply(reply);
-        if (ok) {
-            reply = data;
-        }
+    async function updateThis(r) {
+        reply = r;
+        toggleEditMode();
     }
 
     // delete
@@ -26,30 +30,42 @@
         const { ok } = await deleteReply(reply.id);
         loadingDeleteThis = false;
         if (ok) {
-            dispatch("delete", reply);
+            onDelete(reply);
         }
     }
 </script>
 
 <div class="border-bottom py-2 sub-reply {index == 0 ? 'border-top' : ''}">
-    {@html parseInline(reply.message)}
-    -
-    <small>
-        <a href={reply.user.url}>{reply.user.username}</a>
-        <span class="text-muted">
-            &middot; {dayjs(reply.created).fromNow()}
-            {#if allowActions}
-                <span class="mx-1">/</span>
-                <a href={"#"}>edit</a>
-                <span class="mx-1">/</span>
-                <a
-                    href={"#"}
-                    class="text-danger"
-                    on:click|preventDefault={deleteThis}
-                >
-                    {loadingDeleteThis ? "menghapus..." : "hapus"}
-                </a>
-            {/if}
-        </span>
-    </small>
+    {#if editMode}
+        <ThreadReplyItemEdit
+            {reply}
+            useMarkdownEditor={false}
+            onCreate={() => {}}
+            onCancel={toggleEditMode}
+            onUpdate={updateThis}
+        />
+    {:else}
+        {@html parseInline(reply.message)}
+        -
+        <small>
+            <a href={reply.user.url}>{reply.user.username}</a>
+            <span class="text-muted">
+                &middot; {dayjs(reply.created).fromNow()}
+                {#if allowActions}
+                    <span class="mx-1">/</span>
+                    <a href={"#"} on:click|preventDefault={toggleEditMode}>
+                        edit
+                    </a>
+                    <span class="mx-1">/</span>
+                    <a
+                        href={"#"}
+                        class="text-danger"
+                        on:click|preventDefault={deleteThis}
+                    >
+                        {loadingDeleteThis ? "menghapus..." : "hapus"}
+                    </a>
+                {/if}
+            </span>
+        </small>
+    {/if}
 </div>

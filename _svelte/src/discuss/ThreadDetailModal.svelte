@@ -1,15 +1,16 @@
 <script>
-    import { onMount, onDestroy, createEventDispatcher } from "svelte";
+    import { onMount, onDestroy, getContext } from "svelte";
     import { listReply, createOrUpdateReply } from "../common/api";
     import ThreadReplyItem from "./ThreadReplyItem.svelte";
     import MarkdownEditor from "./MarkdownEditor.svelte";
 
-    export let currentUserId;
     export let thread;
     export let theme = "info";
     export let title;
     export let backdrop = true;
+    export let onClose;
 
+    const currentUserId = getContext("currentUserId");
     let modalId = "thread-detail-modal";
     let modalIdSelector = "#" + modalId;
 
@@ -23,12 +24,6 @@
     let submitReplyErrors;
     let submittingReply;
     let replyEditorReset = 0;
-
-    const dispatch = createEventDispatcher();
-
-    function close() {
-        dispatch("close");
-    }
 
     async function getReplies() {
         loadingReplies = true;
@@ -70,18 +65,18 @@
         }
     }
 
-    function onDeleteReply({ detail }) {
-        replies = replies.filter((r) => r.id !== detail.id);
+    function onDeleteReply(reply) {
+        replies = replies.filter((r) => r.id !== reply.id);
     }
 
-    function onDeleteNewReply({ detail }) {
-        newReplies = newReplies.filter((r) => r.id !== detail.id);
+    function onDeleteNewReply(reply) {
+        newReplies = newReplies.filter((r) => r.id !== reply.id);
     }
 
     onMount(async () => {
         jQuery(modalIdSelector)
             .on("hide.bs.modal", async () => {
-                close();
+                onClose();
             })
             .modal({ backdrop: backdrop });
 
@@ -104,7 +99,7 @@
                 <a href={"#"}>
                     <span
                         class="material-icons text-light"
-                        on:click|preventDefault={close}
+                        on:click|preventDefault={onClose}
                     >
                         close
                     </span>
@@ -117,16 +112,16 @@
                         created: thread.created,
                         message: thread.description,
                     }}
+                    onDelete={() => {}}
                 />
 
                 {#each replies as reply (reply.id)}
                     <ThreadReplyItem
-                        {currentUserId}
                         {reply}
                         allowReply={true}
                         allowActions={currentUserId == reply.user.id}
                         classes="bg-light border-top"
-                        on:delete={onDeleteReply}
+                        onDelete={onDeleteReply}
                     />
                 {/each}
                 {#if nextRepliesURL}
@@ -145,20 +140,19 @@
                 {/if}
                 {#each newReplies as reply (reply.id)}
                     <ThreadReplyItem
-                        {currentUserId}
                         {reply}
                         classes="bg-light border-top"
+                        allowReply={true}
                         allowActions={currentUserId == reply.user.id}
-                        on:delete={onDeleteNewReply}
+                        onDelete={onDeleteNewReply}
                     />
                 {/each}
             </div>
             <div class="p-4">
                 <h5>Jawaban kamu</h5>
                 <MarkdownEditor
-                    id={"thread-reply-" + thread.id}
                     reset={replyEditorReset}
-                    bind:value={replyMessage}
+                    onChange={(v) => (replyMessage = v)}
                 />
                 {#if submitReplyErrors && submitReplyErrors.message}
                     <small class="form-text text-danger">

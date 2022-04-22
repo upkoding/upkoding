@@ -1,17 +1,17 @@
 <script>
-    import { onMount, onDestroy } from "svelte";
+    import { onMount } from "svelte";
     import "codemirror/lib/codemirror.css";
     import "codemirror/mode/markdown/markdown";
     import "codemirror/addon/display/autorefresh";
     import CodeMirror from "codemirror";
 
-    export let id;
     export let value = "";
     export let width = "100%";
     export let height = 150;
     export let reset = 0; // if reset value > 0 and keep changing, we'll reset
-    let textArea;
+    export let onChange;
 
+    let textArea;
     let editor;
 
     onMount(() => {
@@ -22,7 +22,7 @@
         });
         editor.setSize(width, height);
         editor.on("change", (e) => {
-            value = e.getDoc().getValue();
+            onChange(e.getDoc().getValue());
         });
         return () => {
             editor.toTextArea();
@@ -36,7 +36,7 @@
 </script>
 
 <div class="editor-container">
-    <textarea bind:this={textArea} bind:value {id} />
+    <textarea bind:this={textArea} {value} />
 </div>
 
 <style>

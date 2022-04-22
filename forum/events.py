@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.conf import settings
 from django.core.mail import send_mass_mail
 from django.template.loader import render_to_string
@@ -19,21 +20,24 @@ class OnThreadCreated:
         self.topic = thread.topic
         self.topic_content_object = self.topic.content_object
 
-        # add creator as thread participant
-        self.instance.add_participant(self.user)
+        with transaction.atomic():
+            # add creator as thread participant
+            self.instance.add_participant(self.user)
 
-        # add topic content owner to topic participant
-        # so we can notify them about a reply/answer to their thread
-        self.topic.add_participant(self.topic_content_object.user)
+            # add topic content owner to topic participant
+            # so we can notify them about new thread
+            self.topic.add_participant(self.topic_content_object.user)
 
-        # increment thread_count stat for instance's topic
-        self.topic.inc_thread_count()
+            # increment thread_count stat for instance's topic
+            self.topic.inc_thread_count()
 
         # send notification to Topic subscribers
         self.email_context = {
             "domain": settings.SITE_DOMAIN,
             "user": self.user,
             "thread": thread,
+            "topic": self.topic,
+            "topic_content_object": self.topic_content_object,
         }
         self.notify_new_thread()
 
@@ -42,7 +46,7 @@ class OnThreadCreated:
         tpl = "forum/emails/new_thread.html"
         subscribers = Participant.subscribed_to(self.topic, exclude_user=self.user)
         if subscribers:
-            subject = f"[UpKoding Forum] @{self.user.username} bertanya di '{self.topic_content_object.title}'"
+            subject = f"[UpKoding Forum] {self.user.username} bertanya di - {self.topic_content_object.title}"
             msg = render_to_string(tpl, self.email_context)
 
             # TODO: need better (scalable) solution for this if subscribers number are large.
@@ -62,32 +66,38 @@ class OnReplyCreated:
         self.thread = reply.thread
         self.user = reply.user
         self.parent = reply.parent
+        self.topic = self.thread.topic
+        self.topic_content_object = self.topic.content_object
         self.email_context = {
             "domain": settings.SITE_DOMAIN,
             "user": self.user,
             "thread": self.thread,
             "thread_reply": reply,
             "thread_reply_parent": self.parent,
+            "topic": self.topic,
+            "topic_content_object": self.topic_content_object,
         }
 
         if self.parent:
-            # thread reply's reply: add creator as Participant for its parent reply.
-            self.parent.add_participant(self.user)
+            with transaction.atomic():
+                # thread reply's reply: add creator as Participant for its parent reply.
+                self.parent.add_participant(self.user)
 
-            # update reply count
-            self.parent.inc_reply_count()
-            self.thread.inc_reply_count()
+                # update reply count
+                self.parent.inc_reply_count()
+                self.thread.inc_reply_count()
 
             # send notifications to reply participants
             self.notify_new_reply_reply()
         else:
-            # thread reply: add creator as thread participant as well as reply participants
-            self.instance.add_participant(self.user)
-            self.thread = self.instance.thread
-            self.thread.add_participant(self.user)
+            with transaction.atomic():
+                # thread reply: add creator as thread participant as well as reply participants
+                self.instance.add_participant(self.user)
+                self.thread = self.instance.thread
+                self.thread.add_participant(self.user)
 
-            # update reply count
-            self.thread.inc_reply_count()
+                # update reply count
+                self.thread.inc_reply_count()
 
             # send notifications to thread participants
             self.notify_new_reply()
@@ -97,7 +107,7 @@ class OnReplyCreated:
         tpl = "forum/emails/new_thread_reply.html"
         subscribers = Participant.subscribed_to(self.thread, exclude_user=self.user)
         if subscribers:
-            subject = f"[UpKoding Forum] @{self.user.username} menjawab thread: '{self.thread.title}'"
+            subject = f"[UpKoding Forum] {self.user.username} menjawab - {self.thread.title}"
             msg = render_to_string(tpl, self.email_context)
 
             # TODO: need better (scalable) solution for this if subscribers number are large.
@@ -121,10 +131,7 @@ class OnReplyCreated:
             emails = []
             for sub in subscribers:
                 to_user = sub.user
-                jawaban = (
-                    "jawabanmu" if self.parent.user_id == to_user.id else "jawaban"
-                )
-                subject = f"[UpKoding Forum] @{self.user.username} membalas {jawaban} di thread: '{self.thread.title}'"
+                subject = f"[UpKoding Forum] {self.user.username} berkomentar di - {self.thread.title}"
 
                 if UserSetting.objects.email_notify_forum_activity(to_user):
                     emails.append((subject, msg, FROM, [to_user.email]))

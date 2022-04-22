@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.db import transaction
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -199,7 +200,6 @@ class Topic(models.Model, StatMixin, ParticipantMixin):
         # set slug
         if not self.slug:
             self.slug = slugify(self.title)
-
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
