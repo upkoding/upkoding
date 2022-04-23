@@ -39,8 +39,10 @@ django==3.1.6
     #   -r requirements.in
     #   django-ace
     #   django-anymail
+    #   django-filter
     #   django-markdownify
     #   django-storages
+    #   djangorestframework
     #   stream-django
 django-ace==1.0.11
     # via -r requirements.in
@@ -48,11 +50,15 @@ django-anymail[mailgun]==8.2
     # via -r requirements.in
 django-email-verification==0.1.0
     # via -r requirements.in
+django-filter==21.1
+    # via -r requirements.in
 django-markdownify==0.9.0
     # via -r requirements.in
 django-mdeditor==0.1.18
     # via -r requirements.in
 django-storages==1.11.1
+    # via -r requirements.in
+djangorestframework==3.13.1
     # via -r requirements.in
 gunicorn==20.0.4
     # via -r requirements.in
@@ -63,7 +69,9 @@ jmespath==0.10.0
     #   boto3
     #   botocore
 markdown==3.3.4
-    # via django-markdownify
+    # via
+    #   -r requirements.in
+    #   django-markdownify
 midtransclient==1.2.0
     # via -r requirements.in
 oauthlib==3.1.1
@@ -96,6 +104,7 @@ python3-openid==3.2.0
 pytz==2021.3
     # via
     #   django
+    #   djangorestframework
     #   stream-django
     #   stream-python
 pyyaml==6.0

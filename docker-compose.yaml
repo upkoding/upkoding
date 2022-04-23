@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: upkoding
       POSTGRES_PASSWORD: upkoding
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: [ "CMD-SHELL", "pg_isready" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -35,3 +35,10 @@ services:
       - "3000:3000"
     volumes:
       - ./_static:/static
+
+  svelte:
+    image: node:14-slim
+    working_dir: /svelte
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./_svelte:/svelte

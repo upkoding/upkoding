@@ -28,3 +28,10 @@ runstatic:
 
 buildstatic:
 	docker-compose run --rm static sh -c "npm install && npm run build"
+
+
+buildsvelte:
+	docker-compose run --rm svelte sh -c "npm install && rm -rf public/build && npm run build"
+
+runsvelte:
+	docker-compose up svelte

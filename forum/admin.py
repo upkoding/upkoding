@@ -3,57 +3,43 @@ from django.contrib import admin
 from .models import (
     Topic,
     Thread,
-    ThreadStat,
-    ThreadAnswer,
-    ThreadAnswerParticipant,
-    ThreadAnswerStat,
-    ThreadParticipant, )
+    Reply,
+    Stat,
+    Participant,
+)
 
 
+@admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
-    model = Topic
-    list_display = ['title', 'type', 'thread_count', 'status', 'created', 'updated']
-    list_filter = ['type', 'status']
+    list_display = [
+        "id",
+        "title",
+        "content_object",
+        "status",
+        "created",
+        "updated",
+    ]
+    list_filter = ["status"]
 
 
+@admin.register(Thread)
 class ThreadAdmin(admin.ModelAdmin):
-    model = Thread
-    list_display = ['title', 'topic', 'user', 'status', 'created']
-    list_filter = ['status']
+    list_display = ["id", "title", "topic", "user", "status", "created"]
+    list_filter = ["status"]
 
 
-class ThreadStatAdmin(admin.ModelAdmin):
-    model = ThreadStat
-    list_display = ['thread', 'type', 'value', 'created']
-    list_filter = ['type']
+@admin.register(Reply)
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "message", "parent", "status", "created"]
+    list_filter = ["status"]
 
 
-class ThreadParticipantAdmin(admin.ModelAdmin):
-    model = ThreadParticipant
-    list_display = ['user', 'thread', 'subscribed', 'created']
+@admin.register(Stat)
+class StatAdmin(admin.ModelAdmin):
+    list_display = ["id", "content_type", "content_id", "stat_type", "value", "created"]
+    list_filter = ["stat_type"]
 
 
-class ThreadAnswerAdmin(admin.ModelAdmin):
-    model = ThreadAnswer
-    list_display = ['thread', 'user', 'parent', 'status', 'created']
-    list_filter = ['status']
-
-
-class ThreadAnswerParticipantAdmin(admin.ModelAdmin):
-    model = ThreadAnswerParticipant
-    list_display = ['user', 'thread_answer', 'subscribed', 'created']
-
-
-class ThreadAnswerStatAdmin(admin.ModelAdmin):
-    model = ThreadAnswerStat
-    list_display = ['thread_answer', 'type', 'value', 'created']
-    list_filter = ['type']
-
-
-admin.site.register(Topic, TopicAdmin)
-admin.site.register(Thread, ThreadAdmin)
-admin.site.register(ThreadStat, ThreadStatAdmin)
-admin.site.register(ThreadParticipant, ThreadParticipantAdmin)
-admin.site.register(ThreadAnswer, ThreadAnswerAdmin)
-admin.site.register(ThreadAnswerParticipant, ThreadAnswerParticipantAdmin)
-admin.site.register(ThreadAnswerStat, ThreadAnswerStatAdmin)
+@admin.register(Participant)
+class ParticipantAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "content_type", "content_id", "subscribed", "created"]

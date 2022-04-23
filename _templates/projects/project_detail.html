@@ -7,6 +7,9 @@
 {% load projects %}
 
 {% block meta %}{% meta object=object %}{% endblock %}
+{% block extrastyle %}
+
+{% endblock %}
 
 {% block content %}
 <div class="breadcrumb-bar navbar bg-white sticky-top">
@@ -76,7 +79,7 @@
                             {% endif %}
                             {% endblock %}
 
-                            <div class="d-flex justify-content-between text-small mt-2">
+                            <div class="d-flex justify-content-between text-small mt-2 mb-3">
                                 <div class="d-flex align-items-center">
                                     <span>Tantangan diposting oleh
                                         <a href="{{ project_owner.get_absolute_url }}">
@@ -89,6 +92,13 @@
                                     {% render_tags object 'secondary' %}
                                 </span>
                             </div>
+
+                        {% if not user_project %}
+                        <link href="{% static 'build/discuss.css' %}" rel="stylesheet"/>
+                        <div id="discuss-target" class="mt-5"></div>
+                        {{ discuss_props|json_script:"discuss-props" }}
+                        <script type="text/javascript" src="{% static 'build/discuss.js' %}"></script>
+                        {% endif %}
 
                         </div>
                     </div>

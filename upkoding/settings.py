@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "codeblocks.apps.CodeblocksConfig",
     "roadmaps.apps.RoadmapsConfig",
     "discord.apps.DiscordConfig",
-    # 'forum.apps.ForumConfig',
+    "forum.apps.ForumConfig",
     # 3rd party apps
     "django_email_verification",
     "whitenoise.runserver_nostatic",
@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     "anymail",
     "django_ace",
     "stream_django",
+    "rest_framework",
+    "django_filters",
     # django contribs
     "django.contrib.postgres",
     "django.contrib.humanize",
@@ -143,6 +145,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ],
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_PAGINATION_CLASS": "upkoding.pagination.NewestIdLastCursorPagination",
+    "PAGE_SIZE": 10,
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -217,6 +227,7 @@ STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = os.getenv("STATIC_URL", "/static/")
 STATICFILES_DIRS = [
     BASE_DIR / "_static/dist",
+    BASE_DIR / "_svelte/public",
 ]
 
 MEDIA_ROOT = BASE_DIR / "media"

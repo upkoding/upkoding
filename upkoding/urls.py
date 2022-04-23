@@ -24,19 +24,23 @@ from codeblocks.views import AdminCodeBlockTester
 
 if settings.MAINTENANCE_MODE:
     urlpatterns = [
-        path('', render_template('base/maintenance.html')),
+        path("", render_template("base/maintenance.html")),
     ]
 else:
     urlpatterns = [
-        path('admin/', admin.site.urls),
-        path('admin/codeblocks/tester', AdminCodeBlockTester.as_view(),
-             name='admin_codeblocks_tester'),
-        path('account/', include('account.urls', namespace='account')),
-        path('email-verification/', include('django_email_verification.urls')),
-        path('challenges/', include('projects.urls', namespace='projects')),
-        path('roadmaps/', include('roadmaps.urls', namespace='roadmaps')),
-        path('coders/', include('coders.urls', namespace='coders')),
-        path('mdeditor/', include('mdeditor.urls')),
-        path('discord/', include('discord.urls', namespace='discord')),
-        path('', include('base.urls', namespace='base')),
+        path("admin/", admin.site.urls),
+        path(
+            "admin/codeblocks/tester",
+            AdminCodeBlockTester.as_view(),
+            name="admin_codeblocks_tester",
+        ),
+        path("account/", include("account.urls", namespace="account")),
+        path("email-verification/", include("django_email_verification.urls")),
+        path("challenges/", include("projects.urls", namespace="projects")),
+        path("roadmaps/", include("roadmaps.urls", namespace="roadmaps")),
+        path("coders/", include("coders.urls", namespace="coders")),
+        path("forum/", include("forum.urls", namespace="forum")),
+        path("mdeditor/", include("mdeditor.urls")),
+        path("discord/", include("discord.urls", namespace="discord")),
+        path("", include("base.urls", namespace="base")),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
