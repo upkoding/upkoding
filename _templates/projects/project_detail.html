@@ -94,10 +94,10 @@
                             </div>
 
                         {% if not user_project %}
-                        <link href="{% static 'discuss.css' %}" rel="stylesheet"/>
-                        <div id="discuss-target"></div>
+                        <link href="{% static 'build/discuss.css' %}" rel="stylesheet"/>
+                        <div id="discuss-target" class="mt-5"></div>
                         {{ discuss_props|json_script:"discuss-props" }}
-                        <script type="text/javascript" src="{% static 'discuss.js' %}"></script>
+                        <script type="text/javascript" src="{% static 'build/discuss.js' %}"></script>
                         {% endif %}
 
                         </div>

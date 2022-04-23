@@ -5,6 +5,7 @@
     import dayjs from "../common/dayjs";
     import ThreadSubReplyItem from "./ThreadSubReplyItem.svelte";
     import ThreadReplyItemEdit from "./ThreadReplyItemEdit.svelte";
+    import ItemAction from "./ItemAction.svelte";
 
     // props
     export let classes = "";
@@ -75,18 +76,11 @@
         <div class="d-flex align-items-center" style="font-size: smaller;">
             <span>{dayjs(reply.created).fromNow()}</span>
             {#if allowActions}
-                <span class="mx-1">/</span>
-                <a href={"#"} on:click|preventDefault={toggleEditMode}>
-                    edit
-                </a>
-                <span class="mx-1">/</span>
-                <a
-                    href={"#"}
-                    class="text-danger"
-                    on:click|preventDefault={deleteThis}
-                >
-                    {loadingDeleteThis ? "menghapus..." : "hapus"}
-                </a>
+                <ItemAction
+                    onEdit={toggleEditMode}
+                    onDelete={deleteThis}
+                    loading={loadingDeleteThis}
+                />
             {/if}
         </div>
     </div>
@@ -101,7 +95,7 @@
         {:else}
             {@html parse(reply.message)}
         {/if}
-        <div class="mt-4 bg-light">
+        <div class="mt-5 bg-light">
             <!-- sub replies -->
             {#if subReplies.length > 0}
                 <div class="mb-1 text-muted">Komentar</div>

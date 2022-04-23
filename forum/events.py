@@ -107,7 +107,7 @@ class OnReplyCreated:
         tpl = "forum/emails/new_thread_reply.html"
         subscribers = Participant.subscribed_to(self.thread, exclude_user=self.user)
         if subscribers:
-            subject = f"[UpKoding Forum] {self.user.username} menjawab - {self.thread.title}"
+            subject = f"[UpKoding Forum] {self.user.username} menjawab thread - {self.thread.title}"
             msg = render_to_string(tpl, self.email_context)
 
             # TODO: need better (scalable) solution for this if subscribers number are large.
@@ -131,7 +131,7 @@ class OnReplyCreated:
             emails = []
             for sub in subscribers:
                 to_user = sub.user
-                subject = f"[UpKoding Forum] {self.user.username} berkomentar di - {self.thread.title}"
+                subject = f"[UpKoding Forum] {self.user.username} berkomentar di thread - {self.thread.title}"
 
                 if UserSetting.objects.email_notify_forum_activity(to_user):
                     emails.append((subject, msg, FROM, [to_user.email]))

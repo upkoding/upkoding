@@ -16,6 +16,12 @@ WORKDIR /staticfiles
 COPY _static/ .
 RUN npm install && npm run build
 
+# build svelteapp
+FROM node:14-slim as svelteapps
+WORKDIR /svelteapps
+COPY _svelte/ .
+RUN npm install && npm run build
+
 # production
 # built to run on Digital Ocean App Platform:
 # - DO default port: 8080
@@ -23,6 +29,7 @@ RUN npm install && npm run build
 FROM base as prod
 WORKDIR /app
 COPY --from=staticfiles /staticfiles/dist /app/_static/dist
+COPY --from=svelteapps /svelteapps/public /app/_svelte/public
 RUN python3 manage.py collectstatic --noinput
 
 ARG app_version

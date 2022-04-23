@@ -2,9 +2,11 @@
     import { tick, getContext } from "svelte";
     import dayjs from "../common/dayjs";
     import { deleteThread, createOrUpdateThread } from "../common/api";
+    import toast from "../common/toast";
     import ConfirmationModal from "./ConfirmationModal.svelte";
     import ThreadFormModal from "./ThreadFormModal.svelte";
     import ThreadDetailModal from "./ThreadDetailModal.svelte";
+    import ItemAction from "./ItemAction.svelte";
 
     export let thread;
     export let onDelete;
@@ -64,6 +66,7 @@
         loading = false;
         if (ok) {
             closeEditForm();
+            toast("Pertanyaan berhasil diupdate.");
             await tick();
             thread = data;
         } else {
@@ -85,35 +88,13 @@
                 oleh <a href={thread.user.url}>{thread.user.username}</a>
                 {dayjs(thread.created).fromNow()}
                 &middot;
-                <span>{reply_count} jawaban</span>
+                <span>{reply_count} komentar</span>
             </small>
         </div>
     </div>
 
     {#if thread.user.id === currentUserId}
-        <div class="ml-1 dropdown card-options">
-            <button
-                class="btn-options"
-                type="button"
-                id="..."
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-            >
-                <i class="material-icons">more_vert</i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <span class="dropdown-item" on:click={openEditForm}>
-                    Edit
-                </span>
-                <span
-                    class="dropdown-item text-danger"
-                    on:click={openConfirmForm}
-                >
-                    Hapus
-                </span>
-            </div>
-        </div>
+        <ItemAction onEdit={openEditForm} onDelete={openConfirmForm} />
     {/if}
 </div>
 
@@ -152,7 +133,6 @@
 {/if}
 
 <style>
-    .dropdown-item,
     h6,
     .media-body {
         cursor: pointer;

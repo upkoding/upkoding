@@ -5,14 +5,17 @@
 		createTopicForProject,
 		createOrUpdateThread,
 		listThread,
+		getThread,
 	} from "../common/api";
 	import EmptyThreads from "./EmptyThreads.svelte";
 	import ThreadFormModal from "./ThreadFormModal.svelte";
+	import ThreadDetailModal from "./ThreadDetailModal.svelte";
 	import ThreadItem from "./ThreadItem.svelte";
 
 	// app props
 	export let current_user_id;
 	export let project_id;
+	export let pop_thread_id = null;
 
 	setContext("currentUserId", current_user_id);
 
@@ -24,6 +27,14 @@
 	let showNewThreadModal = false;
 	let saving = false;
 	let savingErrors = null;
+	let popThread;
+
+	async function getPopThread(thread_id) {
+		const { ok, data } = await getThread(thread_id);
+		if (ok) {
+			popThread = data;
+		}
+	}
 
 	async function getThreads(refresh) {
 		if (loading) return;
@@ -51,6 +62,10 @@
 
 	// on mounted: fetch threads
 	onMount(async () => {
+		if (pop_thread_id) {
+			await getPopThread(pop_thread_id);
+		}
+
 		await getThreads(true);
 	});
 
@@ -107,12 +122,27 @@
 	/>
 {/if}
 
+{#if popThread}
+	<ThreadDetailModal
+		title={popThread.title}
+		thread={popThread}
+		onClose={() => (popThread = null)}
+	/>
+{/if}
+
 <div class="card shadow-sm mb-3">
 	<div class="card-header d-flex justify-content-between">
-		<span class="mt-1">FORUM DISKUSI</span>
-		<button class="btn btn-info" on:click={openForm}>
-			Ajukan Pertanyaan
-		</button>
+		<span class="mt-1">
+			<i class="material-icons-x mr-1">question_answer</i>
+			<strong>Forum Diskusi</strong>
+			<!-- <span class="mt-1"> FORUM DISKUSI </span> -->
+		</span>
+
+		{#if current_user_id}
+			<button class="btn btn-info" on:click={openForm}>
+				Ajukan Pertanyaan
+			</button>
+		{/if}
 	</div>
 	{#if threads.length > 0}
 		<div class="list-group list-group-flush">

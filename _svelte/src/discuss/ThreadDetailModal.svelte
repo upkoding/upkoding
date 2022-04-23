@@ -118,7 +118,7 @@
                 {#each replies as reply (reply.id)}
                     <ThreadReplyItem
                         {reply}
-                        allowReply={true}
+                        allowReply={currentUserId !== null}
                         allowActions={currentUserId == reply.user.id}
                         classes="bg-light border-top"
                         onDelete={onDeleteReply}
@@ -142,30 +142,41 @@
                     <ThreadReplyItem
                         {reply}
                         classes="bg-light border-top"
-                        allowReply={true}
+                        allowReply={currentUserId !== null}
                         allowActions={currentUserId == reply.user.id}
                         onDelete={onDeleteNewReply}
                     />
                 {/each}
             </div>
-            <div class="p-4">
-                <h5>Jawaban kamu</h5>
-                <MarkdownEditor
-                    reset={replyEditorReset}
-                    onChange={(v) => (replyMessage = v)}
-                />
-                {#if submitReplyErrors && submitReplyErrors.message}
-                    <small class="form-text text-danger">
-                        {submitReplyErrors.message}
-                    </small>
-                {/if}
 
-                <div class="d-flex justify-content-between mt-2">
-                    <small>Format jawaban ditulis dalam Markdown.</small>
-                    <button class="btn btn-info" on:click={submitReply}>
-                        {submittingReply ? "Submitting..." : "Submit Jawaban"}
-                    </button>
-                </div>
+            <div class="p-4">
+                {#if currentUserId}
+                    <h5>Jawaban kamu</h5>
+                    <MarkdownEditor
+                        reset={replyEditorReset}
+                        onChange={(v) => (replyMessage = v)}
+                    />
+                    {#if submitReplyErrors && submitReplyErrors.message}
+                        <small class="form-text text-danger">
+                            {submitReplyErrors.message}
+                        </small>
+                    {/if}
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <small>Format jawaban ditulis dalam Markdown.</small>
+                        <button class="btn btn-info" on:click={submitReply}>
+                            {submittingReply
+                                ? "Submitting..."
+                                : "Submit Jawaban"}
+                        </button>
+                    </div>
+                {:else}
+                    <p class="text-center text-muted">
+                        <span class="material-icons-x">lock</span>
+                        Silahkan <a href="/account/login/">login</a> untuk memberi
+                        komentar.
+                    </p>
+                {/if}
             </div>
         </div>
     </div>
