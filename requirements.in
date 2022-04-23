@@ -21,3 +21,4 @@ django-email-verification==0.1.0
 djangorestframework==3.13.1
 markdown==3.3.4
 django-filter==21.1
+pyjwt==2.3.0

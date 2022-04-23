@@ -288,6 +288,10 @@ MAINTENANCE_MODE = os.getenv("MAINTENANCE_MODE", "False") == "True"
 SHOW_ROADMAPS = os.getenv("SHOW_ROADMAPS", "False") == "True"
 ENABLE_PAYMENT = os.getenv("ENABLE_PAYMENT", "False") == "True"
 
+CANNYIO_ENABLED = os.getenv("CANNYIO_ENABLED", "False") == "True"
+CANNYIO_URL = os.getenv("CANNYIO_URL", "https://feedback.upkoding.com/feedback")
+CANNYIO_SECRET_KEY = os.getenv("CANNYIO_SECRET_KEY")
+
 # Email verification
 def email_verified_callback(user):
     user.verified_email = user.email

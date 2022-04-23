@@ -90,6 +90,7 @@ pycryptodomex==3.11.0
     # via stream-python
 pyjwt==2.3.0
     # via
+    #   -r requirements.in
     #   social-auth-core
     #   stream-python
 pynacl==1.4.0
