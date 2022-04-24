@@ -227,7 +227,7 @@ STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = os.getenv("STATIC_URL", "/static/")
 STATICFILES_DIRS = [
     BASE_DIR / "_static/dist",
-    BASE_DIR / "_svelte/public",
+    BASE_DIR / "_static/svelte/public",
 ]
 
 MEDIA_ROOT = BASE_DIR / "media"

@@ -19,7 +19,7 @@ RUN npm install && npm run build
 # build svelteapp
 FROM node:14-slim as svelteapps
 WORKDIR /svelteapps
-COPY _svelte/ .
+COPY _static/svelte/ .
 RUN npm install && npm run build
 
 # production
@@ -29,7 +29,7 @@ RUN npm install && npm run build
 FROM base as prod
 WORKDIR /app
 COPY --from=staticfiles /staticfiles/dist /app/_static/dist
-COPY --from=svelteapps /svelteapps/public /app/_svelte/public
+COPY --from=svelteapps /svelteapps/public /app/_static/svelte/public
 RUN python3 manage.py collectstatic --noinput
 
 ARG app_version

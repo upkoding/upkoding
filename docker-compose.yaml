@@ -41,4 +41,4 @@ services:
     working_dir: /svelte
     command: sh -c "npm install && npm run dev"
     volumes:
-      - ./_svelte:/svelte
+      - ./_static/svelte:/svelte

@@ -19,8 +19,11 @@ make migrate
 # 3. buat admin / superuser, masukkan informasi yang diminta
 make createsuperuser
 
-# 4. build static files
+# 4. build theme static files
 make buildstatic
+
+# 4. build Svelte static files (new)
+make buildsvelte
 
 # 5. jalankan proyek
 make runserver
