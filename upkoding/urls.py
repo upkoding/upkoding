@@ -40,7 +40,8 @@ else:
         path("roadmaps/", include("roadmaps.urls", namespace="roadmaps")),
         path("coders/", include("coders.urls", namespace="coders")),
         path("forum/", include("forum.urls", namespace="forum")),
-        path("mdeditor/", include("mdeditor.urls")),
+        # mdeditor disabled, we don't need file upload.
+        # path("mdeditor/", include("mdeditor.urls")),
         path("discord/", include("discord.urls", namespace="discord")),
         path("", include("base.urls", namespace="base")),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
