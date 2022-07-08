@@ -31,9 +31,9 @@
                     <a class="nav-link {% active_class '/account/auths/' %}"
                         href="{% url 'account:auths' %}">Autentikasi</a>
                 </li>
-                <li class="nav-item">
+                {% comment %} <li class="nav-item">
                     <a class="nav-link {% active_class '/account/pro/' %}" href="{% url 'account:pro' %}">Pro Access</a>
-                </li>
+                </li> {% endcomment %}
                 <li class="nav-item">
                     <a class="nav-link {% active_class '/account/notifications/' %}"
                         href="{% url 'account:notifications' %}">Notifikasi</a>

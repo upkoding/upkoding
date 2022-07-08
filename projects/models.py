@@ -443,7 +443,8 @@ class UserProject(models.Model):
             return True
         if not self.has_codeblock() or self.user == user:
             return True
-        if user.is_authenticated and user.is_pro_user():
+        if user.is_authenticated:
+            # if user.is_authenticated and user.is_pro_user():
             return True
         return False
 
@@ -479,12 +480,14 @@ class UserProject(models.Model):
         if self.project.is_premium and not is_pro_user:
             return False
 
+        MAX_RUN = 10
+
         # If never run 3 times OR not the first-or-last run of 3 -> allow!
-        mod = codeblock.run_count % 3
-        if (codeblock.run_count < 3) or (mod != 0):
+        mod = codeblock.run_count % MAX_RUN
+        if (codeblock.run_count < MAX_RUN) or (mod != 0):
             return True
 
-        # free user can only run the code 3 times in 24hr
+        # free user can only run the code MAX_RUN times in 24hr
         if codeblock.last_run:
             breaktime = 60 * 60 * 24  # 24hr
             sec_since_last_run = (now() - codeblock.last_run).total_seconds()

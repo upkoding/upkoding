@@ -1,17 +1,16 @@
 <div class="card mt-3">
     <div class="card-header">
-        <i class="devicon-{{codeblock.get_language_display}}-plain mr-1"></i> <strong>Upgrade ke PRO untuk melihat
+        <i class="devicon-{{codeblock.get_language_display}}-plain mr-1"></i> <strong>Login untuk melihat
             solusi dari <a href="{{ user_project_owner.get_absolute_url }}">
                 {{ user_project_owner.username }}</a>
         </strong>
     </div>
     <div class="bg-dark text-center p-3">
-        <a href="{% url 'base:pro'%}" class="btn btn-lg btn-warning mt-3">
-            <i class="material-icons-x mr-1">spa</i>
-            Get Pro Access!
+        <a href="{% url 'account:login'%}" class="btn btn-lg btn-info mt-3">
+            Login / Register
         </a>
         <small class="d-block text-center text-muted mt-2 mb-2">
-            Lihat solusi peserta lainnya, akses semua kelas dan tantangan premium.
+            Login untuk melihat solusi peserta lainnya, kerjakan tantangan atau berdiskusi.
         </small>
     </div>
 

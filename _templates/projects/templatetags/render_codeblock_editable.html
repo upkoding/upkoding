@@ -38,10 +38,11 @@
             <form method="POST" class="text-right" id="codeblock-form">
                 {% csrf_token %}
                 <input type="hidden" name="kind" value="code_submission" />
-                {% if not user.is_pro_user %}
+                {% comment %} {% if not user.is_pro_user %}
                 <small class="text-muted">Batas menjalankan kode 3 kali dalam 24 jam,
                     <a href="{% url 'base:pro' %}">go Pro</a>!</small>
-                {% endif %}
+                {% endif %} {% endcomment %}
+                <small class="text-muted">Batas menjalankan kode 10 kali dalam 24 jam</small>
                 <button type="submit" class="btn btn-primary ml-2">
                     <i class="material-icons-x">play_arrow</i>
                     <span id="codeblock-run" data-text="Jalankan" data-text-loading="Loading...">Jalankan</span>

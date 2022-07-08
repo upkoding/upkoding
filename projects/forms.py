@@ -25,7 +25,7 @@ class UserProjectCodeSubmissionForm(forms.Form):
                                   code='error_access')
 
         if not self.user_project.can_run_codeblock(self.user):
-            raise ValidationError('Batas menjalankan kode tercapai, tunggu 24 jam atau gunakan PRO Access.',
+            raise ValidationError('Batas menjalankan kode tercapai, tunggu 24 jam sebelum mencoba kembali.',
                                   code='error_limit')
 
         block_id = cleaned_data['code_block_id']
