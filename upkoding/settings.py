@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "roadmaps.apps.RoadmapsConfig",
     "discord.apps.DiscordConfig",
     "forum.apps.ForumConfig",
+    "courses.apps.CoursesConfig",
     # 3rd party apps
     "django_email_verification",
     "whitenoise.runserver_nostatic",

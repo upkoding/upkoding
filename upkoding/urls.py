@@ -38,6 +38,7 @@ else:
         path("email-verification/", include("django_email_verification.urls")),
         path("challenges/", include("projects.urls", namespace="projects")),
         path("roadmaps/", include("roadmaps.urls", namespace="roadmaps")),
+        path("courses/", include("courses.urls", namespace="courses")),
         path("coders/", include("coders.urls", namespace="coders")),
         path("forum/", include("forum.urls", namespace="forum")),
         # mdeditor disabled, we don't need file upload.
