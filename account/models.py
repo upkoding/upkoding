@@ -19,7 +19,7 @@ def avatar_path(instance, filename):
     """
     return 'avatar/u{}-{}.{}'.format(
         instance.id,
-        int(instance.date_joined.timestamp()),
+        int(now().timestamp()),
         filename.split('.')[-1]
     )
 
