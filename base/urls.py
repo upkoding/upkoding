@@ -12,5 +12,6 @@ urlpatterns = [
     path('aturan-dan-privasi/', render_template('base/tos.html'), name='tos'),
     path('pro/', render_template('base/pro.html'), name='pro'),
     path('kontributor/', Contributors.as_view(), name='contributors'),
-    path('robots.txt', render_template('base/robots.txt', 'text/plain'))
+    path('robots.txt', render_template('base/robots.txt', 'text/plain')),
+    path('goodbye/', render_template('base/goodbye.html'), name='goodbye'),
 ]

@@ -149,6 +149,7 @@
             {% endif %}
         </div>
         <div class="main-container {% block main_container_classes %}{% endblock %}">
+            <div class="alert alert-danger">👋 Good bye! Upkoding.com akan dinonaktifkan per tanggal 1 Oktober 2022. <a href="{% url 'base:goodbye' %}">Loh kok?</a></div>
             {% block content %}
             {% endblock %}
         </div>
